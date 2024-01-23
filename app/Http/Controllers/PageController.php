@@ -7,6 +7,10 @@ use Illuminate\Support\Facades\Http;
 class PageController extends Controller
 {
 
+    public function dashboard()
+    {
+        return view('dashboard');
+    }
     public function profile()
     {
         return view('profile');

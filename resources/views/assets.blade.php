@@ -40,7 +40,7 @@
             </div>
             <div class="form-group">
               <label for="EncodedBy">Encoded By</label>
-              <input type="text" class="form-control" id="EncodedBy" value="{{ auth()->user()->name }}" disabled>
+              <input type="text" class="form-control" id="EncodedBy" value="" disabled>
             </div>
 
             <div class="modal-footer">

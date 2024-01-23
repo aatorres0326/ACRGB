@@ -5,6 +5,10 @@
 @section('contents')
 <div class="row">
   Dashboard
+
+
+
+
 </div>
 <div class="row">
   <div class="col-xl-4 col-md-6 mb-4">

@@ -16,21 +16,23 @@ Route::controller(AuthController::class)->group(function () {
     Route::post('login', 'loginAction')->name('login.action');
     Route::get('logout', 'logout')->middleware('auth')->name('logout');
 });
-
-Route::middleware('auth')->group(function () {
-    Route::get('dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-    // Route::get('/table', [App\Http\Controllers\AuthController::class, 'table'])->name('table');
-    Route::get('table', [APIController::class, 'displayData']);
+Route::middleware(['auth'])->group(function () {
+    // Protected routes go here
+    Route::get('/dashboard', [App\Http\Controllers\PageController::class, 'dashboard'])->name('message');
+    // Route::get('table', [APIController::class, 'displayData']);
+    Route::get('users', [APIController::class, 'GetUsers']);
     Route::get('/profile', [App\Http\Controllers\PageController::class, 'profile'])->name('profile');
-    Route::get('/users', [App\Http\Controllers\PageController::class, 'users'])->name('users');
     Route::get('/assets', [App\Http\Controllers\PageController::class, 'assets'])->name('assets');
     Route::get('/xmlupload', [App\Http\Controllers\PageController::class, 'xmlupload'])->name('xmlupload');
     Route::get('facilities', [APIController::class, 'apiData']);
-    // Route::get('budgetmanagement', [App\Http\Controllers\PageController::class, 'budgetmanagement'])->name('budgetmanagement');
     Route::get('budgetmanagement', [APIController::class, 'displayBudget']);
+
+    // ... other protected routes
 });
+
+
+
+
 Route::middleware('Admin')->group(function () {
     Route::get('/users', [App\Http\Controllers\PageController::class, 'users'])->name('users');
 });
