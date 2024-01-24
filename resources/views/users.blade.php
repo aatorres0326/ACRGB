@@ -10,13 +10,15 @@
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                 <!-- Modal Header -->
-                <div class="modal-header">
+                <div class="modal-header  bg-gradient-light">
                     <h6 class="modal-title">ADD USER</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <form>
+                    <form action="{{ route('addUserAccount') }}" method="POST">
+                        @csrf
+
                         <div class="form-row">
                             <div class="form-group col-md-6">
                                 <label for="username">Username</label>
@@ -27,25 +29,38 @@
                                 <input type="password" class="form-control" name="password" placeholder="Password">
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label for="fname">First Name</label>
-                            <input type="text" class="form-control" name="firstname" placeholder="First Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="lname">Last Name</label>
-                            <input type="text" class="form-control" name="lastname" placeholder="Last Name">
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="firstname">Firstname</label>
+                                <input type="text" class="form-control" name="firstname" placeholder="Firstname">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="middlename">Middlename</label>
+                                <input type="text" class="form-control" name="middlename" placeholder="Middlename">
+                            </div>
                         </div>
                         <div class="form-row">
-                            <!-- <div class="form-group col-md-7">
-                <label for="ulocation">User Location</label>
-                <input type="text" class="form-control" id="ulocation">
-              </div> -->
-                            <div class="form-group col-md-5">
+                            <div class="form-group col-md-6">
+                                <label for="lastname">Lastname</label>
+                                <input type="text" class="form-control" name="lastname" placeholder="Lastname">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="userlevel">User Level</label>
+                                <select name="role" class="form-control">
+
+                                    <option value="">Admin</option>
+                                    <option value="">Staff</option>
+
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col">
                                 <label for="userlevel">Facility</label>
                                 <select name="hfid" class="form-control">
-
-                                    <option value=""></option>
-
+                                    @foreach($facilities as $facility)
+                                    <option value="{{ $facility['id'] }}">{{ $facility['hciname'] }}</option>
+                                    @endforeach
                                 </select>
                             </div>
                         </div>
@@ -59,8 +74,12 @@
             </div>
         </div>
     </div>
+    <?php
+    $now = new DateTime();
 
-
+    echo $now->format('Y-m-d');
+    
+    ?>
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
         <div class="card-body">
@@ -71,7 +90,8 @@
                         none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add User
                     </a>
                 </div>
-                <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%" cellspacing="0">
+                <table class="table table-sm table-hover table-bordered table-light" id="tablemanager" width="100%"
+                    cellspacing="0">
                     <div class="row" style="margin-bottom: 7px;">
                         <div class="col"></div>
                         <div class="col"></div>
@@ -87,33 +107,25 @@
                             <th class="disableSort disableFilterBy"></th>
                         </tr>
                     </thead>
-                    <tfoot>
-                        <tr>
-                            <th>User ID</th>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Role</th>
-                            <th>Facility Assignment</th>
-                            <th>Creation Date</th>
-                            <th></th>
-                        </tr>
-                    </tfoot>
+
                     <tbody>
+                        @foreach($userList as $user)
                         <tr>
 
-                            @foreach($userList['result'] as $user)
+
                             <td>{{ $user['userid'] }}</td>
-                            <td>Alexander Amoroso Torres</td>
-                            <td>aatorres</td>
+                            <td>{{ $user['firstname'] . ' ' . $user['middlename'] . ' ' . $user['lastname'] }}</td>
+                            <td>{{ $user['username'] }}</td>
                             <td>Super Admin</td>
-                            <td>PhilHealth</td>
-                            <td>November 9, 2023</td>
+                            <td>{{ $user['hfid'] }}</td>
+                            <td>{{ $user['datecreated'] }}</td>
                             <td>
-                                @endforeach
+
                                 <center><a class=" btn btn-sm btn-warning">Edit</a></center>
                             </td>
 
                         </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

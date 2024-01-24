@@ -7,28 +7,6 @@ use Illuminate\Support\Facades\Http;
 class APIController extends Controller
 {
 
-    public function GetUsers()
-    {
-        // Assuming $apiResponse contains the JSON response from your API
-        $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUser');
-
-        // Debug: Dump the HTTP response
-        dd($apiResponse->status(), $apiResponse->json());
-
-        // Extract the JSON response body
-        $decodedResponse = $apiResponse->json();
-
-        // Extract the result array
-        $userList = $decodedResponse['result'];
-
-        // Debug: Dump the user list
-        dd($userList);
-
-        return view('users', compact('userList'));
-    }
-
-
-
     public function displayData()
     {
 

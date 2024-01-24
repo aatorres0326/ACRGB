@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Http;
+
 
 class PageController extends Controller
 {
@@ -23,7 +23,7 @@ class PageController extends Controller
 
     public function users()
     {
-        return view('user-management');
+        return view('users');
     }
     public function assets()
     {
