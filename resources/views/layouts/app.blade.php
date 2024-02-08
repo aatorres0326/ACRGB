@@ -159,14 +159,8 @@
     </div>
   </div>
 
-  <script type="text/javascript">
 
-    function myFunctionEdit(API, Description) {
-      document.getElementById("titlemodal").innerHTML = "Claim Details";
-      document.getElementsByName("API")[0].setAttribute("value", API);
-      document.getElementsByName("Description")[0].setAttribute("value", Description);
-    }
-  </script>
+
 
 
   <!-- Bootstrap core JavaScript-->
@@ -179,16 +173,26 @@
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
   <!-- Page level plugins -->
   <script src="{{ asset('js/tableManager.js')}}"></script>
+  <script src="{{ asset('js/app.js') }}"></script>
 
 
-  <script type="text/javascript">
-
-    function myFunctionEdit(API, Description) {
-      document.getElementById("titlemodal").innerHTML = "Claim Details";
-      document.getElementsByName("API")[0].setAttribute("value", API);
-      document.getElementsByName("Description")[0].setAttribute("value", Description);
-    }
+  <script>
+    $(document).ready(function () {
+      $('.edit-user').click(function () {
+        var modal = $('#edit-user');
+        var button = $(this);
+        modal.find('.modal-body').html(`
+                <p><strong>User ID:</strong> ${button.data('userid')}</p>
+                <p><strong>Name:</strong> ${button.data('name')}</p>
+                <p><strong>Username:</strong> ${button.data('username')}</p>
+                <p><strong>Facility Assignment:</strong> ${button.data('hfid')}</p>
+                <p><strong>Creation Date:</strong> ${button.data('datecreated')}</p>
+            `);
+        modal.modal('show');
+      });
+    });
   </script>
+
   <!-- TABLE SCRIPT -->
   <script type="text/javascript">
     $('#tablemanager').tablemanager({
@@ -205,15 +209,14 @@
       pagination: true,
       showrows: [10, 15, 50, 100],
       disableFilterBy: [1]
-    });
-  </script>
+    })  </script>
 
   <!-- FILE INPUT SCRIPT -->
   <script>
     $(".custom-file-input").on("change", function () {
       var fileName = $(this).val().split("\\").pop();
       $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-    });
+    })  
   </script>
 
 
@@ -229,8 +232,7 @@
     }
 
     // Event listener for window load
-    window.addEventListener('load', showContent);
-  </script>
+    window.addEventListener('load', showContent)  </script>
   <!-- SCRIPT FOR EDITING TABLE CELLS -->
   <script>
     function makeEditable(button) {
@@ -259,7 +261,6 @@
       button.onclick = function () {
         makeEditable(this);
       };
-
     }
   </script>
 </body>

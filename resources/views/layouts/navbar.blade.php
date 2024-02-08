@@ -4,7 +4,10 @@
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
-
+    {{ (request()->is('facilities')) ? 'FACILITIES' : '' }}
+    {{ (request()->is('users')) ? 'USER MANAGEMENT' : '' }}
+    {{ (request()->is('table')) ? 'CLAIMS' : '' }}
+    {{ (request()->is('budgetmanagement')) ? 'BUDGET MANAGEMENT' : '' }}
 
 
     <ul class="navbar-nav ml-auto">

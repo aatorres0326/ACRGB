@@ -74,10 +74,29 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="edit-user" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- User details will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <?php
     $now = new DateTime();
 
-    echo $now->format('Y-m-d');
+    $now->format('Y-m-d');
     
     ?>
     <!-- USERS TABLE -->
@@ -117,11 +136,19 @@
                             <td>{{ $user['firstname'] . ' ' . $user['middlename'] . ' ' . $user['lastname'] }}</td>
                             <td>{{ $user['username'] }}</td>
                             <td>Super Admin</td>
-                            <td>{{ $user['hfid'] }}</td>
+                            @foreach ($facilities as $facility)
+                            @if ($facility['id'] === $user['hfid'])
+                            <!-- Display the relevant data from the other table here -->
+                            <td>{{ $facility['hciname'] }}</td>
+                            @endif
+                            @endforeach
                             <td>{{ $user['datecreated'] }}</td>
                             <td>
-
-                                <center><a class=" btn btn-sm btn-warning">Edit</a></center>
+                                <center><button class="btn-sm btn-warning edit-user" data-userid="{{ $user['userid'] }}"
+                                        data-name="{{ $user['firstname'] . ' ' . $user['middlename'] . ' ' . $user['lastname'] }}"
+                                        data-username="{{ $user['username'] }}" data-hfid="{{ $user['hfid'] }}"
+                                        data-datecreated="{{ $user['datecreated'] }}">Edit
+                                    </button></center>
                             </td>
 
                         </tr>
@@ -132,5 +159,6 @@
         </div>
     </div>
 </div>
+
 
 @endsection

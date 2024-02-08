@@ -8,6 +8,8 @@
     "devDependencies": {
         "axios": "^1.1.2",
         "datatables.net-bs4": "^1.13.8",
+        "jquery": "^3.7.1",
+        "laravel-mix": "^6.0.49",
         "laravel-vite-plugin": "^0.8.0",
         "vite": "^4.0.0"
     }

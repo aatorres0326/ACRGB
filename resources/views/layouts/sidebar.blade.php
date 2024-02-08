@@ -44,8 +44,8 @@
             <i class="fas fa-fw fa-clipboard-check"></i>
             <span>Claims</span></a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link {{ (request()->is('facilities')) ? 'active' : '' }}" href="/facilities">
+    <li class="nav-item {{ (request()->is('facilities')) ? 'active' : '' }}">
+        <a class="nav-link" href="/facilities">
             <i class="fas fa-fw fa-hospital-alt"></i>
             <span>Facilities</span></a>
     </li>

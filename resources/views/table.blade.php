@@ -27,7 +27,7 @@
         </div>
       </div>
     </div>
-    {{ session()->get('lastname').','.session()->get('firstname') }}
+
     <!-- CLAIMS TABLE -->
     <div class="card shadow mb-4">
       <div class="card-body">
