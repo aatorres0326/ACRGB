@@ -10,25 +10,30 @@ class APIController extends Controller
     public function displayData()
     {
 
-        // Make a GET request to the API
-        $response = Http::withoutVerifying()->get('https://api.publicapis.org/entries');
-        $response->json();
-        $result = json_decode($response, true);
-        // $newData = $result['entries'];
+        // Assuming $apiResponse contains the JSON response from your API
+        $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetAccountPayable');
+        $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHCIFacility');
 
-        return view('table', compact('result'));
+        // Debug: Dump the HTTP response
+
+
+        // Extract the JSON response body
+        $decodedFacilityResponse = $facilityapiResponse->json();
+
+        // Extract the result array
+        $facilities = json_decode($decodedFacilityResponse['result'], true);
+        // Debug: Dump the HTTP response
+
+
+        // Extract the JSON response body
+        $decoded = $apiResponse->json();
+
+        // Extract the result array
+        $result = json_decode($decoded['result'], true);
+
+        return view('table', compact('result', 'facilities'));
     }
-    public function displayBudget()
-    {
 
-        // Make a GET request to the API
-        $response = Http::withoutVerifying()->get('https://api.publicapis.org/entries');
-        $response->json();
-        $result = json_decode($response, true);
-        // $newData = $result['entries'];
-
-        return view('budget-management', compact('result'));
-    }
 
 
 

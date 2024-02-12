@@ -122,7 +122,7 @@
                             <th>Username</th>
                             <th>Role</th>
                             <th>Facility Assignment</th>
-                            <th class="disableSort disableFilterBy">Creation Date</th>
+                            <th>Creation Date</th>
                             <th class="disableSort disableFilterBy"></th>
                         </tr>
                     </thead>

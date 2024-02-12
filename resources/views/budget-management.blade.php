@@ -148,27 +148,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($result['entries'] as $data)
-                            <tr>
-                                <td>
-                                    <?= $data['API'] ?>
-                                </td>
-                                <td>{{ $data['Description'] }}</td>
-                                <td>{{ $data['Auth'] }}</td>
-                                <td></td>
-                                <td></td>
-                                <td>{{ $data['Cors'] }}</td>
 
-                                <td>{{ $data['Category'] }}</td>
-                                <td>
-                                    <a data-toggle="modal" data-target="#detail" onclick="myFunctionEdit(
-                                                    '<?=$data['API']?>',
-                                                    '<?=$data['Description']?>'
-                                 )" class="btn-link pe-auto user-select-none font-weight-bolder">Set Budget</a>
-                                </td>
+                            <tr>
+                                <?php
+          for ($i = 1; $i <= 3; $i++) {
+              echo '<tr>';
+              echo '<td>Tranch ' . $i . '</td>';
+              echo '<td>Disbursed</td>';
+              echo '<td class="editable" contenteditable="false">' . number_format(10000000 + $i * 500000, 0) . '</td>';
+            echo '<td class="editable" contenteditable="false">November ' . ($i % 30 + 1) . ', 2023</td>';
+              echo '<td class="editable" contenteditable="false"">January 16, 2024</td>';
+            echo '<td class="editable" contenteditable="false"">January 16, 2024</td>';
+            echo '<td class="editable" contenteditable="false"">January 16, 2024</td>';
+             echo ' <td><a data-toggle="modal" data-target="#detail" class="btn-link pe-auto user-select-none font-weight-bolder">Set Budget</a></td>';
+              // echo '<td>Encoder ' . $i . '</td>';
+          }
+          ?>
+
                             </tr>
 
-                            @endforeach
+
 
                         </tbody>
                     </table>

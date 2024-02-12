@@ -7,7 +7,7 @@
 
     <!-- ADD USER MODAL -->
     <div class="modal" id="add-user">
-        <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
                 <!-- Modal Header -->
                 <div class="modal-header  bg-gradient-light">
@@ -123,7 +123,7 @@
                             <td>{{ $facility['address'] }}</td>
                             <td>{{ $facility['accreditation'] }}</td>
 
-                            <td></td>
+                            <td>Sample Regional Office</td>
                             <td>
                                 <center><button class="btn-sm btn-warning edit-user">Edit
                                     </button></center>

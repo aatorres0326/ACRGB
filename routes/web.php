@@ -25,7 +25,7 @@ Route::get('/profile', [App\Http\Controllers\PageController::class, 'profile'])-
 Route::get('/assets', [App\Http\Controllers\PageController::class, 'assets'])->name('assets');
 Route::get('/xmlupload', [App\Http\Controllers\PageController::class, 'xmlupload'])->name('xmlupload');
 Route::get('facilities', [FacilityController::class, 'GetFacilities']);
-Route::get('budgetmanagement', [APIController::class, 'displayBudget']);
+Route::get('/budgetmanagement', [App\Http\Controllers\PageController::class, 'budgetmanagement'])->name('budgetmanagement');
 Route::post('/add-user-account', [UsersManageController::class, 'addUserAccount'])->name('addUserAccount');
 Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');
 // Route::middleware(['auth'])->group(function () {
