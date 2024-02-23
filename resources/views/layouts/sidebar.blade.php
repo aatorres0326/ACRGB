@@ -1,7 +1,7 @@
 <ul class="navbar-nav bg-gradient-dark sidebar sidebar-dark accordion" id="accordionSidebar">
 
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="/dashboard">
         <div class="sidebar-brand-icon">
             <i class="fas fa-globe" style="color:#7DB343;"></i>
         </div>
@@ -15,7 +15,7 @@
     <hr class="sidebar-divider my-0">
 
     <!-- Nav Item - Dashboard -->
-    <li class="nav-item { (request()->is('dashboard')) ? 'active' : '' }}">
+    <li class="nav-item {{ (request()->is('dashboard')) ? 'active' : '' }}">
         <a class="nav-link" href="/dashboard">
             <i class="fas fa-fw fa-tachometer-alt"></i>
             <span>Dashboard</span></a>
@@ -29,51 +29,77 @@
         Reports
     </div>
 
-    <li class="nav-item {{ (request()->is('assets')) ? 'active' : '' }}">
-        <a class="nav-link" href="/assets">
-            <i class="fas fa-fw fa-coins"></i>
-            <span>Assets</span></a>
-    </li>
+
     <li class="nav-item  {{ (request()->is('budgetmanagement')) ? 'active' : '' }}">
         <a class="nav-link" href="/budgetmanagement">
             <i class="fas fa-fw fa-chart-pie"></i>
             <span>Budget Management</span></a>
     </li>
-    <li class="nav-item {{ (request()->is('table')) ? 'active' : '' }}">
+    <!-- <li class="nav-item {{ (request()->is('table')) ? 'active' : '' }}">
         <a class="nav-link" href="/table">
             <i class="fas fa-fw fa-clipboard-check"></i>
             <span>Claims</span></a>
-    </li>
-    <li class="nav-item {{ (request()->is('facilities')) ? 'active' : '' }}">
-        <a class="nav-link" href="/facilities">
-            <i class="fas fa-fw fa-hospital-alt"></i>
-            <span>Facilities</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {{ (request()->is('xmlupload')) ? 'active' : '' }}" href="/xmlupload">
-            <i class="fas fa-fw fa-upload"></i>
-            <span>XML Upload</span></a>
-    </li>
+    </li> -->
+
+
 
     <!-- Divider -->
     <hr class="sidebar-divider">
 
     <!-- Heading -->
     <div class="sidebar-heading">
-        Utilities
+        Utility Management
     </div>
+    <li class="nav-item" id="accordion">
+        <a class="nav-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
+            aria-controls="collapseOne">
+            <i class="fas fa-fw fa-users"></i><span>&nbsp;Users</span>
+        </a>
+        <div id="collapseOne"
+            class="collapse {{ (request()->is('userlogins')) ? 'show' : '' }} {{ (request()->is('userinfo')) ? 'show' : '' }}"
+            data-parent="#accordion">
+            <!-- Nav Item - Pages Collapse Menu -->
+            <div class="bg-white py-2 collapse-inner rounded">
+                <ul class="navbar-nav">
+
+                    <li class="nav-item">
+                        <a class="collapse-item {{ (request()->is('userlogins')) ? 'active' : '' }}" href="/userlogins">
+
+                            <span>Login Details</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="collapse-item  {{ (request()->is('userinfo')) ? 'active' : '' }}" href="/userinfo">
+
+                            <span>User Details</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="collapse-item  {{ (request()->is('userlevel')) ? 'active' : '' }}" href="/userlevel">
+
+                            <span>Role Management</span></a>
+                    </li>
+
+                </ul>
+            </div>
+        </div>
+    </li>
+    <li class="nav-item  {{ (request()->is('area')) ? 'active' : '' }}">
+        <a class="nav-link" href="/area">
+            <i class="fas fa-fw fa-cog"></i>
+            <span>Area</span></a>
+    </li>
+    <li class="nav-item {{ (request()->is('assets')) ? 'active' : '' }}">
+        <a class="nav-link" href="/assets">
+            <i class="fas fa-fw fa-coins"></i>
+            <span>Assets</span></a>
+    </li>
+    <li class="nav-item {{ (request()->is('facilities')) ? 'active' : '' }}">
+        <a class="nav-link" href="/facilities">
+            <i class="fas fa-fw fa-hospital-alt"></i>
+            <span>Facilities</span></a>
+    </li>
 
     <!-- Nav Item - Pages Collapse Menu -->
-    <li class="nav-item {{ (request()->is('users')) ? 'active' : '' }}">
-        <a class="nav-link active" href="/users">
-            <i class="fas fa-fw fa-users"></i>
-            <span>User Management</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="budget_logs.html">
-            <i class="fas fa-fw fa-list"></i>
-            <span>Logs</span></a>
-    </li>
+
     <!-- Divider -->
     <hr class="sidebar-divider d-none d-md-block">
 

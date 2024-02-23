@@ -13,30 +13,7 @@ use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
-    public function register()
-    {
-        return view('auth/register');
-    }
 
-    public function registerSave(Request $request)
-    {
-
-
-        Validator::make($request->all(), [
-            'name' => 'required',
-            'email' => 'required|email',
-            'password' => 'required|confirmed'
-        ])->validate();
-
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'level' => 'Admin'
-        ]);
-
-        return redirect()->route('register');
-    }
 
     public function login()
     {
@@ -64,7 +41,13 @@ class AuthController extends Controller
         if ($response->successful()) {
             // Check if the API request was successful
             if ($response['success']) {
+
                 $result = json_decode($response['result'], true);
+                $level = $result['leveid'];
+
+                $userlevel = 'http://localhost:7001/ACRGB/ACRGBFETCH/GetLevel/' . $level;
+
+                $levelresult = json_decode($userlevel['result'], true);
 
 
                 // Start a session or perform other actions

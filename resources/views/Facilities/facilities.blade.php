@@ -41,7 +41,7 @@
                         </div>
                         <div class="form-row">
                             <div class="form-group col">
-                                <label for="userlevel">Regional Office</label>
+                                <label for="userlevel">Area</label>
                                 <select name="role" class="form-control">
 
                                     <option value="">PhilHealth Regional Office Area 1</option>
@@ -61,22 +61,6 @@
         </div>
     </div>
 
-    <div class="modal fade" id="edit-user" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- User details will be displayed here -->
-                </div>
-            </div>
-        </div>
-    </div>
 
 
     <?php
@@ -105,10 +89,12 @@
                         <tr>
                             <th class="d-none">Facility ID</th>
                             <th>Facility</th>
-                            <th>Address</th>
-                            <th>Accreditation</th>
-                            <th>Regional Office</th>
-                            <th class="disableSort disableFilterBy">
+                            <th class="text-center">Address</th>
+                            <th class="text-center">Area</th>
+                            <th class="text-center">Accreditation</th>
+                            <th class="text-center">Created By</th>
+                            <th class="text-center">Date Created</th>
+                            <th class="disableSort disableFilterBy text-center">Action
                             </th>
                         </tr>
                     </thead>
@@ -118,15 +104,16 @@
                         <tr>
 
 
-                            <td class="d-none">{{ $facility['id'] }}</td>
-                            <td>{{ $facility['hciname'] }}</td>
-                            <td>{{ $facility['address'] }}</td>
-                            <td>{{ $facility['accreditation'] }}</td>
-
-                            <td>Sample Regional Office</td>
-                            <td>
-                                <center><button class="btn-sm btn-warning edit-user">Edit
-                                    </button></center>
+                            <td class="d-none">{{ $facility['hcfid'] }}</td>
+                            <td>{{ $facility['hcfname'] }}</td>
+                            <td class="text-center">{{ $facility['hcfaddress'] }}</td>
+                            <td class="text-center">{{ $facility['areaid'] }}</td>
+                            <td class="text-center">{{ $facility['hcfcode'] }}</td>
+                            <td class="text-center">{{ $facility['createdby'] }}</td>
+                            <td class="text-center">{{ $facility['datecreated'] }}</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-link text-darker-warning"><i class="fas fa-fw fa-edit"
+                                        data-toggle="tooltip" title="Edit"></i></a>
                             </td>
 
                         </tr>

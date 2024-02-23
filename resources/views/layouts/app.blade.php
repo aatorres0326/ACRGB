@@ -108,6 +108,14 @@
       background-color: rgba(240, 240, 240, 0.7);
       z-index: 9999;
     }
+
+    .text-darker-warning {
+      color: #cc6600;
+    }
+
+    .text-darker-warning:hover {
+      color: #994d00;
+    }
   </style>
 </head>
 
@@ -175,23 +183,68 @@
   <script src="{{ asset('js/tableManager.js')}}"></script>
   <script src="{{ asset('js/app.js') }}"></script>
 
+  <script type="text/javascript">
 
-  <script>
-    $(document).ready(function () {
-      $('.edit-user').click(function () {
-        var modal = $('#edit-user');
-        var button = $(this);
-        modal.find('.modal-body').html(`
-                <p><strong>User ID:</strong> ${button.data('userid')}</p>
-                <p><strong>Name:</strong> ${button.data('name')}</p>
-                <p><strong>Username:</strong> ${button.data('username')}</p>
-                <p><strong>Facility Assignment:</strong> ${button.data('hfid')}</p>
-                <p><strong>Creation Date:</strong> ${button.data('datecreated')}</p>
-            `);
-        modal.modal('show');
-      });
-    });
+    function myFunctionEdit(did, lastname) {
+      document.getElementById("titlemodal").innerHTML = "Add Login Credentials";
+      document.getElementsByName("did")[0].setAttribute("value", did);
+      document.getElementsByName("userlastname")[0].setAttribute("value", lastname);
+
+      var currentDate = new Date();
+      var philippinesTime = new Date(currentDate.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
+
+      // Format date (without separators)
+      var month = (philippinesTime.getMonth() + 1).toString().padStart(2, '0');
+      var day = philippinesTime.getDate().toString().padStart(2, '0');
+      var year = philippinesTime.getFullYear();
+      var hours = philippinesTime.getHours().toString().padStart(2, '0');
+      var minutes = philippinesTime.getMinutes().toString().padStart(2, '0');
+      var seconds = philippinesTime.getSeconds().toString().padStart(2, '0');
+
+      // Generate username
+      var username = lastname + year + month + day + hours + minutes + seconds;
+
+      // Update username field
+      document.getElementsByName("username")[0].setAttribute("value", username);
+
+      var password = '@' + generateRandomPassword();
+
+      // Update password field
+      document.getElementsByName("password")[0].setAttribute("value", password);
+    }
+
+    function generateRandomPassword() {
+      var length = 8;
+      var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+      var password = "";
+
+      while (!containsUppercase(password) || !containsLowercase(password) || !containsNumber(password)) {
+        password = "";
+
+        // Generate password with random characters
+        for (var i = 0; i < length; i++) {
+          var randomIndex = Math.floor(Math.random() * charset.length);
+          password += charset[randomIndex];
+        }
+      }
+
+      return password;
+    }
+
+    function containsUppercase(str) {
+      return /[A-Z]/.test(str);
+    }
+
+    function containsLowercase(str) {
+      return /[a-z]/.test(str);
+    }
+
+    function containsNumber(str) {
+      return /\d/.test(str);
+    }
+
   </script>
+
 
   <!-- TABLE SCRIPT -->
   <script type="text/javascript">
@@ -263,6 +316,25 @@
       };
     }
   </script>
+
+  <script>
+    $(document).ready(function () {
+      $('.create-login').click(function () {
+        var userID = $(this).data('userid');
+        // Now you have the userID of the selected row, you can use it as needed
+        console.log("User ID:", userID);
+        // Perform any further actions with the userID here
+      });
+    });
+  </script>
+
+  <!-- TOOLTIP -->
+  <script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+  </script>
+
 </body>
 
 </html>

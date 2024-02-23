@@ -16,7 +16,7 @@ class FacilityController extends Controller
     public function GetFacilities()
     {
         // Assuming $apiResponse contains the JSON response from your API
-        $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHCIFacility');
+        $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
 
         // Debug: Dump the HTTP response
 
@@ -30,7 +30,7 @@ class FacilityController extends Controller
         // Debug: Dump the user list
 
 
-        return view('facilities', compact('facilities'));
+        return view('Facilities/facilities', compact('facilities'));
     }
 
     public function addFacility(Request $request)

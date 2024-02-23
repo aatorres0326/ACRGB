@@ -135,7 +135,7 @@
                         <thead>
                             <tr>
                                 <th>Facility</th>
-                                <th>Province</th>
+                                <th>Area</th>
                                 <!-- <th class="disableSort disableFilterBy">Claim Amount</th> -->
                                 <th>Total Budget</th>
                                 <th class="disableSort disableFilterBy">Date Disbursed</th>
@@ -153,8 +153,8 @@
                                 <?php
           for ($i = 1; $i <= 3; $i++) {
               echo '<tr>';
-              echo '<td>Tranch ' . $i . '</td>';
-              echo '<td>Disbursed</td>';
+              echo '<td>Sample Facility</td>';
+              echo '<td>NCR</td>';
               echo '<td class="editable" contenteditable="false">' . number_format(10000000 + $i * 500000, 0) . '</td>';
             echo '<td class="editable" contenteditable="false">November ' . ($i % 30 + 1) . ', 2023</td>';
               echo '<td class="editable" contenteditable="false"">January 16, 2024</td>';

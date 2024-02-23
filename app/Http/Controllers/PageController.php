@@ -27,7 +27,7 @@ class PageController extends Controller
     }
     public function assets()
     {
-        return view('assets');
+        return view('BudgetManagement/assets');
     }
     public function xmlupload()
     {
@@ -35,7 +35,7 @@ class PageController extends Controller
     }
     public function budgetmanagement()
     {
-        return view('budget-management');
+        return view('BudgetManagement/budget-management');
     }
 
 

@@ -16,7 +16,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <form action="{{ route('addUserAccount') }}" method="POST">
+                    <form action="" method="POST">
                         @csrf
 
                         <div class="form-row">
@@ -54,16 +54,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group col">
-                                <label for="userlevel">Facility</label>
-                                <select name="hfid" class="form-control">
-                                    @foreach($facilities as $facility)
-                                    <option value="{{ $facility['id'] }}">{{ $facility['hciname'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Add</button> <button type="button"
                                 class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -75,40 +66,16 @@
         </div>
     </div>
 
-    <div class="modal fade" id="edit-user" tabindex="-1" role="dialog" aria-labelledby="editUserModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <!-- User details will be displayed here -->
-                </div>
-            </div>
-        </div>
-    </div>
 
 
-    <?php
-    $now = new DateTime();
 
-    $now->format('Y-m-d');
-    
-    ?>
+
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive-sm"
                 style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                <div style="position:absolute; top:13px; right:470px">
-                    <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#add-user" text-decoration:
-                        none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add User
-                    </a>
-                </div>
+
                 <table class="table table-sm table-hover table-bordered table-light" id="tablemanager" width="100%"
                     cellspacing="0">
                     <div class="row" style="margin-bottom: 7px;">
@@ -117,13 +84,14 @@
                     </div>
                     <thead>
                         <tr>
-                            <th>User ID</th>
-                            <th>Name</th>
-                            <th>Username</th>
-                            <th>Role</th>
-                            <th>Facility Assignment</th>
-                            <th>Creation Date</th>
-                            <th class="disableSort disableFilterBy"></th>
+                            <th class="text-center">User ID</th>
+
+                            <th class="text-center">Username</th>
+                            <th class="text-center">Role</th>
+                            <th class="text-center">Created By</th>
+                            <th class="text-center">Date Created</th>
+                            <th class="text-center d-none">Status</th>
+                            <th class="disableSort disableFilterBy text-center"></th>
                         </tr>
                     </thead>
 
@@ -132,23 +100,21 @@
                         <tr>
 
 
-                            <td>{{ $user['userid'] }}</td>
-                            <td>{{ $user['firstname'] . ' ' . $user['middlename'] . ' ' . $user['lastname'] }}</td>
-                            <td>{{ $user['username'] }}</td>
-                            <td>Super Admin</td>
-                            @foreach ($facilities as $facility)
-                            @if ($facility['id'] === $user['hfid'])
-                            <!-- Display the relevant data from the other table here -->
-                            <td>{{ $facility['hciname'] }}</td>
-                            @endif
-                            @endforeach
-                            <td>{{ $user['datecreated'] }}</td>
-                            <td>
-                                <center><button class="btn-sm btn-warning edit-user" data-userid="{{ $user['userid'] }}"
-                                        data-name="{{ $user['firstname'] . ' ' . $user['middlename'] . ' ' . $user['lastname'] }}"
-                                        data-username="{{ $user['username'] }}" data-hfid="{{ $user['hfid'] }}"
-                                        data-datecreated="{{ $user['datecreated'] }}">Edit
-                                    </button></center>
+                            <td class="text-center">{{ $user['userid'] }}</td>
+                            <td class="text-center">{{ $user['username'] }}</td>
+
+                            <td class="text-center">{{ $user['leveid'] }}</td>
+
+
+
+                            <td class="text-center">{{ $user['createdby'] }}</td>
+                            <td class="text-center">{{ $user['datecreated'] }}</td>
+
+
+                            <td class="text-center d-none">{{ $user['status'] }}</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-link text-darker-warning"><i class="fas fa-fw fa-edit"
+                                        data-toggle="tooltip" title="Edit"></i></a>
                             </td>
 
                         </tr>

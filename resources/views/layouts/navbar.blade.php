@@ -4,10 +4,13 @@
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
-    {{ (request()->is('facilities')) ? 'FACILITIES' : '' }}
+    {{ (request()->is('facilities')) ? 'FACILITY MANAGEMENT' : '' }}
     {{ (request()->is('users')) ? 'USER MANAGEMENT' : '' }}
     {{ (request()->is('table')) ? 'CLAIMS' : '' }}
     {{ (request()->is('budgetmanagement')) ? 'BUDGET MANAGEMENT' : '' }}
+    {{ (request()->is('userlogins')) ? 'USER LOGIN MANAGEMENT' : '' }}
+    {{ (request()->is('userinfo')) ? 'USER INFORMATION MANAGEMENT' : '' }}
+    {{ (request()->is('area')) ? 'AREA MANAGEMENT' : '' }}
 
 
     <ul class="navbar-nav ml-auto">
