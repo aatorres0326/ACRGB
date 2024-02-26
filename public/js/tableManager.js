@@ -103,7 +103,7 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
         /**
         Options default values
         **/
-        var firstSort       = [[0, 0]],
+        var firstSort       = [[4, 1]],
             dateColumn      = [],
             dateFormat      = [],
             disableFilterBy = [];
@@ -417,23 +417,6 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
                 });
             }
 
-            /**
-            Check if first element to sort is empty or undefined
-            **/
-            if (
-                options.firstSort != "" &&
-                typeof options.firstSort !== undefined &&
-                options.firstSort !== undefined
-            ) {
-                var firstSortColumn = [];
-                var firstSortRules = options.firstSort;
-                var firstSortOrder = [];
-                for (i = 0; i < options.firstSort.length; i++) {
-                    firstSortColumn.push(options.firstSort[i][0]);
-                    firstSortOrder.push(options.firstSort[i][1]);
-                }
-                TableSort(firstSortRules);
-            }
         }
         if (debug) {
             cLog("Options set:", options);

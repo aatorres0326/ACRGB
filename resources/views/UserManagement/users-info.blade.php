@@ -14,6 +14,7 @@
                     <h6 class="modal-title">ADD USER</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
+
                 <!-- Modal body -->
                 <div class="modal-body">
                     <form action="{{ route('addUserInfo') }}" method="POST">
@@ -77,17 +78,12 @@
 
 
 
-    <?php
-    $now = new DateTime();
-
-    $now->format('Y-m-d');
-    
-    ?>
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive-sm"
-                style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
+                style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;"
+                id="content">
                 <div style="position:absolute; top:13px; right:470px">
                     <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#add-user" style="text-decoration:
                         none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add User
@@ -103,10 +99,10 @@
                         <tr>
                             <th>Name</th>
                             <th class="text-center">Login Credential</th>
-                            <th class="text-center">Facility Assignment</th>
+                            <th class="text-center">Facility</th>
                             <th class="text-center">Area</th>
                             <th class="text-center">Creation Date</th>
-                            <th class="text-center">Created By</th>
+                            <th class="text-center d-none">Created By</th>
 
                             <th class="disableSort disableFilterBy text-center">Action</th>
 
@@ -165,15 +161,9 @@
 
 
                             <td class="text-center">{{ $user['datecreated'] }}</td>
-                            <td class="text-center">{{ $user['createdby'] }}</td>
-                            <td class="text-center d-none">{{ $user['stats'] }}</td>
-                            <td class="text-center">
-                                @if($user['stats'] == 1)
-                                <span>Change</span>
-                                @elseif($user['stats'] == 2)
-                                <span>Active</span>
-                                @endif
-                            </td>
+                            <td class="text-center d-none">{{ $user['createdby'] }}</td>
+
+
                             <td>
                                 <center>
                                     @php
@@ -186,20 +176,23 @@
                                     }
                                     @endphp
                                     @if (Str::contains($login, 'Credentials Not Found'))
-                                    <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin" onclick="myFunctionEdit(
+                                    <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin" onclick="addLogin(
                                                     '<?=$user['did']?>',
                                                     '<?=$user['lastname']?>'
                                  )"><i class="fas fa-fw fa-plus" data-toggle="tooltip" title="Create Login"></i></a>
                                     @else
-                                    <a class="btn btn-sm btn-link disabled" data-toggle="modal"
-                                        data-userid="{{ $user['did'] }}" data-target="#add-login-details"><i
-                                            class="fas fa-fw fa-plus" data-toggle="tooltip"
-                                            title="Create Login"></i></a>
+                                    <a class="btn btn-sm btn-link disabled"><i class="fas fa-fw fa-plus"
+                                            data-toggle="tooltip" title="Create Login"></i></a>
                                     @endif
 
 
-                                    <a class="btn btn-sm btn-link text-darker-warning"><i class="fas fa-fw fa-edit"
-                                            data-toggle="tooltip" title="Edit"></i></a>
+                                    <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
+                                        data-target="#editUser" onclick="EditUserDetails(
+                                                    '<?=$user['did']?>',
+                                                     '<?=$user['firstname']?>',
+                                                      '<?=$user['middlename']?>',
+                                                    '<?=$user['lastname']?>'
+                                 )"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
                                     <a class="btn btn-sm btn-link text-danger"><i class="fas fa-fw fa-file-archive"
                                             data-toggle="tooltip" title="Archive"></i></a>
                                 </center>
@@ -227,18 +220,18 @@
                                     <div class="form-row">
 
                                         <div class="form-group col-md-7">
-                                            <label for="username">Username</label>
+                                            <label for="firstnamee">Username</label>
                                             <input class="form-control" type="text" name="username" id="username" />
                                         </div>
                                         <div class="form-group col-md-5">
                                             <label for="password">Password</label>
-                                            <input class="form-control" type="text" name="password" id="password" />
+                                            <input class="form-control" type="text" name="password" id=" password" />
                                         </div>
 
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col">
-                                            <label for="level">Facility</label>
+                                            <label for="level">User Level</label>
                                             <select name="level" class="form-control">
                                                 @foreach($userLevel as $level)
                                                 <option value="{{ $level['levelid'] }}">{{ $level['levdetails'] }}
@@ -259,6 +252,64 @@
                 </div>
 
                 <!-- END OF ADD LOGIN MODAL -->
+
+                <!-- MODIFY USER DETAILS MODAL -->
+
+                <div class="modal" id="editUser" name="editUser">
+                    <div class="modal-dialog modal-dialog-centered modal-md">
+                        <div class="modal-content">
+                            <!-- Claim Modal Header -->
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="titlemodal">Add Login Credentials</h5>
+                                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            </div>
+                            <!--Claim Modal body -->
+                            <div class="modal-body" id="modal-body-content">
+                                <form action="{{ route('addUserLogin') }}" method="POST">
+                                    @csrf
+                                    <input class="form-control d-none" type="text" name="did" id="did" />
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="firstname">Firstname</label>
+                                            <input type="text" class="form-control" name="firstname"
+                                                placeholder="Firstname">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="middlename">Middlename</label>
+                                            <input type="text" class="form-control" name="middlename"
+                                                placeholder="Middlename">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-6">
+                                            <label for="lastname">Lastname</label>
+                                            <input type="text" class="form-control" name="lastname"
+                                                placeholder="Lastname">
+                                        </div>
+                                        <div class="form-group col-md-6">
+                                            <label for="area">Area</label>
+                                            <select name="area" class="form-control">
+
+                                                @foreach($area as $areaid)
+                                                <option value="{{ $areaid['areaid'] }}">{{ $areaid['areaname'] }}
+                                                </option>
+                                                @endforeach
+
+                                            </select>
+                                        </div>
+                                    </div>
+
+                            </div>
+                            <!--Claim Modal footer -->
+                            <div class="modal-footer">
+                                <button type="submit" name="submitAdd" class="btn btn-primary">Save</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- END OF MODIFY USER DETAILS MODAL -->
+
             </div>
         </div>
     </div>

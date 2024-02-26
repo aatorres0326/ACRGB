@@ -17,6 +17,10 @@
   <!-- Custom styles for this template-->
   <link href="{{ asset('admin_assets/css/global.min.css') }}" rel="stylesheet">
   <style>
+    .table-sm {
+      font-size: 8px;
+    }
+
     .btn-link:hover {
       text-decoration: none;
     }
@@ -182,17 +186,95 @@
   <!-- Page level plugins -->
   <script src="{{ asset('js/tableManager.js')}}"></script>
   <script src="{{ asset('js/app.js') }}"></script>
+  <!-- MODIFY USER DETAILS -->
+  <script>
+    function EditUserLogin(userid, username, status) {
+      document.getElementById("titlemodal").innerHTML = "Modify Login Credentials";
+      document.getElementsByName("userid")[0].setAttribute("value", userid);
+      document.getElementsByName("editusername")[0].setAttribute("placeholder", username);
+      document.getElementsByName("editpassword")[0].setAttribute("placeholder", "●●●●●●●●●●●●");
+      document.getElementsByName("status")[0].setAttribute("value", status);
+    }
+  </script>
+  <!-- END OF MODIFY USER DETAILS -->
 
+  <!--RESET PASSWORD -->
+  <script>
+    function generateRandomPassword() {
+
+      var numbers = "0123456789";
+      var lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
+      var uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+
+      var password = "";
+
+      // Ensure at least one of each type of character
+
+      password += numbers.charAt(Math.floor(Math.random() * numbers.length));
+      password += lowercaseLetters.charAt(Math.floor(Math.random() * lowercaseLetters.length));
+      password += uppercaseLetters.charAt(Math.floor(Math.random() * uppercaseLetters.length));
+
+      // Generate remaining characters
+      var remainingLength = 6; // Max length - 4 (already added characters)
+      var charset = symbols + numbers + lowercaseLetters + uppercaseLetters;
+      for (var i = 0; i < remainingLength; i++) {
+        var randomIndex = Math.floor(Math.random() * charset.length);
+        password += charset.charAt(randomIndex);
+      }
+
+      // Shuffle the password to make sure the added characters are not always at the beginning
+      password = shuffleString(password);
+
+      return password;
+    }
+
+    function shuffleString(str) {
+      var array = str.split('');
+      var currentIndex = array.length;
+      var temporaryValue, randomIndex;
+
+      // While there remain elements to shuffle...
+      while (0 !== currentIndex) {
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+      }
+
+      return array.join('');
+    }
+
+    function resetPassword() {
+      var passwordInput = document.getElementsByName("editpassword")[0];
+      var newPassword = '@' + generateRandomPassword();
+      passwordInput.value = newPassword;
+    }
+    function reset() {
+      var passwordInput = document.getElementsByName("editpassword")[0];
+      passwordInput.placeholder = "●●●●●●●●●";
+      passwordInput.value = ""; // Set value to placeholders
+    }
+  </script>
+  <!-- END OF RESET PASSWORD -->
+  <script>
+    $(document).ready(function () {
+      $('#myTable').DataTable({
+        "order": [[4, 'asc']] // Sort by the 5th column in ascending order by default
+      });
+    });
+  </script>
+  <!-- GET SELECTED USER DETAILS -->
   <script type="text/javascript">
-
-    function myFunctionEdit(did, lastname) {
+    function addLogin(did, lastname) {
       document.getElementById("titlemodal").innerHTML = "Add Login Credentials";
       document.getElementsByName("did")[0].setAttribute("value", did);
       document.getElementsByName("userlastname")[0].setAttribute("value", lastname);
-
       var currentDate = new Date();
       var philippinesTime = new Date(currentDate.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
-
       // Format date (without separators)
       var month = (philippinesTime.getMonth() + 1).toString().padStart(2, '0');
       var day = philippinesTime.getDate().toString().padStart(2, '0');
@@ -200,15 +282,11 @@
       var hours = philippinesTime.getHours().toString().padStart(2, '0');
       var minutes = philippinesTime.getMinutes().toString().padStart(2, '0');
       var seconds = philippinesTime.getSeconds().toString().padStart(2, '0');
-
       // Generate username
       var username = lastname + year + month + day + hours + minutes + seconds;
-
       // Update username field
       document.getElementsByName("username")[0].setAttribute("value", username);
-
       var password = '@' + generateRandomPassword();
-
       // Update password field
       document.getElementsByName("password")[0].setAttribute("value", password);
     }
@@ -217,33 +295,27 @@
       var length = 8;
       var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
       var password = "";
-
       while (!containsUppercase(password) || !containsLowercase(password) || !containsNumber(password)) {
         password = "";
-
         // Generate password with random characters
         for (var i = 0; i < length; i++) {
           var randomIndex = Math.floor(Math.random() * charset.length);
           password += charset[randomIndex];
         }
       }
-
       return password;
     }
-
     function containsUppercase(str) {
       return /[A-Z]/.test(str);
     }
-
     function containsLowercase(str) {
       return /[a-z]/.test(str);
     }
-
     function containsNumber(str) {
       return /\d/.test(str);
     }
-
   </script>
+  <!-- END OF GET SELECTED USER DETAILS -->
 
 
   <!-- TABLE SCRIPT -->

@@ -11,6 +11,7 @@
     {{ (request()->is('userlogins')) ? 'USER LOGIN MANAGEMENT' : '' }}
     {{ (request()->is('userinfo')) ? 'USER INFORMATION MANAGEMENT' : '' }}
     {{ (request()->is('area')) ? 'AREA MANAGEMENT' : '' }}
+    {{ (request()->is('userlevel')) ? 'ROLE MANAGEMENT' : '' }}
 
 
     <ul class="navbar-nav ml-auto">

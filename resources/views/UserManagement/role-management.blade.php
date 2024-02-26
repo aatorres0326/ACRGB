@@ -16,20 +16,20 @@
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
-                    <form action="" method="POST">
+                    <form action="{{ route('addUserLevel') }}" method="POST">
                         @csrf
 
                         <div class="form-row">
                             <div class="form-group col-md">
-                                <label for="levname">Username</label>
-                                <input type="text" class="form-control" name="levname" placeholder="Role">
+                                <label for="levname">Role</label>
+                                <input type="text" class="form-control" name="levname">
                             </div>
 
                         </div>
                         <div class="form-row">
                             <div class="form-group col-md">
-                                <label for="levdetails">Middlename</label>
-                                <input type="text" class="form-control" name="levdetails" placeholder="Role Details">
+                                <label for="levdetails">Details</label>
+                                <input type="text" class="form-control" name="levdetails">
                             </div>
                         </div>
 
@@ -47,10 +47,6 @@
             </div>
         </div>
     </div>
-
-
-
-
 
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">

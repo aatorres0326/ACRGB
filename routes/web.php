@@ -29,6 +29,8 @@ Route::get('facilities', [FacilityController::class, 'GetFacilities']);
 Route::get('/budgetmanagement', [App\Http\Controllers\PageController::class, 'budgetmanagement'])->name('budgetmanagement');
 Route::post('/add-user-info', [UsersManageController::class, 'addUserInfo'])->name('addUserInfo');
 Route::post('/add-user-login', [UsersManageController::class, 'addUserLogin'])->name('addUserLogin');
+Route::put('/edit-user-login', [UsersManageController::class, 'editUserLogin'])->name('editUserLogin');
+Route::post('/add-user-level', [UsersManageController::class, 'addUserLevel'])->name('addUserLevel');
 Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');
 Route::post('/add-area-type', [AreaController::class, 'addAreaType'])->name('addAreaType');
 Route::post('/add-area', [AreaController::class, 'addArea'])->name('addArea');

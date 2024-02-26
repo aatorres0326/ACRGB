@@ -6,65 +6,7 @@
 <div class="container-fluid">
 
     <!-- ADD USER MODAL -->
-    <div class="modal" id="add-user">
-        <div class="modal-dialog modal-dialog-centered modal-md">
-            <div class="modal-content">
-                <!-- Modal Header -->
-                <div class="modal-header  bg-gradient-light">
-                    <h6 class="modal-title">ADD USER</h6>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <!-- Modal body -->
-                <div class="modal-body">
-                    <form action="" method="POST">
-                        @csrf
 
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="username">Username</label>
-                                <input type="text" class="form-control" name="username" placeholder="Username">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="password">Password</label>
-                                <input type="password" class="form-control" name="password" placeholder="Password">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="firstname">Firstname</label>
-                                <input type="text" class="form-control" name="firstname" placeholder="Firstname">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="middlename">Middlename</label>
-                                <input type="text" class="form-control" name="middlename" placeholder="Middlename">
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div class="form-group col-md-6">
-                                <label for="lastname">Lastname</label>
-                                <input type="text" class="form-control" name="lastname" placeholder="Lastname">
-                            </div>
-                            <div class="form-group col-md-6">
-                                <label for="userlevel">User Level</label>
-                                <select name="role" class="form-control">
-
-                                    <option value="">Admin</option>
-                                    <option value="">Staff</option>
-
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Add</button> <button type="button"
-                                class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                        </div>
-                    </form>
-                </div>
-                <!-- Modal footer -->
-            </div>
-        </div>
-    </div>
 
 
 
@@ -90,7 +32,7 @@
                             <th class="text-center">Role</th>
                             <th class="text-center">Created By</th>
                             <th class="text-center">Date Created</th>
-                            <th class="text-center d-none">Status</th>
+                            <th class="text-center">Status</th>
                             <th class="disableSort disableFilterBy text-center"></th>
                         </tr>
                     </thead>
@@ -113,8 +55,20 @@
 
                             <td class="text-center d-none">{{ $user['status'] }}</td>
                             <td class="text-center">
-                                <a class="btn btn-sm btn-link text-darker-warning"><i class="fas fa-fw fa-edit"
-                                        data-toggle="tooltip" title="Edit"></i></a>
+                                @if($user['status'] == 1)
+                                <span>For Change</span>
+                                @elseif($user['status'] == 2)
+                                <span>Active</span>
+                                @endif
+                            </td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
+                                    data-target="#editLogin" onclick="EditUserLogin(
+                                                    '<?=$user['userid']?>',
+                                                     '<?=$user['username']?>',
+                                                      
+                                                    '<?=$user['status']?>'
+                                 )"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
                             </td>
 
                         </tr>
@@ -124,6 +78,54 @@
             </div>
         </div>
     </div>
+
+    <!-- END OF USERS TABLE -->
+
+    <!-- EDIT LOGIN CREDENTIALS MODAL -->
+    <div class="modal" id="editLogin" name="editLogin">
+        <div class="modal-dialog modal-dialog-centered modal-md">
+            <div class="modal-content">
+                <!-- Claim Modal Header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titlemodal">Modify Login Credentials</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="reset()">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!--Claim Modal body -->
+                <div class="modal-body" id="modal-body-content">
+                    <form action="{{ route('editUserLogin') }}" method="POST">
+                        @method('PUT')
+                        @csrf
+                        <input class="form-control d-none" type="text" name="userid" id="userid" />
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="username">Username</label>
+                                <input autocomplete="off" type="text" class="form-control" name="editusername"
+                                    id="username">
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="password">Password</label>
+                                <input autocomplete="off" type="text" class="form-control" name="editpassword"
+                                    placeholder="●●●●●●●●●">
+                                <a class="btn btn-link btn-sm float-right" onclick="resetPassword()"> Reset
+                                    Password</a>
+
+                            </div>
+                        </div>
+
+                </div>
+                <!--Claim Modal footer -->
+                <div class="modal-footer">
+                    <button type="submit" name="submitAdd" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal"
+                        onclick="reset()">Close</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- END OF EDIt LOGIN MODAL -->
 </div>
 
 

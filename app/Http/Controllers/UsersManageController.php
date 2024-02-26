@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 
 class UsersManageController extends Controller
 {
@@ -57,8 +58,14 @@ class UsersManageController extends Controller
         $area = json_decode($decodedArea['result'], true);
         $userlogin = json_decode($decodedapiUser['result'], true);
         $userLevel = json_decode($decodedapiLevel['result'], true);
-        // Debug: Dump the user list
 
+        // Debug: Dump the user list
+        $userInfoList = collect($userInfoList);
+        $facilities = collect($facilities);
+        $area = collect($area);
+        $userlogin = collect($userlogin);
+        $userLevel = collect($userLevel);
+        $userInfoList = $userInfoList->sortByDesc('datecreated');
 
         return view('UserManagement/users-info', compact('userInfoList', 'facilities', 'area', 'userlogin', 'userLevel'));
     }
@@ -108,6 +115,28 @@ class UsersManageController extends Controller
 
     }
 
+    public function editUserLogin(Request $request)
+    {
+
+
+
+        $response = Http::put('http://localhost:7001/ACRGB/ACRGBINSERT/UPDATEUSERCREDENTIALS', [
+            'userid' => $request->input('userid'),
+            'username' => $request->input('editusername'),
+            'userpassword' => $request->input('editpassword'),
+            'stats' => "1",
+
+
+
+        ]);
+
+        if ($response->successful()) {
+            return redirect('/userlogins');
+
+        }
+
+    }
+
     public function GetUserLevel()
     {
         // Assuming $apiResponse contains the JSON response from your API
@@ -127,6 +156,26 @@ class UsersManageController extends Controller
 
 
         return view('UserManagement/role-management', compact('userLevel'));
+    }
+
+    public function addUserLevel(Request $request)
+    {
+
+        $now = new DateTime();
+
+        $response = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTUSERLEVEL', [
+            'levname' => $request->input('levname'),
+            'levdetails' => $request->input('levdetails'),
+            'datecreated' => $now->format('m-d-Y'),
+            'createdby' => $request->input('createdby'),
+
+        ]);
+
+        if ($response->successful()) {
+            return redirect('/userlevel');
+
+        }
+
     }
 
 
