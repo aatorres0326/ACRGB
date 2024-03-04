@@ -5,7 +5,7 @@
 
 <div class="container-fluid">
 
-    <!-- ADD USER MODAL -->
+    <!-- ADD ROLE MODAL -->
     <div class="modal" id="add-role">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
@@ -14,7 +14,7 @@
                     <h6 class="modal-title">ADD ROLE</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <!-- Modal body -->
+
                 <div class="modal-body">
                     <form action="{{ route('addUserLevel') }}" method="POST">
                         @csrf
@@ -32,18 +32,14 @@
                                 <input type="text" class="form-control" name="levdetails">
                             </div>
                         </div>
-
-
                         <input type="text" class="form-control d-none" name="createdby" value="90">
-
-
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Add</button> <button type="button"
                                 class="btn btn-danger" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
                 </div>
-                <!-- Modal footer -->
+
             </div>
         </div>
     </div>
@@ -67,9 +63,7 @@
                     <thead>
                         <tr>
                             <th class="text-center">Role</th>
-
                             <th class="text-center">Details</th>
-
                             <th class="text-center">Created By</th>
                             <th class="text-center">Date Created</th>
                             <th class="text-center">Status</th>
@@ -80,19 +74,10 @@
                     <tbody>
                         @foreach($userLevel as $level)
                         <tr>
-
-
-
                             <td class="text-center">{{ $level['levname'] }}</td>
                             <td class="text-center">{{ $level['levdetails'] }}</td>
-
-
-
-
                             <td class="text-center">{{ $level['createdby'] }}</td>
                             <td class="text-center">{{ $level['datecreated'] }}</td>
-
-
                             <td class="text-center d-none">{{ $level['stats'] }}</td>
                             <td class="text-center">
                                 @if($level['stats'] == 1)

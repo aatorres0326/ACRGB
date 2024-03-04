@@ -7,11 +7,6 @@
 
     <!-- ADD USER MODAL -->
 
-
-
-
-
-
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
         <div class="card-body">
@@ -27,7 +22,6 @@
                     <thead>
                         <tr>
                             <th class="text-center">User ID</th>
-
                             <th class="text-center">Username</th>
                             <th class="text-center">Role</th>
                             <th class="text-center">Created By</th>
@@ -40,19 +34,11 @@
                     <tbody>
                         @foreach($userList as $user)
                         <tr>
-
-
                             <td class="text-center">{{ $user['userid'] }}</td>
                             <td class="text-center">{{ $user['username'] }}</td>
-
                             <td class="text-center">{{ $user['leveid'] }}</td>
-
-
-
                             <td class="text-center">{{ $user['createdby'] }}</td>
                             <td class="text-center">{{ $user['datecreated'] }}</td>
-
-
                             <td class="text-center d-none">{{ $user['status'] }}</td>
                             <td class="text-center">
                                 @if($user['status'] == 1)
@@ -61,7 +47,10 @@
                                 <span>Active</span>
                                 @endif
                             </td>
+
                             <td class="text-center">
+                                <a class="btn btn-sm btn-link text-primary" href="/useraccess"><i
+                                        class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></a>
                                 <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
                                     data-target="#editLogin" onclick="EditUserLogin(
                                                     '<?=$user['userid']?>',
@@ -70,6 +59,7 @@
                                                     '<?=$user['status']?>'
                                  )"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
                             </td>
+
 
                         </tr>
                         @endforeach
@@ -85,14 +75,14 @@
     <div class="modal" id="editLogin" name="editLogin">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
-                <!-- Claim Modal Header -->
+
                 <div class="modal-header">
                     <h5 class="modal-title" id="titlemodal">Modify Login Credentials</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="reset()">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <!--Claim Modal body -->
+
                 <div class="modal-body" id="modal-body-content">
                     <form action="{{ route('editUserLogin') }}" method="POST">
                         @method('PUT')
@@ -115,7 +105,7 @@
                         </div>
 
                 </div>
-                <!--Claim Modal footer -->
+
                 <div class="modal-footer">
                     <button type="submit" name="submitAdd" class="btn btn-primary">Save</button>
                     <button type="button" class="btn btn-secondary" data-dismiss="modal"

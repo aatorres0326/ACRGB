@@ -256,17 +256,11 @@
     function reset() {
       var passwordInput = document.getElementsByName("editpassword")[0];
       passwordInput.placeholder = "●●●●●●●●●";
-      passwordInput.value = ""; // Set value to placeholders
+      passwordInput.value = "";
     }
   </script>
   <!-- END OF RESET PASSWORD -->
-  <script>
-    $(document).ready(function () {
-      $('#myTable').DataTable({
-        "order": [[4, 'asc']] // Sort by the 5th column in ascending order by default
-      });
-    });
-  </script>
+
   <!-- GET SELECTED USER DETAILS -->
   <script type="text/javascript">
     function addLogin(did, lastname) {
@@ -275,7 +269,7 @@
       document.getElementsByName("userlastname")[0].setAttribute("value", lastname);
       var currentDate = new Date();
       var philippinesTime = new Date(currentDate.toLocaleString('en-US', { timeZone: 'Asia/Manila' }));
-      // Format date (without separators)
+
       var month = (philippinesTime.getMonth() + 1).toString().padStart(2, '0');
       var day = philippinesTime.getDate().toString().padStart(2, '0');
       var year = philippinesTime.getFullYear();
@@ -393,9 +387,7 @@
     $(document).ready(function () {
       $('.create-login').click(function () {
         var userID = $(this).data('userid');
-        // Now you have the userID of the selected row, you can use it as needed
         console.log("User ID:", userID);
-        // Perform any further actions with the userID here
       });
     });
   </script>

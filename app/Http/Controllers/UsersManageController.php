@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use DateTime;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
-use Illuminate\Support\Collection;
+
 
 class UsersManageController extends Controller
 {
@@ -33,15 +33,11 @@ class UsersManageController extends Controller
 
     public function GetUsersInfo()
     {
-        // Assuming $apiResponse contains the JSON response from your API
         $apiUserInfo = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserInfo/ACTIVE');
         $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
         $apiArea = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetArea/ACTIVE');
         $apiUser = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUser/ACTIVE');
         $apiLevel = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserLevel/ACTIVE');
-
-        // Debug: Dump the HTTP response
-
 
         // Extract the JSON response body
         $decodedFacilityResponse = $facilityapiResponse->json();
@@ -59,7 +55,6 @@ class UsersManageController extends Controller
         $userlogin = json_decode($decodedapiUser['result'], true);
         $userLevel = json_decode($decodedapiLevel['result'], true);
 
-        // Debug: Dump the user list
         $userInfoList = collect($userInfoList);
         $facilities = collect($facilities);
         $area = collect($area);
@@ -80,7 +75,7 @@ class UsersManageController extends Controller
             'firstname' => $request->input('firstname'),
             'middlename' => $request->input('middlename'),
             'lastname' => $request->input('lastname'),
-            'areaid' => $request->input('area'),
+            // 'areaid' => $request->input('area'),
             'datecreated' => $now->format('m-d-Y'),
             'createdby' => $request->input('createdby'),
             'hcfid' => $request->input('hcfid'),
@@ -118,15 +113,10 @@ class UsersManageController extends Controller
     public function editUserLogin(Request $request)
     {
 
-
-
-        $response = Http::put('http://localhost:7001/ACRGB/ACRGBINSERT/UPDATEUSERCREDENTIALS', [
+        $response = Http::put('http://localhost:7001/ACRGB/ACRGBUPDATE/UPDATEUSERCREDENTIALS', [
             'userid' => $request->input('userid'),
             'username' => $request->input('editusername'),
             'userpassword' => $request->input('editpassword'),
-            'stats' => "1",
-
-
 
         ]);
 
@@ -139,21 +129,12 @@ class UsersManageController extends Controller
 
     public function GetUserLevel()
     {
-        // Assuming $apiResponse contains the JSON response from your API
 
         $apiUserLevel = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserLevel/ACTIVE');
 
-
-        // Extract the JSON response body
-
         $decodedapiUserLevel = $apiUserLevel->json();
 
-        // Extract the result array
-
         $userLevel = json_decode($decodedapiUserLevel['result'], true);
-
-        // Debug: Dump the user list
-
 
         return view('UserManagement/role-management', compact('userLevel'));
     }
@@ -176,6 +157,29 @@ class UsersManageController extends Controller
 
         }
 
+    }
+
+    public function GetFacilities()
+    {
+
+        $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
+
+        // Extract the JSON response body
+        $decodedFacilityResponse = $facilityapiResponse->json();
+
+
+
+
+        // Extract the result array
+
+        $facilities = json_decode($decodedFacilityResponse['result'], true);
+
+
+
+        $facilities = collect($facilities);
+
+
+        return view('UserManagement/access-assignments', compact('facilities'));
     }
 
 

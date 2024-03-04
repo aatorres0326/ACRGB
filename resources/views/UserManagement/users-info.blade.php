@@ -14,8 +14,6 @@
                     <h6 class="modal-title">ADD USER</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-
-                <!-- Modal body -->
                 <div class="modal-body">
                     <form action="{{ route('addUserInfo') }}" method="POST">
                         @csrf
@@ -39,9 +37,7 @@
                                 <label for="area">Area</label>
                                 <select name="area" class="form-control">
 
-                                    @foreach($area as $areaid)
-                                    <option value="{{ $areaid['areaid'] }}">{{ $areaid['areaname'] }}</option>
-                                    @endforeach
+
 
                                 </select>
                             </div>
@@ -69,7 +65,6 @@
                         </div>
                     </form>
                 </div>
-                <!-- Modal footer -->
             </div>
         </div>
     </div>
@@ -100,10 +95,8 @@
                             <th>Name</th>
                             <th class="text-center">Login Credential</th>
                             <th class="text-center">Facility</th>
-                            <th class="text-center">Area</th>
                             <th class="text-center">Creation Date</th>
                             <th class="text-center d-none">Created By</th>
-
                             <th class="disableSort disableFilterBy text-center">Action</th>
 
                         </tr>
@@ -112,16 +105,16 @@
                     <tbody>
                         @foreach($userInfoList as $user)
                         <tr>
-                            <td>{{ $user['firstname'] ." ". $user['middlename'] ." ". $user['lastname']}}</td>
+                            <td>{{ $user['firstname'] . " " . $user['middlename'] . " " . $user['lastname']}}</td>
 
                             @php
-                            $login = "No Login Credentials";
-                            foreach ($userlogin as $userlog) {
-                            if ($userlog['did'] === $user['did']) {
-                            $login = $userlog['username'];
-                            break;
-                            }
-                            }
+    $login = "No Login Credentials";
+    foreach ($userlogin as $userlog) {
+        if ($userlog['did'] === $user['did']) {
+            $login = $userlog['username'];
+            break;
+        }
+    }
                             @endphp
                             @if (Str::contains($login, 'No Login Credentials'))
                             <td class="text-center" style="color: #e9967a">{{ $login }}</td>
@@ -130,13 +123,13 @@
                             @endif
 
                             @php
-                            $facilityName = "Facility Not Found" . " (Facility ID " . $user['hcfid'] . " )";
-                            foreach ($facilities as $facility) {
-                            if ($facility['hcfid'] === $user['hcfid']) {
-                            $facilityName = $facility['hcfname'];
-                            break;
-                            }
-                            }
+    $facilityName = "Facility Not Found" . " (Facility ID " . $user['hcfid'] . " )";
+    foreach ($facilities as $facility) {
+        if ($facility['hcfid'] === $user['hcfid']) {
+            $facilityName = $facility['hcfname'];
+            break;
+        }
+    }
                             @endphp
                             @if (Str::contains($facilityName, 'Facility Not Found'))
                             <td class="text-center" style="color: #e9967a">{{ $facilityName }}</td>
@@ -144,20 +137,6 @@
                             <td class="text-center">{{ $facilityName }}</td>
                             @endif
 
-                            @php
-                            $areaName = "Facility Not Found" . " (Facility ID " . $areaid['areaid'] . " )";
-                            foreach ($area as $areaid) {
-                            if ($areaid['areaid'] === $user['areaid']) {
-                            $areaName = $areaid['areaname'];
-                            break;
-                            }
-                            }
-                            @endphp
-                            @if (Str::contains($areaName, 'Facility Not Found'))
-                            <td style="color: #e9967a">{{ $areaName }}</td>
-                            @else
-                            <td class="text-center">{{ $areaName }}</td>
-                            @endif
 
 
                             <td class="text-center">{{ $user['datecreated'] }}</td>
@@ -167,13 +146,13 @@
                             <td>
                                 <center>
                                     @php
-                                    $login = "Credentials Not Found";
-                                    foreach ($userlogin as $userlog) {
-                                    if ($userlog['did'] === $user['did']) {
-                                    $login = $userlog['username'];
-                                    break;
-                                    }
-                                    }
+    $login = "Credentials Not Found";
+    foreach ($userlogin as $userlog) {
+        if ($userlog['did'] === $user['did']) {
+            $login = $userlog['username'];
+            break;
+        }
+    }
                                     @endphp
                                     @if (Str::contains($login, 'Credentials Not Found'))
                                     <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin" onclick="addLogin(
@@ -206,12 +185,12 @@
                 <div class="modal" id="addlogin" name="addlogin">
                     <div class="modal-dialog modal-dialog-centered modal-md">
                         <div class="modal-content">
-                            <!-- Claim Modal Header -->
+
                             <div class="modal-header">
                                 <h5 class="modal-title" id="titlemodal">Add Login Credentials</h5>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
-                            <!--Claim Modal body -->
+
                             <div class="modal-body" id="modal-body-content">
                                 <form action="{{ route('addUserLogin') }}" method="POST">
                                     @csrf
@@ -242,7 +221,7 @@
                                     </div>
 
                             </div>
-                            <!--Claim Modal footer -->
+
                             <div class="modal-footer">
                                 <button type="submit" name="submitAdd" class="btn btn-primary">Save</button>
                             </div>
@@ -258,12 +237,12 @@
                 <div class="modal" id="editUser" name="editUser">
                     <div class="modal-dialog modal-dialog-centered modal-md">
                         <div class="modal-content">
-                            <!-- Claim Modal Header -->
+
                             <div class="modal-header">
                                 <h5 class="modal-title" id="titlemodal">Add Login Credentials</h5>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
-                            <!--Claim Modal body -->
+
                             <div class="modal-body" id="modal-body-content">
                                 <form action="{{ route('addUserLogin') }}" method="POST">
                                     @csrf
@@ -290,17 +269,12 @@
                                             <label for="area">Area</label>
                                             <select name="area" class="form-control">
 
-                                                @foreach($area as $areaid)
-                                                <option value="{{ $areaid['areaid'] }}">{{ $areaid['areaname'] }}
-                                                </option>
-                                                @endforeach
-
                                             </select>
                                         </div>
                                     </div>
 
                             </div>
-                            <!--Claim Modal footer -->
+
                             <div class="modal-footer">
                                 <button type="submit" name="submitAdd" class="btn btn-primary">Save</button>
                             </div>

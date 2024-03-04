@@ -55,15 +55,19 @@
             aria-controls="collapseOne">
             <i class="fas fa-fw fa-users"></i><span>&nbsp;Users</span>
         </a>
-        <div id="collapseOne"
-            class="collapse {{ (request()->is('userlogins')) ? 'show' : '' }} {{ (request()->is('userinfo')) ? 'show' : '' }}"
-            data-parent="#accordion">
+        <div id="collapseOne" class="collapse
+            {{ (request()->is('userlogins')) ? 'show' : '' }}
+            {{ (request()->is('userinfo')) ? 'show' : '' }}
+            {{ (request()->is('userlevel')) ? 'show' : '' }}
+            {{ (request()->is('useraccess')) ? 'show' : '' }}" data-parent="#accordion">
             <!-- Nav Item - Pages Collapse Menu -->
             <div class="bg-white py-2 collapse-inner rounded">
                 <ul class="navbar-nav">
 
                     <li class="nav-item">
-                        <a class="collapse-item {{ (request()->is('userlogins')) ? 'active' : '' }}" href="/userlogins">
+                        <a class="collapse-item
+                        {{ (request()->is('userlogins')) ? 'active' : '' }}
+                        {{ (request()->is('useraccess')) ? 'active' : '' }}" href="/userlogins">
 
                             <span>Login Details</span></a>
                     </li>

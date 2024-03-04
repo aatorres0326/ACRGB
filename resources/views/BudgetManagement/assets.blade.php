@@ -5,7 +5,7 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
-  <div class="modal" id="add-assets">
+  <div class="modal" id="add-assets"
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
         <div class="modal-header">
@@ -75,33 +75,68 @@
           </div>
           <thead>
             <tr>
-              <th>Asset ID</th>
-              <th>Amount</th>
-              <th>Transaction Number</th>
-              <th>Type of Asset</th>
-              <th>Source of Funds</th>
-              <th>Date Received</th>
-              <th>Encoded By</th>
+              <th>Facility</th>
+              <th class="text-center">Tranch</th>
+              <th class="text-center">Receipt</th>
+              <th class="text-center">Amount</th>
+              <th class="text-center">Created By</th>
+              <th class="text-center">Date Released</th>
+              <th class="text-center">Dare Created</th>
               <!-- <th>Accreditation</th> -->
-              <th class="disableSort disableFilterBy"></th>
+              <th class="disableSort disableFilterBy text-center">Action</th>
             </tr>
           </thead>
           <tbody>
-            <?php
-          for ($i = 1; $i <= 20; $i++) {
-              echo '<tr>';
-              echo '<td>00000000' . $i . '</td>';
-              echo '<td>' . number_format(10000000 + $i * 500000, 0) . '</td>';
-              echo '<td>TRX000' . $i . '</td>';
-              echo '<td>Cash</td>';
-              echo '<td>Bank</td>';
-              echo '<td>November ' . ($i % 30 + 1) . ', 2023</td>';
-              echo '<td>Admin</td>';
-              // echo '<td>Encoder ' . $i . '</td>';
-              echo '<td><button data-toggle="modal" class="btn-sm btn-warning">Edit</button></td>';
-              echo '</tr>';
-          }
-          ?>
+            @foreach($Assets as $asset)
+                        <tr>
+
+
+<!-- FACILITY ROW -->
+                             @php
+  $facilityName = "Facility Not Found" . " (Facility ID " . $asset['hcfid'] . " )";
+  foreach ($Facilities as $facility) {
+    if ($facility['hcfid'] === $asset['hcfid']) {
+      $facilityName = $facility['hcfname'];
+      break;
+    }
+  }
+                            @endphp
+                            @if (Str::contains($facilityName, 'Facility Not Found'))
+                            <td class="text-center" style="color: #e9967a">{{ $facilityName }}</td>
+                            @else
+                            <td class="text-center">{{ $facilityName }}</td>
+                            @endif
+<!-- END OF FACILITY ROW -->
+
+<!-- TRANCH ROW -->
+                                                        @php
+  $TranchName = "Tranch Not Found" . " (Tranch ID " . $asset['tranchid'] . " )";
+  foreach ($Tranch as $tranchid) {
+    if ($tranchid['tranchid'] === $asset['tranchid']) {
+      $TranchName = $tranchid['tranchtype'];
+      break;
+    }
+  }
+                            @endphp
+                            @if (Str::contains($TranchName, 'Tranch Not Found'))
+                            <td class="text-center" style="color: #e9967a">{{ $TranchName }}</td>
+                            @else
+                            <td class="text-center">{{ $TranchName }}</td>
+                            @endif
+
+<!-- END OF TRANCH ROW -->
+                            <td class="text-center">{{ $asset['receipt'] }}</td>
+                            <td class="text-center">{{ $asset['amount'] }}</td>
+                            <td class="text-center">{{ $asset['createdby'] }}</td>
+                            <td class="text-center">{{ $asset['datereleased'] }}</td>
+                            <td class="text-center">{{ $asset['datecreated'] }}</td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-link text-darker-warning"><i class="fas fa-fw fa-edit"
+                                        data-toggle="tooltip" title="Edit"></i></a>
+                            </td>
+
+                        </tr>
+                        @endforeach
           </tbody>
         </table>
       </div>

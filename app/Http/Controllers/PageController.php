@@ -11,28 +11,12 @@ class PageController extends Controller
     {
         return view('dashboard');
     }
-    public function profile()
-    {
-        return view('profile');
-    }
 
-    public function table()
-    {
-        return view('table');
-    }
-
-    public function users()
-    {
-        return view('users');
-    }
     public function assets()
     {
         return view('BudgetManagement/assets');
     }
-    public function xmlupload()
-    {
-        return view('xml-upload');
-    }
+
     public function budgetmanagement()
     {
         return view('BudgetManagement/budget-management');

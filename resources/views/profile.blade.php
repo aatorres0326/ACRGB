@@ -3,9 +3,11 @@
 @section('title', 'Profile')
 
 @section('contents')
-<h1 class="mb-0">Profile</h1>
-<hr />
-<form method="POST" enctype="multipart/form-data" id="profile_setup_frm" action="">
+
+
+<form method="POST" action="{{ route('UpdateProfileLogin') }}">
+    @method('PUT')
+    @csrf
     <div class="row">
         <div class="col-md-12 border-right">
             <div class="p-3 py-5">
@@ -13,30 +15,103 @@
                     <h4 class="text-right">Profile Settings</h4>
                 </div>
                 <div class="row" id="res"></div>
+                <!-- ROW -->
                 <div class="row mt-2">
-
                     <div class="col-md-6">
                         <label class="labels">Name</label>
-                        <input type="text" name="name" class="form-control" placeholder="first name"
-                            value="{{ auth()->user()->name }}">
+                        <input type="text" class="form-control" disabled
+                            placeholder="{{ session()->get('firstname') . " " . session()->get('middlename') . " " . session()->get('lastname') }}">
                     </div>
                     <div class="col-md-6">
-                        <label class="labels">Email</label>
-                        <input type="text" name="email" disabled class="form-control"
-                            value="{{ auth()->user()->email }}" placeholder="Email">
+                        <label class="labels">User Level</label>
+                        <input type="text" class="form-control" disabled placeholder="{{ session()->get('leveid') }}">
+                    </div>
+                </div>
+                <!-- END ROW -->
+
+                <!-- ROW -->
+                <div class="row mt-2">
+
+                    @php
+                    $facilityName = "Facility Not Found" . " (Facility ID " . session()->get('hcfid') . ")";
+
+                    foreach ($facilities as $facility) {
+                    $hcfid = session()->get('hcfid');
+                    if ($facility['hcfid'] === $hcfid) {
+                    $facilityName = $facility['hcfname'];
+                    break;
+                    }
+                    }
+                    @endphp
+
+                    @if (Str::contains($facilityName, 'Facility Not Found'))
+                    <div class="col-md-6">
+                        <label class="labels">Facility Assignment</label>
+                        <input type="text" class="form-control" style="color: #e9967a" disabled
+                            placeholder="{{ $facilityName }}">
+                    </div>
+                    @else
+                    <div class="col-md-6">
+                        <label class="labels">Facility Assignment</label>
+                        <input type="text" class="form-control" disabled placeholder="{{ $facilityName }}">
+                    </div>
+                    @endif
+
+                    @php
+                    $areaName = "Area Not Found" . " (Area ID " . session()->get('areaid') . ")";
+
+                    foreach ($area as $area_id) {
+                    $areaid = session()->get('areaid');
+                    if ($area_id['areaid'] === $areaid) {
+                    $areaName = $area_id['areaname'];
+                    break;
+                    }
+                    }
+                    @endphp
+
+
+                    @if (Str::contains($areaName, 'Area Not Found'))
+                    <div class="col-md-6">
+                        <label class="labels">Area</label>
+                        <input type="text" class="form-control" style="color: #e9967a" disabled
+                            placeholder="{{ $areaName }}">
+                    </div>
+                    @else
+                    <div class="col-md-6">
+                        <label class="labels">Area</label>
+                        <input type="text" class="form-control" disabled placeholder="{{ $areaName }}">
+                    </div>
+                    @endif
+
+                </div>
+                <!-- END ROW -->
+
+                <!-- ROW -->
+                <div class="row mt-2">
+
+                    <input type="text" name="userid" class="form-control d-none" value="{{ session()->get('userid') }}">
+                    @php
+                    foreach ($userInfoList as $details) {
+                    $userID = session()->get('userid');
+                    if ($details['userid'] === $userID) {
+                    $username = $details['username'];
+                    break;
+                    }
+                    }
+                    @endphp
+                    <div class="col-md-6">
+                        <label class="labels">Username</label>
+                        <input type="text" name="editusername" class="form-control" placeholder="{{ $username }}">
+
+                    </div>
+                    <div class="col-md-6">
+                        <label class="labels">Password</label>
+                        <input type="password" name="editpassword" class="form-control" placeholder="●●●●●●●●●">
                     </div>
                 </div>
                 <div class="row mt-2">
-                    <div class="col-md-6">
-                        <label class="labels">Phone</label>
-                        <input type="text" name="phone" class="form-control" placeholder="Phone Number"
-                            value="{{ auth()->user()->phone }}">
-                    </div>
-                    <div class="col-md-6">
-                        <label class="labels">Address</label>
-                        <input type="text" name="address" class="form-control" value="{{ auth()->user()->address }}"
-                            placeholder="Address">
-                    </div>
+
+
                 </div>
 
                 <div class="mt-5 text-center"><button id="btn" class="btn btn-primary profile-button" type="submit">Save
