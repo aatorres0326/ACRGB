@@ -16,45 +16,53 @@
 </head>
 
 <body class="bg-gradient-light">
-  <div class="container"> <!-- Outer Row -->
+  <div class="container">
     <div class="row justify-content-center">
       <div class="col-xl-10 col-lg-12 col-md-0">
         <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
-            <!-- Nested Row within Card Body -->
+            
             <div class="row">
-              <!--div class="col-lg-6 d-none d-lg-block bg-login-image"></div-->
               <div class="col-lg-6">
-                <center><img class="mb-4 p-5" src="{{ asset('admin_assets/img/ACR_GBlogo.png') }}" alt="" width="350">
+                <center><img class="mb-2 p-5" src="{{ asset('admin_assets/img/ACR_GBlogo.png') }}" alt="" width="350">
                 </center>
               </div>
               <div class="col-lg-6">
                 <div class="p-5">
-                  <form action="{{ route('login.action') }}" method="POST" class="user">
+                  <form action="{{ route('login.action') }}" method="POST" class="user" style="max-height: 200px;">
                     @csrf
-                    @if ($errors->any())
-                    <div class="alert alert-danger">
-                      <ul? @foreach ($errors->all() as $error) <li>{{ $error }}</li>
-                        @endforeach
-                        </ul>
-                    </div>
-                    @endif
+                    
                     <div class="form-group">
-                      <input name="username" type="text" class="form-control form-control-user" id="exampleInputEmail"
-                        placeholder="Username">
+                      <input autocomplete="off" name="username" type="text" class="form-control form-control-user" id="exampleInputEmail"
+                        placeholder="Username" required>
                     </div>
                     <div class="form-group">
-                      <input name="password" type="password" class="form-control form-control-user"
-                        id="exampleInputPassword" placeholder="Password">
+                      <input autocomplete="off" name="password" type="password" class="form-control form-control-user"
+                        id="exampleInputPassword" placeholder="Password" required>
                     </div>
-
                     <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
+                    @if ($errors->any() || session('error'))
+    <div class="alert alert-danger alert-dismissible alert-sm mt-2 fade show"style="position:relative;" role="alert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @if ($errors->any())
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        @endif
+        @if (session('error'))
+            {{ session('error') }}
+        @endif
+    </div>
+@endif
                   </form>
-                  <hr>
 
+
+             
                 </div>
-
-
               </div>
             </div>
           </div>
@@ -62,13 +70,12 @@
       </div>
     </div>
   </div>
-  <!-- Bootstrap core JavaScript-->
+
   <script src="{{ asset('admin_assets/vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('admin_assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
-  <!-- Core plugin JavaScript-->
   <script src="{{ asset('admin_assets/vendor/jquery-easing/jquery.easing.min.js') }}"></script>
-  <!-- Custom scripts for all pages-->
   <script src="{{ asset('admin_assets/js/global.min.js') }}"></script>
+
 </body>
 
 </html>

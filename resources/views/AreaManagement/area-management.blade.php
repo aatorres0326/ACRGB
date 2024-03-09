@@ -6,7 +6,7 @@
 <div class="container-fluid">
 
     <!-- ADD AREA TYPE MODAL -->
-    <!-- GET SESSION USERID -->
+    
     <div class="modal" id="add-area-t">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
@@ -131,13 +131,13 @@
 
                                     <td>{{ $Area['areaname'] }}</td>
                                     @php
-                                    $AreaTypeName = "Facility Not Found" . " ( Area Type ID " . $Area['typeid'] . " )";
-                                    foreach ($AreaType as $AreaT) {
-                                    if ($AreaT['typeid'] === $Area['typeid']) {
-                                    $AreaTypeName = $AreaT['typename'];
-                                    break;
-                                    }
-                                    }
+    $AreaTypeName = "Facility Not Found" . " ( Area Type ID " . $Area['typeid'] . " )";
+    foreach ($AreaType as $AreaT) {
+        if ($AreaT['typeid'] === $Area['typeid']) {
+            $AreaTypeName = $AreaT['typename'];
+            break;
+        }
+    }
                                     @endphp
                                     @if (Str::contains($AreaTypeName, 'Facility Not Found'))
                                     <td style="color: #e9967a">{{ $AreaTypeName }}</td>

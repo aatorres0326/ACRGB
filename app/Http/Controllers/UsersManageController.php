@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
 
+
 class UsersManageController extends Controller
 {
 
@@ -159,12 +160,22 @@ class UsersManageController extends Controller
 
     }
 
-    public function GetFacilities()
+    public function GetAccess(Request $request)
     {
 
+        // GET MANAGING BOARD
+
+
+        // GET PROS
+        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro/ACTIVE');
+        $decodedPro = $apiPro->json();
+        $RegionalOffices = json_decode($decodedPro['result'], true);
+
+        $RoleIndexResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndex/0');
         $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
 
         // Extract the JSON response body
+        $decodedRoleIndexResponse = $RoleIndexResponse->json();
         $decodedFacilityResponse = $facilityapiResponse->json();
 
 
@@ -172,14 +183,45 @@ class UsersManageController extends Controller
 
         // Extract the result array
 
-        $facilities = json_decode($decodedFacilityResponse['result'], true);
+        $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
+        $Facilities = json_decode($decodedFacilityResponse['result'], true);
+
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+
+        $decodedMB = $apiMB->json();
+
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        $RoleIndex = collect($RoleIndex);
+        $Facilities = collect($Facilities);
+        $ManagingBoard = collect($ManagingBoard);
 
 
 
-        $facilities = collect($facilities);
+
+        $SelectedUserRole = $request->query('leveid', '');
 
 
-        return view('UserManagement/access-assignments', compact('facilities'));
+
+        return view('UserManagement/access-assignments', compact('RoleIndex', 'Facilities', 'RegionalOffices', 'ManagingBoard', 'SelectedUserRole'));
+    }
+    public function INSERTROLEINDEX(Request $request)
+    {
+
+        $now = new DateTime();
+        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTROLEINDEX', [
+            'userid' => $request->input('userid'),
+            'accessid' => $request->input('accessid'),
+            'createdby' => $request->input('createdby'),
+            'datecreated' => $now->format('m-d-Y'),
+
+        ]);
+
+        if ($AddProResponse->successful()) {
+            return redirect('/useraccess');
+
+        }
+
     }
 
 

@@ -198,6 +198,19 @@
   </script>
   <!-- END OF MODIFY USER DETAILS -->
 
+  <!-- GET USER DETAILS FOR ACCESS MANAGEMENT -->
+  <script>
+function DisplayUserDetails(userid, username, leveid) {
+    // Storing user details in localStorage
+    localStorage.setItem('getUserId', userid);
+    localStorage.setItem('getUsername', username);
+    localStorage.setItem('getLevel', leveid);
+    
+    // Redirecting to the new page
+      window.location.href = "/useraccess?leveid=" + leveid;
+}
+  </script>
+
   <!--RESET PASSWORD -->
   <script>
     function generateRandomPassword() {

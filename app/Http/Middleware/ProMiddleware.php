@@ -5,16 +5,19 @@ namespace App\Http\Middleware;
 use Closure;
 
 
-class AdminMiddleware
+class ProMiddleware
 {
     public function handle($request, Closure $next)
     {
-        if (session()->has('leveid') && session('leveid') !== 'ADMIN') {
+        $levelId = session('leveid');
+
+        if ($levelId !== 'PRO' && $levelId !== 'ADMIN') {
             return response()->view('errors.unauthorized', [], 403);
         }
 
         return $next($request);
     }
 }
+
 
 

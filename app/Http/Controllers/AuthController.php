@@ -3,11 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\User;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
@@ -18,6 +13,11 @@ class AuthController extends Controller
     public function login()
     {
         return view('auth/login');
+    }
+
+    public function changelogin()
+    {
+        return view('auth/changelogin');
     }
 
 
@@ -43,16 +43,55 @@ class AuthController extends Controller
                 $this->startUserSession($result);
 
 
-                return view('dashboard', compact('result'));
+                if ($result['status'] === '1') {
+                    return view('auth/changelogin', compact('result'));
+                } elseif ($result['leveid'] === 'PRO') {
+                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+
+                    $decodedMB = $apiMB->json();
+
+                    $ManagingBoard = json_decode($decodedMB['result'], true);
+
+                    return view('AreaManagement/managing-board', compact('ManagingBoard'));
+                } elseif ($result['leveid'] === 'ADMIN') {
+                    $apiUserInfo = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserInfo/ACTIVE');
+                    $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
+                    $apiArea = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetArea/ACTIVE');
+                    $apiUser = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUser/ACTIVE');
+                    $apiLevel = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserLevel/ACTIVE');
+
+                    // Extract the JSON response body
+                    $decodedFacilityResponse = $facilityapiResponse->json();
+                    $decodedUserInfo = $apiUserInfo->json();
+                    $decodedArea = $apiArea->json();
+                    $decodedapiUser = $apiUser->json();
+                    $decodedapiLevel = $apiLevel->json();
 
 
+
+                    // Extract the result array
+                    $userInfoList = json_decode($decodedUserInfo['result'], true);
+                    $facilities = json_decode($decodedFacilityResponse['result'], true);
+                    $area = json_decode($decodedArea['result'], true);
+                    $userlogin = json_decode($decodedapiUser['result'], true);
+                    $userLevel = json_decode($decodedapiLevel['result'], true);
+
+                    $userInfoList = collect($userInfoList);
+                    $facilities = collect($facilities);
+                    $area = collect($area);
+                    $userlogin = collect($userlogin);
+                    $userLevel = collect($userLevel);
+                    $userInfoList = $userInfoList->sortByDesc('datecreated');
+
+                    return view('UserManagement/users-info', compact('userInfoList', 'facilities', 'area', 'userlogin', 'userLevel'));
+                } else {
+                    return view('dashboard', compact('result'));
+                }
             } else {
-                return response()->json(['error' => 'Login failed. API response indicates failure.' . $response]);
+                return redirect()->back()->with('error', $response['message']);
             }
-
         } else {
-
-            return response()->json(['error' => 'Failed to perform login.'], $response->status());
+            return redirect()->back()->with('error', 'Invalid username or password.');
         }
     }
 
@@ -70,8 +109,8 @@ class AuthController extends Controller
             'middlename' => $userDetails['middlename'],
             'lastname' => $userDetails['lastname'],
             'did' => $userDetails['did'],
-            'areaid' => $userDetails['areaid'],
             'hcfid' => $userDetails['hcfid'],
+            'status' => $userData['status'],
         ]);
 
     }

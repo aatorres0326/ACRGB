@@ -76,6 +76,72 @@ class AreaController extends Controller
 
     }
 
+
+    // REGIONAL OFFICE CONTROLLER
+    public function GetRegionalOffice()
+    {
+
+        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro/ACTIVE');
+
+        $decodedPro = $apiPro->json();
+
+        $RegionalOffices = json_decode($decodedPro['result'], true);
+
+        return view('AreaManagement/pro-management', compact('RegionalOffices'));
+    }
+
+    public function addPro(Request $request)
+    {
+
+        $now = new DateTime();
+        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTPRO', [
+            'proname' => $request->input('proname'),
+            'createdby' => $request->input('createdby'),
+            'datecreated' => $now->format('m-d-Y'),
+
+        ]);
+
+        if ($AddProResponse->successful()) {
+            return redirect('/pro');
+
+        }
+
+    }
+
+    // END OF REGIONAL OFFICE CONTROLLER
+
+    // MANAGING BOARD CONTROLLER
+
+    public function GetManagingBoard()
+    {
+
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+
+        $decodedMB = $apiMB->json();
+
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        return view('AreaManagement/managing-board', compact('ManagingBoard'));
+    }
+    public function INSERTManagingBoard(Request $request)
+    {
+
+        $now = new DateTime();
+        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTManagingBoard', [
+            'mbname' => $request->input('mbname'),
+            'createdby' => $request->input('createdby'),
+            'datecreated' => $now->format('m-d-Y'),
+
+        ]);
+
+        if ($AddProResponse->successful()) {
+            return redirect('/managingboard');
+
+        }
+
+    }
+
+
 }
 
 

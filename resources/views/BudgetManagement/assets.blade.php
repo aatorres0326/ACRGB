@@ -5,7 +5,7 @@
 <!-- Begin Page Content -->
 <div class="container-fluid">
 
-  <div class="modal" id="add-assets"
+  <!-- <div class="modal" id="add-assets">
     <div class="modal-dialog modal-dialog-centered modal-md">
       <div class="modal-content">
         <div class="modal-header">
@@ -13,7 +13,6 @@
           <button type="button" class="close" data-dismiss="modal">&times;</button>
         </div>
 
-        <!-- Add Asset Modal body -->
         <div class="modal-body">
           <form>
             <div class="form-row">
@@ -49,10 +48,10 @@
             </div>
           </form>
         </div>
-        <!-- Modal footer -->
+
       </div>
     </div>
-  </div>
+  </div> -->
 
   <!-- ASSETS TABLE -->
   <div class="card shadow mb-4">
@@ -60,7 +59,7 @@
       <div class="table-responsive-sm"
         style="overflow-y:auto; max-height: 520px; min-height: 515px; margin-top:25px; margin-bottom: 10px;"
         id="content">
-        <div style="position:absolute; top:13px; right:470px" class="pb-2">
+        <div style="position:absolute; top:13px; right:430px" class="pb-2">
           <a class=" btn btn-link btn-sm" data-toggle="modal" data-target="#add-assets" text-decoration: none;"><i
               class="fas fa-plus fa-sm text-info-40"></i> Add Assets
           </a>
@@ -75,7 +74,7 @@
           </div>
           <thead>
             <tr>
-              <th>Facility</th>
+              <th class="text-center">Facility</th>
               <th class="text-center">Tranch</th>
               <th class="text-center">Receipt</th>
               <th class="text-center">Amount</th>

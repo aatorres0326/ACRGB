@@ -4,15 +4,17 @@
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
-    {{ (request()->is('facilities')) ? 'FACILITY MANAGEMENT' : '' }}
-    {{ (request()->is('users')) ? 'USER MANAGEMENT' : '' }}
-    {{ (request()->is('table')) ? 'CLAIMS' : '' }}
-    {{ (request()->is('budgetmanagement')) ? 'BUDGET MANAGEMENT' : '' }}
-    {{ (request()->is('userlogins')) ? 'USER LOGIN MANAGEMENT' : '' }}
-    {{ (request()->is('userinfo')) ? 'USER INFORMATION MANAGEMENT' : '' }}
-    {{ (request()->is('area')) ? 'AREA MANAGEMENT' : '' }}
-    {{ (request()->is('userlevel')) ? 'ROLE MANAGEMENT' : '' }}
-    {{ (request()->is('useraccess')) ? 'USER LOGIN MANAGEMENT / ACCESS ASSIGNMENTS' : '' }}
+    {{ (request()->is('facilities')) ? 'Facility Management' : '' }}
+    {{ (request()->is('users')) ? 'User Management' : '' }}
+    {{ (request()->is('budgetmanagement')) ? 'Budget Management' : '' }}
+    {{ (request()->is('viewhcfbudget')) ? 'Budget Management / Facility Budget' : '' }}
+    {{ (request()->is('userlogins')) ? 'User Login Management' : '' }}
+    {{ (request()->is('userinfo')) ? 'User Information Management' : '' }}
+    {{ (request()->is('area')) ? 'Area Management' : '' }}
+    {{ (request()->is('userlevel')) ? 'Role Management' : '' }}
+    {{ (request()->is('useraccess')) ? 'User Login Management / Access Assignments' : '' }}
+    {{ (request()->is('managingboard')) ? 'Managing Board' : '' }}
+    {{ (request()->is('pro')) ? 'PhilHealth Regional Offices' : '' }}
 
 
     <ul class="navbar-nav ml-auto">

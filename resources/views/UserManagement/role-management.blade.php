@@ -32,7 +32,7 @@
                                 <input type="text" class="form-control" name="levdetails">
                             </div>
                         </div>
-                        <input type="text" class="form-control d-none" name="createdby" value="90">
+                        <input type="text" class="form-control d-none" name="createdby" value="{{ session()->get('userid')}}">
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Add</button> <button type="button"
                                 class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -41,7 +41,7 @@
                 </div>
 
             </div>
-        </div>
+        </div>  
     </div>
 
     <!-- USERS TABLE -->

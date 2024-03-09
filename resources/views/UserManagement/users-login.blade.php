@@ -5,7 +5,7 @@
 
 <div class="container-fluid">
 
-    <!-- ADD USER MODAL -->
+   
 
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
@@ -23,6 +23,7 @@
                         <tr>
                             <th class="text-center">User ID</th>
                             <th class="text-center">Username</th>
+                            <th class="text-center">Password</th>
                             <th class="text-center">Role</th>
                             <th class="text-center">Created By</th>
                             <th class="text-center">Date Created</th>
@@ -36,10 +37,10 @@
                         <tr>
                             <td class="text-center">{{ $user['userid'] }}</td>
                             <td class="text-center">{{ $user['username'] }}</td>
+                            <td class="text-center">{{ $user['userpassword'] }}</td>
                             <td class="text-center">{{ $user['leveid'] }}</td>
                             <td class="text-center">{{ $user['createdby'] }}</td>
                             <td class="text-center">{{ $user['datecreated'] }}</td>
-                            <td class="text-center d-none">{{ $user['status'] }}</td>
                             <td class="text-center">
                                 @if($user['status'] == 1)
                                 <span>For Change</span>
@@ -49,13 +50,15 @@
                             </td>
 
                             <td class="text-center">
-                                <a class="btn btn-sm btn-link text-primary" href="/useraccess"><i
-                                        class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></a>
+                                  <a class="btn btn-sm btn-link text-darker-primary {{ $user['leveid'] === 'HCF' ? 'disabled' : '' }} {{ $user['leveid'] === 'ADMIN' ? 'disabled' : '' }}" onclick="DisplayUserDetails(
+                                                    '<?=$user['userid']?>',
+                                                     '<?=$user['username']?>',
+                                                    '<?=$user['leveid']?>'
+                                 )"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="Edit"></i></a>
                                 <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
                                     data-target="#editLogin" onclick="EditUserLogin(
                                                     '<?=$user['userid']?>',
                                                      '<?=$user['username']?>',
-                                                      
                                                     '<?=$user['status']?>'
                                  )"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
                             </td>
