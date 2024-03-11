@@ -54,7 +54,7 @@
                                                     '<?=$user['userid']?>',
                                                      '<?=$user['username']?>',
                                                     '<?=$user['leveid']?>'
-                                 )"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="Edit"></i></a>
+                                 )"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></a>
                                 <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
                                     data-target="#editLogin" onclick="EditUserLogin(
                                                     '<?=$user['userid']?>',

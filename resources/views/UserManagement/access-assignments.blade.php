@@ -46,12 +46,13 @@
             <tbody>
     @foreach($RegionalOffices as $pro)
         @php
-        $roleIndexData = $RoleIndex->where('accessid', $pro['proid'])->first();
+        $roleIndexData = $RoleIndex->where('accessid', $pro['proid'])->where('userid', $SelectedUserID)->first();
+
         @endphp
         @if($roleIndexData)
             <tr>
                 <td class="d-none">{{ $roleIndexData['roleid'] }}</td>
-                <td class="text-center">{{ $pro['proname'] }}</td>
+                <td>{{ $pro['proname'] }}</td>
                 <td class="text-center">
                     <input class="form-check-input" type="checkbox" value="">
                 </td>
@@ -63,27 +64,23 @@
 @else
                             <thead>
                                 <tr>
-                                    <th class="d-none">Facility ID</th>
-                                    <th>Facility</th>
-                                    <th class="text-center">Address</th>
-                                    <th class="text-center">Accreditation</th>
-                                    <th class="text-center">Area</th>
+                                    <th class="d-none"></th>
+                                    <th>Managing Board</th>
+  
                                     <th class="disableSort disableFilterBy text-center">Action
                                     </th>
                                 </tr>
                             </thead>
             <tbody>
-    @foreach($Facilities as $facility)
+    @foreach($ManagingBoard as $mb)
         @php
-        $roleIndexData = $RoleIndex->where('accessid', $facility['hcfid'])->first();
+        $roleIndexData = $RoleIndex->where('accessid', $mb['mbid'])->where('userid', $SelectedUserID)->first();
+        
         @endphp
         @if($roleIndexData)
             <tr>
                 <td class="d-none">{{ $roleIndexData['roleid'] }}</td>
-                <td class="text-center">{{ $facility['hcfname'] }}</td>
-                <td class="text-center">{{ $facility['hcfaddress'] }}</td>
-                <td class="text-center">{{ $facility['hcfcode'] }}</td>
-                <td class="text-center">{{ $facility['areaid'] }}</td>
+                <td>{{ $mb['mbname'] }}</td>
                 <td class="text-center">
                     <input class="form-check-input" type="checkbox" value="">
                 </td>
@@ -131,7 +128,8 @@
                                             <tbody class="protable">
                                             @foreach($RegionalOffices as $pro)
                                             @php
-        $roleIndexData = $RoleIndex->where('accessid', $pro['proid'])->first();
+        $roleIndexData = $RoleIndex->where('accessid', $pro['proid'])->where('userid', $SelectedUserID)->first();
+        
                                             @endphp
                                             @if(!$roleIndexData)
                                                 <tr>
@@ -157,7 +155,8 @@
                                             <tbody>
                                             @foreach($ManagingBoard as $mb)
                                             @php
-        $roleIndexData = $RoleIndex->where('accessid', $mb['mbid'])->first();
+        $roleIndexData = $RoleIndex->where('accessid', $mb['mbid'])->where('userid', $SelectedUserID)->first();
+        
                                             @endphp
                                             @if(!$roleIndexData)
                                             <tr>
@@ -180,9 +179,10 @@
                                     </div>
                                 </div>
                             </div>
-                            <input type="text" name="createdby" value="{{ session()->get('userid') }}"/>
-                            <input type="text" name="userid" id="inputuserid"/>
-                            <textarea name="accessid"></textarea>
+                            <input type="text" class="d-none" name="createdby" value="{{ session()->get('userid') }}"/>
+                            <input type="text" class="d-none" name="userid" value="{{ $SelectedUserID }}"/>
+                            <input type="text" class="d-none" name="passleveid" id="passlevel"/>
+                            <textarea class="d-none" name="accessid" required></textarea>
                             <div class="mt-5 text-center"><button style="margin-top:-50px;" class="btn btn-primary" type="submit">Save</button>
                                 <button type="button" style="margin-top:-50px;" class="btn btn-warning" data-dismiss="modal">Cancel</button>
                             </div>
@@ -236,11 +236,10 @@
     var username = localStorage.getItem('getUsername');
     var leveid = localStorage.getItem('getLevel');
 
-
     document.getElementById("displayusername").value = username;
     document.getElementById("displaylevel").value = leveid;
+    document.getElementById("passlevel").value = leveid;
     document.getElementById("displayuserid").value = userid;
-    document.getElementById("inputuserid").value = userid;
 };
 
     </script>

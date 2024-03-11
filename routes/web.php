@@ -45,18 +45,18 @@ Route::middleware('Admin')->group(function () {
     Route::post('/add-area', [AreaController::class, 'addArea'])->name('addArea');
     Route::get('area', [AreaController::class, 'GetArea']);
     Route::get('pro', [AreaController::class, 'GetRegionalOffice']);
-    Route::get('managingboard', [AreaController::class, 'GetManagingBoard'])->name('managingboard');
-    Route::post('/add-managingboard', [AreaController::class, 'INSERTManagingBoard'])->name('INSERTManagingBoard');
     Route::post('addPro', [AreaController::class, 'addPro'])->name('addPro');
     Route::get('facilities', [FacilityController::class, 'GetFacilities']);
     Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');
     Route::post('INSERTROLEINDEX', [UsersManageController::class, 'INSERTROLEINDEX'])->name('INSERTROLEINDEX');
+    Route::post('INSERTROLEINDEXMB', [AreaController::class, 'INSERTROLEINDEXMB'])->name('INSERTROLEINDEXMB');
     Route::get('useraccess', [UsersManageController::class, 'GetAccess'])->name('userAccess');
 });
 
 Route::middleware('Pro')->group(function () {
     Route::get('managingboard', [AreaController::class, 'GetManagingBoard'])->name('managingboard');
+    Route::get('mbaccess', [AreaController::class, 'GetAccess'])->name('mbaccess');
     Route::post('/add-managingboard', [AreaController::class, 'INSERTManagingBoard'])->name('INSERTManagingBoard');
-    Route::get('facilities', [FacilityController::class, 'GetAccess']);
+    Route::get('facilities', [FacilityController::class, 'GetFacilities']);
     Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');
 });

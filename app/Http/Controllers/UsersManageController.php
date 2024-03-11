@@ -200,29 +200,31 @@ class UsersManageController extends Controller
 
 
         $SelectedUserRole = $request->query('leveid', '');
+        $SelectedUserID = $request->query('userid', '');
 
 
 
-        return view('UserManagement/access-assignments', compact('RoleIndex', 'Facilities', 'RegionalOffices', 'ManagingBoard', 'SelectedUserRole'));
+        return view('UserManagement/access-assignments', compact('RoleIndex', 'Facilities', 'RegionalOffices', 'ManagingBoard', 'SelectedUserRole', 'SelectedUserID'));
     }
     public function INSERTROLEINDEX(Request $request)
     {
-
         $now = new DateTime();
         $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTROLEINDEX', [
             'userid' => $request->input('userid'),
             'accessid' => $request->input('accessid'),
             'createdby' => $request->input('createdby'),
             'datecreated' => $now->format('m-d-Y'),
-
         ]);
 
+        $SelectedUserRole = $request->input('passleveid');
+        $SelectedUserID = $request->input('userid');
+
         if ($AddProResponse->successful()) {
-            return redirect('/useraccess');
-
+            // Pass all necessary variables to the view
+            return redirect('/useraccess?leveid=' . $SelectedUserRole . '&userid=' . $SelectedUserID);
         }
-
     }
+
 
 
 }

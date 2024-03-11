@@ -140,6 +140,50 @@ class AreaController extends Controller
         }
 
     }
+    public function GetAccess(Request $request)
+    {
+
+        $RoleIndexResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndex/0');
+        $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
+
+        $decodedRoleIndexResponse = $RoleIndexResponse->json();
+        $decodedFacilityResponse = $facilityapiResponse->json();
+
+        $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
+        $Facilities = json_decode($decodedFacilityResponse['result'], true);
+
+        $RoleIndex = collect($RoleIndex);
+        $Facilities = collect($Facilities);
+
+
+
+
+
+        $SelectedMbID = $request->query('mbid', '');
+        $SelectedMbName = $request->query('mbname', '');
+
+
+
+        return view('AreaManagement/mb-access-assignment', compact('RoleIndex', 'Facilities', 'SelectedMbID', 'SelectedMbName'));
+    }
+    public function INSERTROLEINDEXMB(Request $request)
+    {
+        $now = new DateTime();
+        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTROLEINDEX', [
+            'userid' => $request->input('mbid'),
+            'accessid' => $request->input('accessid'),
+            'createdby' => $request->input('createdby'),
+            'datecreated' => $now->format('m-d-Y'),
+        ]);
+
+        $SelectedMbID = $request->input('mbid');
+        $SelectedMbName = $request->input('mbname');
+
+        if ($AddProResponse->successful()) {
+            // Pass all necessary variables to the view
+            return redirect('/mbaccess?mbid=' . $SelectedMbID . '&mbname=' . $SelectedMbName);
+        }
+    }
 
 
 }

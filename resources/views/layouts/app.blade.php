@@ -207,7 +207,7 @@ function DisplayUserDetails(userid, username, leveid) {
     localStorage.setItem('getLevel', leveid);
     
     // Redirecting to the new page
-      window.location.href = "/useraccess?leveid=" + leveid;
+      window.location.href = "/useraccess?userid=" + userid + "&leveid=" + leveid;
 }
   </script>
 
