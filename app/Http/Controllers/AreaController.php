@@ -114,14 +114,13 @@ class AreaController extends Controller
 
     public function GetManagingBoard()
     {
+        $SessionUserID = session()->get('userid');
+        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/' . $SessionUserID);
+        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+        $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
 
-        $decodedMB = $apiMB->json();
-
-        $ManagingBoard = json_decode($decodedMB['result'], true);
-
-        return view('AreaManagement/managing-board', compact('ManagingBoard'));
+        return view('AreaManagement/managing-board', compact('HCFUnderPro'));
     }
     public function INSERTManagingBoard(Request $request)
     {
@@ -140,7 +139,7 @@ class AreaController extends Controller
         }
 
     }
-    public function GetAccess(Request $request)
+    public function GetMbAccess(Request $request)
     {
 
         $RoleIndexResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndex/0');
@@ -185,6 +184,59 @@ class AreaController extends Controller
         }
     }
 
+
+    public function GetProAccess(Request $request)
+    {
+
+        $RoleIndexResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndex/0');
+        $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
+
+        $decodedRoleIndexResponse = $RoleIndexResponse->json();
+        $decodedFacilityResponse = $facilityapiResponse->json();
+
+        $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
+        $Facilities = json_decode($decodedFacilityResponse['result'], true);
+
+        $RoleIndex = collect($RoleIndex);
+        $Facilities = collect($Facilities);
+
+
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+
+        $decodedMB = $apiMB->json();
+
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+
+        $SelectedProID = $request->query('proid', '');
+        $SelectedProName = $request->query('proname', '');
+
+        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/167');
+        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+        $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
+
+
+        return view('AreaManagement/pro-access-assignment', compact('RoleIndex', 'Facilities', 'SelectedProID', 'SelectedProName', 'ManagingBoard', 'HCFUnderPro'));
+    }
+
+    public function INSERTROLEINDEXPRO(Request $request)
+    {
+        $now = new DateTime();
+        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTROLEINDEX', [
+            'userid' => $request->input('proid'),
+            'accessid' => $request->input('accessid'),
+            'createdby' => $request->input('createdby'),
+            'datecreated' => $now->format('m-d-Y'),
+        ]);
+
+        $SelectedProID = $request->input('proid');
+        $SelectedProName = $request->input('proname');
+
+        if ($AddProResponse->successful()) {
+            // Pass all necessary variables to the view
+            return redirect('/proaccess?proid=' . $SelectedProID . '&proname=' . $SelectedProName);
+        }
+    }
 
 }
 

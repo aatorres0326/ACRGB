@@ -48,14 +48,17 @@ Route::middleware('Admin')->group(function () {
     Route::post('addPro', [AreaController::class, 'addPro'])->name('addPro');
     Route::get('facilities', [FacilityController::class, 'GetFacilities']);
     Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');
-    Route::post('INSERTROLEINDEX', [UsersManageController::class, 'INSERTROLEINDEX'])->name('INSERTROLEINDEX');
-    Route::post('INSERTROLEINDEXMB', [AreaController::class, 'INSERTROLEINDEXMB'])->name('INSERTROLEINDEXMB');
+    Route::post('INSERTROLEINDEXPRO', [AreaController::class, 'INSERTROLEINDEXPRO'])->name('INSERTROLEINDEXPRO');
     Route::get('useraccess', [UsersManageController::class, 'GetAccess'])->name('userAccess');
+    Route::get('proaccess', [AreaController::class, 'GetProAccess'])->name('proaccess');
 });
 
 Route::middleware('Pro')->group(function () {
     Route::get('managingboard', [AreaController::class, 'GetManagingBoard'])->name('managingboard');
-    Route::get('mbaccess', [AreaController::class, 'GetAccess'])->name('mbaccess');
+    Route::get('mbaccess', [AreaController::class, 'GetMbAccess'])->name('mbaccess');
+    Route::post('INSERTROLEINDEX', [UsersManageController::class, 'INSERTROLEINDEX'])->name('INSERTROLEINDEX');
+    Route::post('INSERTROLEINDEXMB', [AreaController::class, 'INSERTROLEINDEXMB'])->name('INSERTROLEINDEXMB');
+
     Route::post('/add-managingboard', [AreaController::class, 'INSERTManagingBoard'])->name('INSERTManagingBoard');
     Route::get('facilities', [FacilityController::class, 'GetFacilities']);
     Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');

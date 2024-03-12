@@ -42,6 +42,9 @@
     </div>
 <!-- END OF ADD REGIONAL OFFICE MODAL -->
 
+<!-- FOR ADMIN -->
+<!-- ************************************************************************************************************************************************ -->
+@if (session()->get('leveid') == 'ADMIN')
         <!-- REGIONAL OFFICE TABLE -->
         <div class="col-md">
             <div class="card shadow mb-4">
@@ -50,7 +53,7 @@
                         style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content2">
                         <div style="position:absolute; top:13px;">
                             <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#add-pro" style="text-decoration:
-                                none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add Regional Office
+                                none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add Managing Board
                             </a>
                         </div>
                         <table class="table table-sm table-hover table-bordered table-light" width="100%"
@@ -67,6 +70,8 @@
                                     </th>
                                 </tr>
                             </thead>
+ 
+
                             <tbody>
                                 @foreach($ManagingBoard as $MB)
                                 <tr>
@@ -88,6 +93,60 @@
             </div>
 
         </div>
+
+<!-- FOR PRO USER -->
+<!-- ************************************************************************************************************************************************ -->
+      @else
+        <div class="col-md">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+                    <div class="table-responsive-sm"
+                        style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content2">
+                        
+                        <table class="table table-sm table-hover table-bordered table-light" width="100%"
+                            cellspacing="0">
+                            <div class="row" style="margin-bottom: 7px;">
+                                <div class="col"></div>
+                                <div class="col"></div>
+                            </div>
+                            <thead>
+                                <tr>
+                                    <th>Managing Board</th>
+                              
+                                    <th class="disableSort disableFilterBy">
+                                    </th>
+                                </tr>
+                            </thead>
+ 
+
+                           <tbody>
+@foreach(collect($HCFUnderPro)->unique('mb.mbid') as $MB)
+       @php
+        $mb = json_decode($MB['mb']);
+        @endphp
+            <tr>
+                <td class="d-none">{{ $mb->mbid }}</td>
+                <td>{{ $mb->mbname }}</td>
+                <td style="width:50px;">
+                    <center>
+                        <button class="btn btn-sm btn-link text-darker-primary" onclick="DisplayMbDetails('{{$mb->mbid}}', '{{$mb->mbname}}')">
+                            <i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i>
+                        </button>
+                    </center>
+                </td>
+            </tr>
+       
+    @endforeach
+</tbody>
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        @endif
+
     </div>
 
 </div>

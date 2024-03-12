@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 
+
 class FacilityController extends Controller
 {
     public function facilities()
@@ -26,11 +27,14 @@ class FacilityController extends Controller
 
         // Extract the result array
         $facilities = json_decode($decodedResponse['result'], true);
+        $SessionUserID = session()->get('userid');
+        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/' . $SessionUserID);
+        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+        $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
-        // Debug: Dump the user list
 
 
-        return view('Facilities/facilities', compact('facilities'));
+        return view('Facilities/facilities', compact('facilities', 'HCFUnderPro'));
     }
 
     public function addFacility(Request $request)

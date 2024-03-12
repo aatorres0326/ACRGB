@@ -64,19 +64,19 @@
 
 
     <?php
-    $now = new DateTime();
+$now = new DateTime();
 
-    $now->format('Y-m-d');
+$now->format('Y-m-d');
     
     ?>
+ 
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive-sm"
                 style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
                 <div style="position:absolute; top:13px; right:470px">
-                    <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#add-user" text-decoration:
-                        none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add Facility
+                    <a class="btn btn-link btn-sm {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}" data-toggle="modal" data-target="#add-user"><i class="fas fa-plus fa-sm text-info-40"></i> Add Facility
                     </a>
                 </div>
                 <table class="table table-sm table-hover table-bordered table-light" id="tablemanager" width="100%"
@@ -90,7 +90,7 @@
                             <th class="d-none">Facility ID</th>
                             <th>Facility</th>
                             <th class="text-center">Address</th>
-                            <th class="text-center">Area</th>
+                            <th class="text-center">Managing Board</th>
                             <th class="text-center">Accreditation</th>
                             <th class="text-center">Created By</th>
                             <th class="text-center">Date Created</th>
@@ -98,7 +98,7 @@
                             </th>
                         </tr>
                     </thead>
-
+   @if (session()->get('leveid') == 'ADMIN')
                     <tbody>
                         @foreach($facilities as $facility)
                         <tr>
@@ -107,7 +107,7 @@
                             <td class="d-none">{{ $facility['hcfid'] }}</td>
                             <td>{{ $facility['hcfname'] }}</td>
                             <td class="text-center">{{ $facility['hcfaddress'] }}</td>
-                            <td class="text-center">{{ $facility['areaid'] }}</td>
+                          <td class="text-center">{{ $facility['areaid'] }}</td>
                             <td class="text-center">{{ $facility['hcfcode'] }}</td>
                             <td class="text-center">{{ $facility['createdby'] }}</td>
                             <td class="text-center">{{ $facility['datecreated'] }}</td>
@@ -119,6 +119,30 @@
                         </tr>
                         @endforeach
                     </tbody>
+                    @else
+                               <tbody>
+    @foreach($HCFUnderPro as $facility)
+    <tr>
+        <td class="d-none">{{ $facility['hcfid'] }}</td>
+        <td>{{ $facility['hcfname'] }}</td>
+        <td class="text-center">{{ $facility['hcfaddress'] }}</td>
+        
+        @php
+        $mb = json_decode($facility['mb']);
+        @endphp
+        
+        <td class="text-center">{{ $mb->mbname }}</td>
+        
+        <td class="text-center">{{ $facility['hcfcode'] }}</td>
+        <td class="text-center">{{ $facility['createdby'] }}</td>
+        <td class="text-center">{{ $facility['datecreated'] }}</td>
+        <td class="text-center">
+            <a class="btn btn-sm btn-link text-darker-warning"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
+        </td>
+    </tr>
+    @endforeach
+</tbody>
+                    @endif
                 </table>
             </div>
         </div>

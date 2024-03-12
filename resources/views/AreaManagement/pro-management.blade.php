@@ -43,7 +43,6 @@
 <!-- END OF ADD REGIONAL OFFICE MODAL -->
 
 
-   
 
         <!-- REGIONAL OFFICE TABLE -->
         <div class="col-md">
@@ -65,7 +64,7 @@
                             <thead>
                                 <tr>
 
-                                    <th>Regional Office</th>
+                                    <th>Managing Board</th>
                                     <th>Created By</th>
                                     <th>Date Created</th>
 
@@ -79,7 +78,7 @@
                                 @foreach($RegionalOffices as $pro)
                                 <tr>
 
-
+<td class="d-none">{{ $pro['proid'] }}</td>
                                     <td>{{ $pro['proname'] }}</td>
 
                                     <td>{{ $pro['createdby'] }}</td>
@@ -88,13 +87,12 @@
 
 
 
-                                    <td>
-                                        <center>
-                                            <button class="btn-sm btn-primary add-mb-pro">Add</button>
-                                            <button class="btn-sm btn-warning edit-pro">Edit</button>
-                                        </center>
+                                  <td style="width:50px;">
+                                        <center><button class="btn btn-sm btn-link text-darker-primary" onclick="DisplayMbDetails(
+                                                    '<?=$pro['proid']?>',
+                                                     '<?=$pro['proname']?>'                                                  
+                                 )"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></button></center>
                                     </td>
-
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -109,7 +107,16 @@
 </div>
 
 
-
+  <script>
+function DisplayMbDetails(proid, proname) {
+    // Storing user details in localStorage
+    localStorage.setItem('getProId', proid);
+    localStorage.setItem('getProName', proname);
+    
+    // Redirecting to the new page
+      window.location.href = "/proaccess?proid=" + proid + "&proname=" + proname;
+}
+  </script>
 
 
 
