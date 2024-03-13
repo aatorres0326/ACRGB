@@ -118,9 +118,13 @@ class AreaController extends Controller
         $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/' . $SessionUserID);
         $decodedHCFUnderPro = $ApiHCFUnderPro->json();
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
 
+        $decodedMB = $apiMB->json();
 
-        return view('AreaManagement/managing-board', compact('HCFUnderPro'));
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        return view('AreaManagement/managing-board', compact('HCFUnderPro', 'ManagingBoard'));
     }
     public function INSERTManagingBoard(Request $request)
     {

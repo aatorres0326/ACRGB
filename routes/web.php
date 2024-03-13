@@ -63,3 +63,8 @@ Route::middleware('Pro')->group(function () {
     Route::get('facilities', [FacilityController::class, 'GetFacilities']);
     Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');
 });
+Route::middleware('MB')->group(function () {
+
+    Route::get('facilities', [FacilityController::class, 'GetFacilities']);
+
+});

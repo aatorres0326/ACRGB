@@ -53,6 +53,26 @@ class AuthController extends Controller
                     $ManagingBoard = json_decode($decodedMB['result'], true);
 
                     return view('AreaManagement/managing-board', compact('ManagingBoard'));
+                } elseif ($result['leveid'] === 'MB') {
+                    // Assuming $apiResponse contains the JSON response from your API
+                    $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
+
+                    // Debug: Dump the HTTP response
+
+
+                    // Extract the JSON response body
+                    $decodedResponse = $apiResponse->json();
+
+                    // Extract the result array
+                    $facilities = json_decode($decodedResponse['result'], true);
+                    $SessionUserID = session()->get('userid');
+                    $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetMBUsingUserIDMBID/' . $SessionUserID);
+                    $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                    $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
+
+
+
+                    return view('Facilities/facilities', compact('facilities', 'HCFUnderPro'));
                 } elseif ($result['leveid'] === 'ADMIN') {
                     $apiUserInfo = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserInfo/ACTIVE');
                     $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');

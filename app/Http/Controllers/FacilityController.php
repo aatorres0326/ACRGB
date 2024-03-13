@@ -20,21 +20,33 @@ class FacilityController extends Controller
         $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
 
         // Debug: Dump the HTTP response
-
+        // dd($apiResponse);
 
         // Extract the JSON response body
         $decodedResponse = $apiResponse->json();
 
         // Extract the result array
-        $facilities = json_decode($decodedResponse['result'], true);
+        $facilities = $decodedResponse['result'];
         $SessionUserID = session()->get('userid');
-        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/' . $SessionUserID);
-        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-        $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
+        $userLevel = session()->get('leveid');
+
+        if ($userLevel == 'PRO') {
+            $apiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/' . $SessionUserID);
+            $decodedHCFUnderPro = $apiHCFUnderPro->json();
+            $HCFUnderPro = json_decode($decodedHCFUnderPro['result']);
 
 
+            return view('Facilities/facilities', compact('facilities', 'HCFUnderPro'));
+        } else {
+            $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetMBUsingUserIDMBID/' . $SessionUserID);
+            $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+            $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
-        return view('Facilities/facilities', compact('facilities', 'HCFUnderPro'));
+
+            return view('Facilities/facilities', compact('facilities', 'HCFUnderPro'));
+        }
+
+
     }
 
     public function addFacility(Request $request)
