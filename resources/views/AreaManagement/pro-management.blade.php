@@ -64,7 +64,7 @@
                             <thead>
                                 <tr>
 
-                                    <th>Managing Board</th>
+                                    <th>Regional Offices</th>
                                     <th>Created By</th>
                                     <th>Date Created</th>
 

@@ -27,23 +27,27 @@ class UsersManageController extends Controller
         $userLevel = json_decode($decodedapiUserLevel['result'], true);
 
         // Debug: Dump the user list
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
 
+        $decodedMB = $apiMB->json();
 
-        return view('UserManagement/users-login', compact('userList', 'userLevel'));
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        return view('UserManagement/users-login', compact('userList', 'userLevel', 'ManagingBoard'));
     }
 
     public function GetUsersInfo()
     {
         $apiUserInfo = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserInfo/ACTIVE');
-        $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
-        $apiArea = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetArea/ACTIVE');
+
+
         $apiUser = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUser/ACTIVE');
         $apiLevel = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserLevel/ACTIVE');
 
         // Extract the JSON response body
-        $decodedFacilityResponse = $facilityapiResponse->json();
+
         $decodedUserInfo = $apiUserInfo->json();
-        $decodedArea = $apiArea->json();
+
         $decodedapiUser = $apiUser->json();
         $decodedapiLevel = $apiLevel->json();
 
@@ -51,19 +55,23 @@ class UsersManageController extends Controller
 
         // Extract the result array
         $userInfoList = json_decode($decodedUserInfo['result'], true);
-        $facilities = json_decode($decodedFacilityResponse['result'], true);
-        $area = json_decode($decodedArea['result'], true);
+
+
         $userlogin = json_decode($decodedapiUser['result'], true);
         $userLevel = json_decode($decodedapiLevel['result'], true);
 
         $userInfoList = collect($userInfoList);
-        $facilities = collect($facilities);
-        $area = collect($area);
+
+
         $userlogin = collect($userlogin);
         $userLevel = collect($userLevel);
         $userInfoList = $userInfoList->sortByDesc('datecreated');
 
-        return view('UserManagement/users-info', compact('userInfoList', 'facilities', 'area', 'userlogin', 'userLevel'));
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $decodedMB = $apiMB->json();
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        return view('UserManagement/users-info', compact('userInfoList', 'userlogin', 'userLevel', 'ManagingBoard'));
     }
 
 
@@ -76,10 +84,8 @@ class UsersManageController extends Controller
             'firstname' => $request->input('firstname'),
             'middlename' => $request->input('middlename'),
             'lastname' => $request->input('lastname'),
-            // 'areaid' => $request->input('area'),
             'datecreated' => $now->format('m-d-Y'),
             'createdby' => $request->input('createdby'),
-            'hcfid' => $request->input('hcfid'),
         ]);
 
         if ($response->successful()) {
@@ -137,7 +143,13 @@ class UsersManageController extends Controller
 
         $userLevel = json_decode($decodedapiUserLevel['result'], true);
 
-        return view('UserManagement/role-management', compact('userLevel'));
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+
+        $decodedMB = $apiMB->json();
+
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        return view('UserManagement/role-management', compact('userLevel', 'ManagingBoard'));
     }
 
     public function addUserLevel(Request $request)
@@ -167,16 +179,15 @@ class UsersManageController extends Controller
 
 
         // GET PROS
-        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro/ACTIVE');
+        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro');
         $decodedPro = $apiPro->json();
         $RegionalOffices = json_decode($decodedPro['result'], true);
 
         $RoleIndexResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndex/0');
-        $facilityapiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
 
         // Extract the JSON response body
         $decodedRoleIndexResponse = $RoleIndexResponse->json();
-        $decodedFacilityResponse = $facilityapiResponse->json();
+
 
 
 
@@ -184,7 +195,7 @@ class UsersManageController extends Controller
         // Extract the result array
 
         $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
-        $Facilities = json_decode($decodedFacilityResponse['result'], true);
+
 
         $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
 
@@ -193,7 +204,7 @@ class UsersManageController extends Controller
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
         $RoleIndex = collect($RoleIndex);
-        $Facilities = collect($Facilities);
+
         $ManagingBoard = collect($ManagingBoard);
 
 
@@ -204,7 +215,7 @@ class UsersManageController extends Controller
 
 
 
-        return view('UserManagement/access-assignments', compact('RoleIndex', 'Facilities', 'RegionalOffices', 'ManagingBoard', 'SelectedUserRole', 'SelectedUserID'));
+        return view('UserManagement/access-assignments', compact('RoleIndex', 'RegionalOffices', 'ManagingBoard', 'SelectedUserRole', 'SelectedUserID'));
     }
     public function INSERTROLEINDEX(Request $request)
     {

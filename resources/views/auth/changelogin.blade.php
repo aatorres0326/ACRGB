@@ -102,7 +102,7 @@ input[type=submit] {
                       
                       <input autocomplete="off" id="confirmpassword" type="password" class="form-control form-control-user" placeholder="Confirm Password" onkeyup="checkPass()" required/>
                     </div>
-                   <soan id="newRes"></span>
+                   
                     <div id="message" class="block">
   <h5>Password must contain the following:</h5>
   <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
@@ -110,7 +110,7 @@ input[type=submit] {
   <p id="number" class="invalid">A <b>number</b></p>
   <p id="length" class="invalid">Minimum <b>8 characters</b></p>
 </div>
-                    <button type="submit" id="br" class="btn btn-primary btn-block btn-user">Login</button>
+                    <button type="submit" id="br" class="btn btn-primary btn-block btn-user">Save</button>
    
                   </form>
 

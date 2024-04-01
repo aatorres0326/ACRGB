@@ -13,7 +13,8 @@
     {{ (request()->is('area')) ? 'Area Management' : '' }}
     {{ (request()->is('userlevel')) ? 'Role Management' : '' }}
     {{ (request()->is('useraccess')) ? 'User Login Management / Access Assignments' : '' }}
-    {{ (request()->is('managingboard')) ? 'Managing Board' : '' }}
+    {{ (request()->is('managingboard')) ? 'Health Care Provider Networks
+    ' : '' }}
     {{ (request()->is('pro')) ? 'PhilHealth Regional Offices' : '' }}
 
 

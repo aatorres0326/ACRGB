@@ -49,16 +49,7 @@
                         </div>
 
 
-                        <div class="form-row">
-                            <div class="form-group col">
-                                <label for="userlevel">Facility</label>
-                                <select name="hcfid" class="form-control">
-                                    @foreach($facilities as $facility)
-                                    <option value="{{ $facility['hcfid'] }}">{{ $facility['hcfname'] }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Add</button> <button type="button"
                                 class="btn btn-danger" data-dismiss="modal">Cancel</button>
@@ -94,7 +85,7 @@
                         <tr>
                             <th>Name</th>
                             <th class="text-center">Login Credential</th>
-                            <th class="text-center">Facility</th>
+                            
                             <th class="text-center">Creation Date</th>
                             <th class="text-center d-none">Created By</th>
                             <th class="disableSort disableFilterBy text-center">Action</th>
@@ -122,21 +113,8 @@
                             <td class="text-center">{{ $login }}</td>
                             @endif
 
-                            @php
-    $facilityName = "Facility Not Found" . " (Facility ID " . $user['hcfid'] . " )";
-    foreach ($facilities as $facility) {
-        if ($facility['hcfid'] === $user['hcfid']) {
-            $facilityName = $facility['hcfname'];
-            break;
-        }
-    }
-                            @endphp
-                            @if (Str::contains($facilityName, 'Facility Not Found'))
-                            <td class="text-center" style="color: #e9967a">{{ $facilityName }}</td>
-                            @else
-                            <td class="text-center">{{ $facilityName }}</td>
-                            @endif
-
+                       
+                           
 
 
                             <td class="text-center">{{ $user['datecreated'] }}</td>

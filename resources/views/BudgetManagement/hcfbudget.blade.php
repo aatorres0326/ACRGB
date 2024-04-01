@@ -1,6 +1,4 @@
 @extends('layouts.app')
-
-
 @section('contents')
 
 <div id="content">
@@ -8,57 +6,56 @@
 
         <!-- CLAIM MODAL -->
        
-                    <strong>
-                        <h3 class="text-center mb-4">FACILITY NAME</h3>
-                    </strong>
+  
                     <div class="row d-flex justify-content-center">
                         <div class="col-md-12 col-12 text-center">
                             <div class="table-responsive-sm">
                                 <div class="row">
                                     <div class="col-xl-4 col-md-1 mb-1">
-                                        <div class="border-left-success shadow h-100 py-1">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-1">
-                                                    <div
-                                                        class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                        Total Budget Allocated</div>
-                                                    <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                                        <span>&#8369;</span>100,000,000
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+                                       <br>
+                                       <br>
+                                       <strong>      
+@foreach($ManagingBoard as $mb)
+ 
+    @if($mbid == $mb['mbid'])
+        <h3 class="text-center mb-4">{{ $mb['mbname'] }}</h3>
+    @endif
+@endforeach
 
-                                    <div class="col-xl-4 col-md-1 mb-1">
-                                        <div class="border-left-success shadow h-100 py-1">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-1">
-                                                    <div
-                                                        class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                        Total Budget Disbursed</div>
-                                                    <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                                        <span>&#8369;</span>100,000,000
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                    </strong>
+                                                   
+                                             
                                     </div>
-
-                                   
                                     <div class="col-xl-4 col-md-1 mb-1">
-                                        <div class="border-left-warning shadow h-100 py-1">
-                                            <div class="row no-gutters align-items-center">
-                                                <div class="col mr-1">
-                                                    <div
-                                                        class="text-xs font-weight-bold text-warning text-uppercase mb-1">
-                                                        Total Budget Used</div>
-                                                    <div class="h6 mb-0 font-weight-bold text-gray-800">
-                                                        <span>&#8369;</span>6,000,000
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <br>
+                                        <br>
+                                        <h5>
+                                            DATE COVERED :&nbsp; <h5 class="text-info">{{ $datefromformat }} to {{ $datetoformat }}</h5>
+                                        </h5> 
+                                    </div>
+                                    <div class="col-xl-4 col-md-1 mb-1">
+                                                <br>
+                                                      <br>
+@php
+$totalAmount = 0;
+@endphp
+
+@if (count($HCFBudget) > 0)
+    @foreach ($HCFBudget as $hcf)
+        @php
+        // Ensure $hcf['amount'] is numeric before adding
+        if (is_numeric($hcf['amount'])) {
+            $totalAmount += $hcf['amount'];
+        }
+        @endphp
+    @endforeach
+    <h5>
+        TOTAL AMOUNT : &nbsp;<h4 class="text-info">{{ number_format((double) $totalAmount, 1)}}</h4>
+    </h5>
+@endif
+
+                                               
+                                       
                                     </div>
                                 </div>
                                 <table class="table table-sm table-hover table-bordered" id="editableTable" width="100%"
@@ -69,12 +66,14 @@
                                     </div>
                                     <thead>
                                         <tr>
-                                            <th>Tranch</th>
-                                            <th>Tranch Status</th>
+                                            <th>Facility</th>
+                                            <th>Address</th>
+                                            <th>Regional Office</th>
+                                            <th>Managing Board</th>
+                                            <th>Accreditation</th>
+                                            <th>Amount</th>
                                             <!-- <th class="disableSort disableFilterBy">Claim Amount</th> -->
-                                            <th>Amount Disbursed</th>
-                                            <th>Date Requested</th>
-                                            <th>Date Disbursed</th>
+                                            <th>Number of Claims</th>
                                             <th>Action</th>
                                         </tr>
 
@@ -83,20 +82,27 @@
                 <th>Completion Date<    /th> -->
                                     </thead>
                                     <tbody>
-                                        <?php
-for ($i = 1; $i <= 3; $i++) {
-    echo '<tr>';
-    echo '<td>Tranch ' . $i . '</td>';
-    echo '<td>Disbursed</td>';
-    echo '<td class="editable" contenteditable="false">' . number_format(10000000 + $i * 500000, 0) . '</td>';
-    echo '<td class="editable" contenteditable="false">November ' . ($i % 30 + 1) . ', 2023</td>';
-    echo '<td class="editable" contenteditable="false"">January 16, 2024</td>';
 
-    // echo '<td>Encoder ' . $i . '</td>';
-    echo '<td><a class="btn-link pe-auto user-select-none font-weight-bolder" onclick="makeEditable(this)">Change Status</a> </td>';
-    echo '</tr>';
-}
-          ?>
+
+@if (count($HCFBudget) > 0)
+    @foreach ($HCFBudget as $hcf)
+    <tr>
+        <td> {{ $hcf['hcfname']}} </td>
+        <td> {{ $hcf['hcfaddress']}} </td>
+        <td> {{ $hcf['proid']}} </td>
+        <td> {{ $hcf['mb']}} </td>
+        <td> {{ $hcf['hcfcode']}} </td>
+        <td> {{ number_format((double) $hcf['amount'], 1)}} </td>
+        
+        <td> {{ $hcf['totalclaims']}} </td>
+        <td> <button></button> </td>
+    </tr>
+    @endforeach
+@else
+    <tr>
+        <td colspan="8">No data found</td>
+    </tr>
+@endif
 
                                     </tbody>
                                 </table>

@@ -34,9 +34,13 @@ class AssetsController extends Controller
         $Assets = collect($Assets);
         $Facilities = collect($Facilities);
         $Tranch = collect($Tranch);
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
 
+        $decodedMB = $apiMB->json();
 
-        return view('BudgetManagement/assets', compact('Assets', 'Facilities', 'Tranch'));
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        return view('BudgetManagement/assets', compact('Assets', 'Facilities', 'Tranch', 'ManagingBoard'));
     }
 
 

@@ -20,7 +20,7 @@
                    <h5 class="text-success" style="position:absolute; left:20px; top:13px;">ENABLED ACCESS PERMISSION</h5>
                     <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;" id="content">
                         <table class="table table-sm table-hover table-bordered table-light" width="100%" cellspacing="0">
-             <div style="position:absolute; top:13px; right:20px">
+             <div style="position:absolute; top:13px; right:20px" class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}">
                     <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration:
                         none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add Access
                     </a> <a class="btn btn-link btn-sm text-warning" data-toggle="modal" data-target="#add-user" style="text-decoration:
@@ -31,8 +31,8 @@
                  <thead>
                                 <tr>
                                     <th class="d-none"></th>
-                                    <th>Regional Office</th>
-                                    <th class="disableSort disableFilterBy text-center">Action
+                                    <th>Health Care Provider Network</th>
+                                    <th class="disableSort disableFilterBy text-center  {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}">Action
                                     </th>
                                 </tr>
                             </thead>
@@ -45,7 +45,7 @@
             <tr>
                 <td class="d-none">{{ $roleIndexData['roleid'] }}</td>
                 <td>{{ $facility['hcfname'] }}</td>
-                <td class="text-center">
+                <td class="text-center { session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}">
                     <input class="form-check-input" type="checkbox" value="">
                 </td>
             </tr>

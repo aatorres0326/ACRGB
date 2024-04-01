@@ -50,7 +50,7 @@
                             </td>
 
                             <td class="text-center">
-                                  <a class="btn btn-sm btn-link text-darker-primary {{ $user['leveid'] === 'HCF' ? 'disabled' : '' }} {{ $user['leveid'] === 'ADMIN' ? 'disabled' : '' }}" onclick="DisplayUserDetails(
+                                  <a class="btn btn-sm btn-link text-darker-primary {{ $user['leveid'] === 'HCF' ? 'disabled' : '' }}{{ $user['leveid'] === 'PHIC' ? 'disabled' : '' }} {{ $user['leveid'] === 'ADMIN' ? 'disabled' : '' }}" onclick="DisplayUserDetails(
                                                     '<?=$user['userid']?>',
                                                      '<?=$user['username']?>',
                                                     '<?=$user['leveid']?>'

@@ -26,7 +26,7 @@
                         id="content">
                         <table class="table table-sm table-hover table-bordered table-light" width="100%"
                             cellspacing="0">
-                            <div style="position:absolute; top:13px; right:20px">
+                            <div style="position:absolute; top:13px; right:20px" class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
                                 <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration:
                         none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add Access
                                 </a> <a class="btn btn-link btn-sm text-warning" data-toggle="modal"
@@ -38,8 +38,8 @@
                             <thead>
                                 <tr>
                                     <th class="d-none"></th>
-                                    <th>Managing Board</th>
-                                    <th class="disableSort disableFilterBy text-center">Action
+                                    <th>Health Care Provider Networks</th>
+                                    <th class="disableSort disableFilterBy text-center {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : ''}} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : ''}}">Action
                                     </th>
                                 </tr>
                             </thead>
@@ -55,7 +55,7 @@
                                 <tr>
                                     <td class="d-none">{{ $roleIndexData['roleid'] }}</td>
                                     <td>{{ $mb['mbname'] }}</td>
-                                    <td class="text-center">
+                                    <td class="text-center {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : ''}} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : ''}}">
                                         <input class="form-check-input" type="checkbox" value="">
                                     </td>
                                 </tr>
@@ -136,11 +136,11 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="text" name="createdby" value="{{ session()->get('userid') }}" />
-                        <input type="text" name="proid" value="{{ $SelectedProID }}" />
-                        <input type="text" name="proname" value="{{ $SelectedProName }}" />
+                        <input type="text" class="d-none" name="createdby" value="{{ session()->get('userid') }}" />
+                        <input type="text" class="d-none" name="proid" value="{{ $SelectedProID }}" />
+                        <input type="text" class="d-none" name="proname" value="{{ $SelectedProName }}" />
 
-                        <textarea name="accessid" required></textarea>
+                        <textarea class="d-none" name="accessid" required></textarea>
                         <div class="mt-5 text-center"><button style="margin-top:-50px;" class="btn btn-primary"
                                 type="submit">Save</button>
                             <button type="button" style="margin-top:-50px;" class="btn btn-warning"

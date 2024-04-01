@@ -11,7 +11,7 @@ class MbMiddleware
     {
         $levelId = session('leveid');
 
-        if ($levelId !== 'PRO' && $levelId !== 'ADMIN' && $levelId !== 'MB') {
+        if ($levelId !== 'PRO' && $levelId !== 'ADMIN' && $levelId !== 'MB' && $levelId !== 'PHIC') {
             return response()->view('errors.unauthorized', [], 403);
         }
 
