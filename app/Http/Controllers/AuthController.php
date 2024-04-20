@@ -46,12 +46,12 @@ class AuthController extends Controller
                 if ($result['status'] === '1') {
                     return view('auth/changelogin', compact('result'));
                 } elseif ($result['leveid'] === 'PRO') {
-                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
 
                     $decodedMB = $apiMB->json();
                     $SessionUserID = session()->get('userid');
                     $ManagingBoard = json_decode($decodedMB['result'], true);
-                    $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID);
+                    $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID . "/PRO");
                     $decodedHCFUnderPro = $ApiHCFUnderPro->json();
                     $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
@@ -74,7 +74,7 @@ class AuthController extends Controller
                     $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
                     // GET MANAGING BOARD FOR SIDEBAR
-                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
                     $decodedMB = $apiMB->json();
                     $ManagingBoard = json_decode($decodedMB['result'], true);
 
@@ -111,7 +111,7 @@ class AuthController extends Controller
                     $userInfoList = $userInfoList->sortByDesc('datecreated');
 
                     // GET MANAGING BOARD FOR SIDEBAR
-                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
                     $decodedMB = $apiMB->json();
                     $ManagingBoard = json_decode($decodedMB['result'], true);
 
@@ -124,12 +124,12 @@ class AuthController extends Controller
                     if ($apiPro->successful()) {
                         $decodedPro = $apiPro->json();
                         // Check if 'result' key exists in the decoded JSON
-                        if (isset ($decodedPro['result'])) {
+                        if (isset($decodedPro['result'])) {
                             $RegionalOffices = json_decode($decodedPro['result'], true);
                             // Pass data to the view and return it
 
                             // GET MANAGING BOARD FOR SIDEBAR
-                            $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+                            $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
                             $decodedMB = $apiMB->json();
                             $ManagingBoard = json_decode($decodedMB['result'], true);
                             return view('AreaManagement/pro-management', compact('RegionalOffices', 'ManagingBoard'));

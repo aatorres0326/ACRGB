@@ -10,10 +10,7 @@ use Illuminate\Http\Request;
 
 class FacilityController extends Controller
 {
-    public function facilities()
-    {
-        return view('facilities');
-    }
+
     public function GetFacilities()
     {
         // Assuming $apiResponse contains the JSON response from your API
@@ -29,12 +26,12 @@ class FacilityController extends Controller
 
 
         // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
         if ($userLevel == 'PRO') {
-            $apiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/' . $SessionUserID);
+            $apiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetFacilityUsingProAccountUserID/' . $SessionUserID);
             $decodedHCFUnderPro = $apiHCFUnderPro->json();
             $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
@@ -77,6 +74,34 @@ class FacilityController extends Controller
 
     }
 
+    public function EditHCFTagging(Request $request)
+    {
+        if ($request->input('t_type') == "APEX") {
+            $response = Http::put('http://localhost:7001/ACRGB/ACRGBUPDATE/TAGGINGFACILITY', [
+                'hcfcode' => $request->input('t_hcfcode'),
+                'type' => $request->input('t_type')
+            ]);
+
+            $response2 = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTAPPELLATE', [
+                'accessid' => $request->input('t_hcfcode'),
+                'userid' => $request->input('appellate')
+            ]);
+
+            if ($response->successful() && $response2->successful()) {
+                return back();
+            }
+        } else {
+            $response = Http::put('http://localhost:7001/ACRGB/ACRGBUPDATE/TAGGINGFACILITY', [
+                'hcfcode' => $request->input('t_hcfcode'),
+                'type' => $request->input('t_type')
+            ]);
+
+            if ($response->successful()) {
+                return back();
+            }
+        }
+    }
+
+
+
 }
-
-

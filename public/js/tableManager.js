@@ -91,21 +91,21 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
         /**
         Get common variables, parts of tables and others utilities
         **/
-        var Table   = $(this),
-            Heads   = $(this).find("thead th"),
-            tbody   = $(this).find("tbody"),
-            rows    = $(this).find("tbody tr"),
-            rlen    = rows.length,
-            arr     = [],
+        var Table = $(this),
+            Heads = $(this).find("thead th"),
+            tbody = $(this).find("tbody"),
+            rows = $(this).find("tbody tr"),
+            rlen = rows.length,
+            arr = [],
             cells,
             clen;
 
         /**
         Options default values
         **/
-        var firstSort       = [[4, 1]],
-            dateColumn      = [],
-            dateFormat      = [],
+        var firstSort = [[4, 1]],
+            dateColumn = [],
+            dateFormat = [],
             disableFilterBy = [];
 
         /**
@@ -124,7 +124,10 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
         var currentPage = 0;
         var numPerPage =
             pagination !== true && showrows_option !== true ? rows.length : 5;
-        var numOfPages = options.numOfPages !== undefined && options.numOfPages > 0 ? options.numOfPages : 5;
+        var numOfPages =
+            options.numOfPages !== undefined && options.numOfPages > 0
+                ? options.numOfPages
+                : 5;
 
         /**
         Set default show rows list or set if option is set
@@ -159,7 +162,7 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
             "showrows",
             "vocabulary",
             "disableFilterBy",
-            "numOfPages"
+            "numOfPages",
         ];
 
         // debug
@@ -320,7 +323,7 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
                 for (var i = 0; i < options.disableFilterBy.length; i++) {
                     // check if should be disabled last column
                     col =
-                        options.disableFilterBy[i] == -1 ||
+                        options.disableFilterBy[i] == 1 ||
                         options.disableFilterBy[i] == "last"
                             ? Heads.length
                             : options.disableFilterBy[i] == "first"
@@ -384,8 +387,8 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
                             return !~text.indexOf(val);
                         })
                         .hide();
-                        
-                    if(val == '') paginate();
+
+                    if (val == "") paginate();
                 });
             }
 
@@ -416,7 +419,6 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
                     }
                 });
             }
-
         }
         if (debug) {
             cLog("Options set:", options);
@@ -771,24 +773,25 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
 
         function filterPages() {
             $(".pagecontroller-num")
-                .hide()    
-                .filter(function(i, el) {
+                .hide()
+                .filter(function (i, el) {
                     let mid = Math.ceil(numOfPages / 2);
                     if (currentPage < mid) {
-                        if(i < numOfPages) return true;
-                    } else if(currentPage > (numPages - (numOfPages - 1))) {
-                        if(i >= numPages - numOfPages) return true;
+                        if (i < numOfPages) return true;
+                    } else if (currentPage > numPages - (numOfPages - 1)) {
+                        if (i >= numPages - numOfPages) return true;
                     } else {
-                        if(numOfPages % 2 == 0) {
-                            if(i >= currentPage - mid && i < currentPage + mid) return true;
+                        if (numOfPages % 2 == 0) {
+                            if (i >= currentPage - mid && i < currentPage + mid)
+                                return true;
                         } else {
-                            if(i > currentPage - mid && i < currentPage + mid) return true;
+                            if (i > currentPage - mid && i < currentPage + mid)
+                                return true;
                         }
                     }
                 })
                 .show();
         }
-        
 
         /**
         Translating function

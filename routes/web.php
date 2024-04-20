@@ -53,12 +53,18 @@ Route::middleware('Pro')->group(function () {
     Route::post('INSERTASSETS', [BudgetController::class, 'INSERTASSETS'])->name('INSERTASSETS');
     Route::post('INSERTROLEINDEXMB', [AreaController::class, 'INSERTROLEINDEXMB'])->name('INSERTROLEINDEXMB');
     Route::get('hcpncontract', [BudgetController::class, 'GetHCPNContract'])->name('hcpncontract');
-    Route::post('AddHCPNContract', [BudgetController::class, 'AddHCPNContract'])->name('AddHCPNContract');
+    Route::get('facilitycontracts', [BudgetController::class, 'GetFacilityContracts'])->name('facilitycontracts');
+    Route::post('AddContract', [BudgetController::class, 'AddContract'])->name('AddContract');
     Route::get('apexcontract', [BudgetController::class, 'GetAPEXContract'])->name('apexcontract');
     Route::get('apexassets', [BudgetController::class, 'GetAPEXAssets'])->name('apexassets');
+    Route::get('facilityassets', [BudgetController::class, 'GetFacilityAssets'])->name('facilityassets');
     Route::post('/add-managingboard', [AreaController::class, 'INSERTManagingBoard'])->name('INSERTManagingBoard');
     Route::post('/add-facility', [FacilityController::class, 'addFacility'])->name('addFacility');
     Route::put('EditHCPNContract', [BudgetController::class, 'EditHCPNContract'])->name('EditHCPNContract');
+    Route::put('EditContractStatus', [BudgetController::class, 'EditContractStatus'])->name('EditContractStatus');
+    Route::get('apexreports', [BudgetController::class, 'GetAPEXReports'])->name('apexreports');
+    Route::get('apexreports/ledger', [BudgetController::class, 'GetAPEXLedger'])->name('apexreports/ledger');
+    Route::get('ledger', [BudgetController::class, 'Ledger'])->name('ledger');
 
 });
 
@@ -72,7 +78,9 @@ Route::middleware('PHIC')->group(function () {
     Route::get('proaccess', [AreaController::class, 'GetProAccess'])->name('proaccess');
     Route::get('pro', [AreaController::class, 'GetRegionalOffice']);
     Route::get('assets', [AssetsController::class, 'GetAssets']);
-    Route::post('addPro', [AreaController::class, 'addPro'])->name('addPro');
+    Route::put('REMOVEROLEINDEXPRO', [AreaController::class, 'REMOVEROLEINDEXPRO'])->name('REMOVEROLEINDEXPRO');
     Route::post('INSERTROLEINDEXPRO', [AreaController::class, 'INSERTROLEINDEXPRO'])->name('INSERTROLEINDEXPRO');
+    Route::put('EditHCFTagging', [FacilityController::class, 'EditHCFTagging'])->name('EditHCFTagging');
+    Route::get('DATESETTINGS', [UsersManageController::class, 'DATESETTINGS']);
 
 });

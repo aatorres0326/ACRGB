@@ -235,7 +235,20 @@ class UsersManageController extends Controller
             return redirect('/useraccess?leveid=' . $SelectedUserRole . '&userid=' . $SelectedUserID);
         }
     }
+    public function DATESETTINGS()
+    {
+        // GET HCPN FOR SIDEBAR
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        $decodedMB = $apiMB->json();
+        $ManagingBoard = json_decode($decodedMB['result'], true);
 
+        // GET DATE SETTINGS
+
+        $api = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetDateSettings/YEARCOMPUTE');
+        $decodedapi = $api->json();
+        $DateSettings = json_decode($decodedapi['result'], true);
+        return view('Utilities/date-settings', compact('ManagingBoard', 'DateSettings'));
+    }
 
 
 }

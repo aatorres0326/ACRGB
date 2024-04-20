@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <center>
             <strong>
-                <h4 class="text-primary">
+                <h4 class="text-info">
 @php
 $hcfname = json_decode($SelectedHCFID, true);
 @endphp
@@ -24,17 +24,17 @@ $hcfname = json_decode($SelectedHCFID, true);
                
                   
             
-                        <strong><p class="card-text">CONTRACT AMOUNT : &nbsp;<span id="contractamount" class="text-primary">{{ number_format((double) $SelectedAmount, 2) }}</span></p></strong>
+                        <strong><p class="card-text text-white">CONTRACT AMOUNT : &nbsp;<span id="contractamount" class="text-info">{{ number_format((double) $SelectedAmount, 2) }}</span></p></strong>
               
             </div>
             <div class="col-md-4 mb-2">
                
-                         <strong><p class="card-text">RELEASED AMOUNT : &nbsp;<span id="totalreleased" class="text-success"></span></p></strong>
+                         <strong><p class="card-text text-white">RELEASED AMOUNT : &nbsp;<span id="totalreleased" class="text-success"></span></p></strong>
             
             </div>
             <div class="col-md-4 mb-2">
           
-                          <strong> <p class="card-text">REMAINING AMOUNT : &nbsp;<span id="remainingamount" class="text-warning"></span></p></strong>
+                          <strong> <p class="card-text text-white">REMAINING AMOUNT : &nbsp;<span id="remainingamount" class="text-warning"></span></p></strong>
      
             </div>
         </div>
@@ -52,7 +52,7 @@ $hcfname = json_decode($SelectedHCFID, true);
                 <div class="table-responsive-sm">
                    
 
-                    <table class="table table-sm table-hover table-bordered" id="assetsTable" width="100%"
+                    <table class="table table-sm table-hover table-bordered table-light" id="assetsTable" width="100%"
                         cellspacing="0">
                         <div class="row" style="margin-bottom: 5px;">
                             <div class="col"></div>
@@ -126,7 +126,7 @@ $hcfname = json_decode($SelectedHCFID, true);
 $hcfname = json_decode($SelectedHCFID, true);
                                     @endphp
                                     <input type="text" name="hcfid" class="form-control d-none"
-                                        value="{{ $hcfname['hcfcode'] }}" readonly>
+                                        value="{{ $hcfname['hcfid'] }}" readonly>
                                     <input type="text" name="conid" class="d-none"
                                         value="{{ $SelectedConID }}">
                                     <input type="text" name="datefrom" value="{{ $SelectedDateFrom }}"
@@ -152,7 +152,7 @@ $hcfname = json_decode($SelectedHCFID, true);
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label for="e_amount">Contract Amount</label>
-                                    <input type="text" value="&#8369; &nbsp;{{ number_format((double) $SelectedAmount, 2) }}" class="form-control" double readonly>
+                                   <input type="text" value="&#8369; &nbsp;{{ number_format((double) $SelectedAmount, 2) }}" class="form-control" double readonly>
                                     <input type="text" name="contract_amount" id="contract" value="{{ $SelectedAmount }}" class="form-control d-none" double readonly>
                                 </div>
                             </div>
@@ -174,7 +174,8 @@ $hcfname = json_decode($SelectedHCFID, true);
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="e_amount">Tranch Amount</label>
-                                    <input type="text" name="tranch_amount" id="tranch_amount" value="" class="form-control" oninput="formatNumber(this)" double>
+                                    <input type="text" name="tranch_amount" id="tranch_amount" value=""
+                                        class="form-control" oninput="formatNumber(this)" double readonly>
                                 </div>
                             </div>
                             <div class="form-row">

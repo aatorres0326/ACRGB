@@ -14,107 +14,24 @@ class AreaController extends Controller
     {
         return view('area-management');
     }
-    public function GetArea()
-    {
-
-        $apiAreaType = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetAreaType/ACTIVE');
-        $apiArea = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetArea/ACTIVE');
-        $apiUsers = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUser/ACTIVE');
-
-
-
-
-        $decodedAreaType = $apiAreaType->json();
-        $decodedArea = $apiArea->json();
-        $decodedUsers = $apiUsers->json();
-
-
-        $AreaType = json_decode($decodedAreaType['result'], true);
-        $Area = json_decode($decodedArea['result'], true);
-        $Users = json_decode($decodedUsers['result'], true);
-
-
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
-        $decodedMB = $apiMB->json();
-        $ManagingBoard = json_decode($decodedMB['result'], true);
-
-
-        return view('AreaManagement/area-management', compact('AreaType', 'Area', 'Users', 'ManagingBoard'));
-    }
-
-    public function AddAreaType(Request $request)
-    {
-
-        $now = new DateTime();
-        $ATresponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTAREATYPE', [
-            'typename' => $request->input('typename'),
-            'createdby' => $request->input('createdby'),
-            'datecreated' => $now->format('m-d-Y'),
-
-        ]);
-
-        if ($ATresponse->successful()) {
-            return redirect('/area');
-
-        }
-
-    }
-
-    public function AddArea(Request $request)
-    {
-
-        $now = new DateTime();
-        $ATresponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTAREA', [
-            'areaname' => $request->input('areaname'),
-            'typeid' => $request->input('areatype'),
-            'createdby' => $request->input('createdby'),
-            'datecreated' => $now->format('m-d-Y'),
-
-        ]);
-
-        if ($ATresponse->successful()) {
-            return redirect('/area');
-
-        }
-
-    }
 
 
     // REGIONAL OFFICE CONTROLLER
     public function GetRegionalOffice()
     {
 
-        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro/ACTIVE');
+        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro');
 
         $decodedPro = $apiPro->json();
 
         $RegionalOffices = json_decode($decodedPro['result'], true);
 
         // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
         return view('AreaManagement/pro-management', compact('RegionalOffices', 'ManagingBoard'));
-    }
-
-    public function addPro(Request $request)
-    {
-
-        $now = new DateTime();
-        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTPRO', [
-            'proname' => $request->input('proname'),
-            'createdby' => $request->input('createdby'),
-            'datecreated' => $now->format('m-d-Y'),
-
-        ]);
-
-        if ($AddProResponse->successful()) {
-            return redirect('/pro');
-
-        }
-
     }
 
     // END OF REGIONAL OFFICE CONTROLLER
@@ -124,10 +41,10 @@ class AreaController extends Controller
     public function GetManagingBoard()
     {
         $SessionUserID = session()->get('userid');
-        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID);
+        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID . "/PRO");
         $decodedHCFUnderPro = $ApiHCFUnderPro->json();
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
 
         $decodedMB = $apiMB->json();
 
@@ -137,21 +54,28 @@ class AreaController extends Controller
     }
     public function INSERTManagingBoard(Request $request)
     {
+        // Dump the incoming request data for debugging
+        dd($request->all());
 
         $now = new DateTime();
         $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTManagingBoard', [
             'mbname' => $request->input('mbname'),
-            'createdby' => $request->input('createdby'),
             'datecreated' => $now->format('m-d-Y'),
-
+            'createdby' => $request->input('createdby'),
+            'controlnumber' => $request->input('accreditation'),
+            'licensedatefrom' => $request->input('licensedatefrom'),
+            'licensedateto' => $request->input('licensedateto'),
         ]);
+
+        // Dump the response for debugging
+        dd($AddProResponse->json());
 
         if ($AddProResponse->successful()) {
             return redirect('/managingboard');
-
         }
-
     }
+
+
     public function GetMbAccess(Request $request)
     {
 
@@ -174,7 +98,7 @@ class AreaController extends Controller
         $SelectedMbID = $request->query('mbid', '');
         $SelectedMbName = $request->query('mbname', '');
 
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
 
         $decodedMB = $apiMB->json();
 
@@ -204,6 +128,7 @@ class AreaController extends Controller
 
     public function GetProAccess(Request $request)
     {
+        $SelectedProCode = $request->query('proid', '');
         $SessionUserID = session()->get('userid');
         $RoleIndexResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndex/0');
 
@@ -218,7 +143,7 @@ class AreaController extends Controller
 
 
 
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
 
         $decodedMB = $apiMB->json();
 
@@ -228,7 +153,7 @@ class AreaController extends Controller
         $SelectedProID = $request->query('proid', '');
         $SelectedProName = $request->query('proname', '');
 
-        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetRoleIndexWithID/' . $SessionUserID);
+        $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SelectedProCode . '/PHIC');
         $decodedHCFUnderPro = $ApiHCFUnderPro->json();
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
@@ -250,6 +175,22 @@ class AreaController extends Controller
         $SelectedProName = $request->input('proname');
 
         if ($AddProResponse->successful()) {
+            // Pass all necessary variables to the view
+            return redirect('/proaccess?proid=' . $SelectedProID . '&proname=' . $SelectedProName);
+        }
+    }
+    public function REMOVEROLEINDEXPRO(Request $request)
+    {
+        $now = new DateTime();
+        $RemoveProResponse = Http::put('http://localhost:7001/ACRGB/ACRGBUPDATE/RemoveAccessRole', [
+            'userid' => $request->input('proid'),
+            'accessid' => $request->input('accessid'),
+        ]);
+
+        $SelectedProID = $request->input('proid');
+        $SelectedProName = $request->input('proname');
+
+        if ($RemoveProResponse->successful()) {
             // Pass all necessary variables to the view
             return redirect('/proaccess?proid=' . $SelectedProID . '&proname=' . $SelectedProName);
         }
