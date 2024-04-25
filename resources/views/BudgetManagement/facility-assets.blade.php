@@ -126,7 +126,7 @@ $hcfname = json_decode($SelectedHCFID, true);
 $hcfname = json_decode($SelectedHCFID, true);
                                     @endphp
                                     <input type="text" name="hcfid" class="form-control d-none"
-                                        value="{{ $hcfname['hcfid'] }}" readonly>
+                                        value="{{ $hcfname['hcfcode'] }}" readonly>
                                     <input type="text" name="conid" class="d-none"
                                         value="{{ $SelectedConID }}">
                                     <input type="text" name="datefrom" value="{{ $SelectedDateFrom }}"

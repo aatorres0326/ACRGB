@@ -3,14 +3,11 @@
 
 <div id="content">
     <div class="container-fluid">
-        <div class="card-body bg-gradient-light">
         <center>
             <strong>
                 <h4 class="text-primary">
-@php
-$hcfname = json_decode($SelectedHCFID, true);
-@endphp
-                    <strong>{{ $hcfname['hcfname'] }}</strong>
+
+                    <strong>{{ $SelectedHCPN }}</strong>
                    
                 </h4>
                 <br>
@@ -106,7 +103,7 @@ $hcfname = json_decode($SelectedHCFID, true);
                 </div>
             </div>
         </div>
-</div>
+
         <!-- ADD ASSETS MODAL -->
         <div class="modal" id="release-tranch">
             <div class="modal-dialog modal-dialog-centered modal-md">
@@ -123,33 +120,18 @@ $hcfname = json_decode($SelectedHCFID, true);
                             <div class="form-row">
                                 <div class="form-group col-md">
 
-                                    @php
-$hcfname = json_decode($SelectedHCFID, true);
-                                    @endphp
+                   
                                     <input type="text" name="hcfid" class="form-control d-none"
-                                        value="{{ $hcfname['hcfcode'] }}" readonly>
+                                        value="{{ $SelectedControlNumber }}" readonly required>
                                     <input type="text" name="conid" class="d-none"
-                                        value="{{ $SelectedConID }}">
-                                    <input type="text" name="datefrom" value="{{ $SelectedDateFrom }}"
-                                        class="form-control d-none" readonly>
-                                    <input type="text" name="dateto" value="{{ $SelectedDateTo}}"
-                                        class="form-control d-none" readonly>
-                                    <h4>{{ $hcfname['hcfname'] }}</h4>
+                                        value="{{ $SelectedConID }}" required>
+                                   
+                                    <h4>{{ $SelectedHCPN }}</h4>
 
 
-                                    <input type="text" name="selectedhcfid" class="d-none"
-                                        value="{{ $SelectedHCFID }}">
+                                 
                                 </div>
                             </div>
-                            <div class="form-row">
-                                <div class="form-group col-md">
-                                    <label for="datefrom">Date Covered</label>
-                                    <input type="text" name="datecovered"
-                                        value="{{ $SelectedDateFrom }} to {{ $SelectedDateTo }}" class="form-control"
-                                        readonly>
-                                </div>
-                            </div>
-
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label for="e_amount">Contract Amount</label>
@@ -158,18 +140,19 @@ $hcfname = json_decode($SelectedHCFID, true);
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-4">
                                     <label for="tranch">Tranch</label>
                                     <select name="tranch" id="tranch" class="form-control"
                                         onchange="updatePercentage()">
+                                        <option>Select Tranch</option>
                                         @foreach ($Tranch as $tranch)
                                         <option value="{{ $tranch['tranchid'] }}"
                                             data-percent="{{ $tranch['percentage'] }}">{{ $tranch['tranchtype'] }}</option>
                                         @endforeach
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <label for="e_amount">Percentage</label>
+                                <div class="form-group col-md-2">
+                                    <label for="e_amount">&nbsp;&nbsp;%</label>
                                     <input type="num" id="percent" class="form-control" name="percent"
                                         value="{{ $Tranch[0]['percentage'] }}" readonly>
                                 </div>

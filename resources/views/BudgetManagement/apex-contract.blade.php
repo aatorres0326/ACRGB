@@ -3,13 +3,13 @@
 
 @section('contents')
 
+
 <div id="content">
     <div class="container-fluid">
 
-
         <!-- CONTRACT TABLE -->
         <div class="card shadow mb-4">
-            <div class="card-body">
+            <div class="card-body bg-gradient-light">
                 <div class="table-responsive-sm"
                     style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
                     <div style="position:absolute; top:13px; right:460px">
@@ -17,10 +17,14 @@
                         <a class="btn btn-link btn-sm " data-toggle="modal" data-target="#add-contract" text-decoration:
                             none;><i class="fas fa-plus fa-sm text-info-40"></i> Add Contract
                         </a>
+                       
                         @endif
+                         <input type="text" id="searchInput">
                     </div>
-                    <table class="table table-sm table-hover table-bordered table-striped" id="tablemanager"
+
+                    <table class="table table-sm table-hover table-bordered display" id="tablemanager"
                         width="100%" cellspacing="0">
+                        <caption>List of APEX Contracts</caption>
                         <div class="row" style="margin-bottom: 7px;">
                             <div class="col"></div>
                             <div class="col"></div>
@@ -28,14 +32,14 @@
                         <thead>
                             <tr>
                                 <thead>
-                            <tr>
-                                <th class="text-center">Contract Number</td>
-                                <th  class="text-center" id="max-width-column">APEX Facility</th>
-                                <th class="text-center">Estimated Amount</th>
-                                <th class="text-center">Released Amount</th>
-                                <th class="text-center">Released Date</th>
-                                <th class="text-center">Released By</th>
-                                <th class="text-center disableFilterBy">Date Covered</th>
+                            <tr class="exclude-row">
+                                <th class="text-center disableSort">Contract Number</td>
+                                <th  class="text-center disableSort" id="max-width-column"  data-sortable="true">APEX Facility</th>
+
+                                <th class="text-center disableSort">Contract Amount</th>
+                                    <th class="text-center disableSort">Tranch</th>
+                                    <th class="text-center disableSort disableFilterBy">Used Budget</th>
+                                    <th class="text-center disableSort disableFilterBy">No. of Claims</th>
                            @if (session()->get('leveid') == 'PRO')
                                 <th class="disableSort disableFilterBy text-center">Action</th>
                                 @endif
@@ -55,36 +59,98 @@
             $hcf = json_decode($contract['hcfid'], true);
                                 @endphp
                                 <td id="max-width-column" data-toggle=" tooltip" title="{{ $hcf['hcfname'] }}">{{ $hcf['hcfname'] }}</td>
-                                <td><strong>&#8369;</strong> &nbsp;{{ number_format((double) $contract['baseamount'], 2) }}</td>
                                 <td><strong>&#8369;</strong> &nbsp;{{ number_format((double) $contract['amount'], 2) }}</td>
-                                <td class="text-center"> {{ DateTime::createFromFormat('m-d-Y', $contract['datecreated'])->format('M j, Y') }}</td>
-                                
+                                 @if ($contract['traches'] == 1)
+                                                <td class="text-center">1ST</td>
+                                                @if ($contract['percentage'] < 0)
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span> OVER OF 1ST TRANCH</td>
+                                                @elseif ($contract['percentage'] < 45)
+                                                <td class="text-center"><span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 1ST TRANCH</td>
+                                                @elseif ($contract['percentage'] < 55)
+                                                <td class="text-center"><span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 1ST TRANCH</td>
+                                                @else
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 1ST TRANCH</td>
+                                                @endif
+                                 @elseif ($contract['traches'] == 2)
+                                                <td class="text-center">2ND</td>
+                                                @if ($contract['percentage'] < 0)
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span> OVER OF 2ND TRANCH</td>
+                                                @elseif ($contract['percentage'] < 60)
+                                                <td class="text-center"><span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 2ND TRANCH</td>
+                                                @elseif ($contract['percentage'] < 70)
+                                                <td class="text-center"><span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 2ND TRANCH</td>
+                                                @else
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 2ND TRANCH</td>
+                                                @endif
+                                @elseif ($contract['traches'] == 3)
+                                                <td class="text-center">3RD</td>
+                                                 @if ($contract['percentage'] < 0)
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span> OVER OF 3RD TRANCH</td>
+                                                @elseif ($contract['percentage'] < 80)
+                                                <td class="text-center"><span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 3RD TRANCH</td>
+                                                @elseif ($contract['percentage'] < 90)
+                                                <td class="text-center"><span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 3RD TRANCH</td>
+                                                @else
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 3RD TRANCH</td>
+                                                @endif
+                                                @else
+                                                <td class="text-center">N/A</td>
+                                                <td class="text-center">N/A</td>
+                                @endif
+                                                 
+                                                
+                                               
+                                                <td class="text-center">{{$contract['totalclaims']}}</td>
                                 @php
             $createdby = json_decode($contract['createdby'], true);
                                 @endphp
-
-                                @if ($createdby == null)
-                                <td class="text-center">NO DATA FOUND</td>        
-                                @else
-                                <td class="text-center"> {{ $createdby['firstname'] . " " . $createdby['lastname'] }}</td>    
-                                @endif 
-
-                                <td class="text-center">{{ DateTime::createFromFormat('m-d-Y', $contract['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $contract['dateto'])->format('M j, Y') }}</td>
-                                @if (session()->get('leveid') == 'PRO')
                                 <td class="text-center">
-                                    <button class="btn btn-sm btn-link text-darker-primary" onclick="GetAPEXContractDetails('{{$contract['conid']}}', '{{$contract['hcfid']}}', '<?= $contract['dateto'] ?>','<?= $contract['datefrom'] ?>','<?= $contract['amount'] ?>')">
-                                        <i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i>
-                                    </button>
-                                    <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal" data-target="#editcontract" onclick="EditContract('<?= $contract['conid'] ?>','<?= $contract['amount'] ?>','<?= $contract['transcode'] ?>','<?= htmlspecialchars(json_encode($hcf), ENT_QUOTES, 'UTF-8') ?>')"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit Contract"></i></a>
-                                    <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal" data-target="#editcontractstatus" onclick="EditContractStatus('<?= $contract['conid'] ?>',
-                                    '<?= htmlspecialchars(json_encode($hcf), ENT_QUOTES, 'UTF-8') ?>',
-                                    '<?= $contract['transcode'] ?>',
-                                    '<?= $contract['baseamount'] ?>',
-                                    '<?= $contract['datefrom'] ?>',
-                                    '<?= $contract['dateto'] ?>')">Change Status</a>
+                                    <button class="btn-info btn-sm" id="{{$contract['transcode']}}" onclick="toggleDetails('{{$contract['transcode']}}')"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></button>
                                 </td>
-                                @endif
                             </tr>
+                             <tr id="{{$contract['transcode']}}-details" class="d-none exclude-row">
+                                                <td colspan="8">
+                                                    <div class="card card-body bg-light">
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-sm-2">
+                                                                <span class="text-secondary font-weight-bold">ESTIMATED AMOUNT</span></br>
+                                                                <span><strong>&#8369;</strong> &nbsp;{{ number_format((double) $contract['baseamount'], 2) }}</span>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <span class="text-secondary font-weight-bold">RELEASED BY</span></br>
+                                                                @if ($createdby == null)
+                                                                    <span>NO DATA FOUND</span>      
+                                                                @else
+                                                                    <span>{{ $createdby['firstname'] . " " . $createdby['lastname'] }}</span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <span class="text-secondary font-weight-bold">DATE RELEASED</span></br>
+                                                                <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datecreated'])->format('M j, Y') }}</span>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <span class="text-secondary font-weight-bold">CONTRACT COVERAGE</span></br>
+                                                                <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $contract['dateto'])->format('M j, Y') }}</span>
+                                                            </div>
+                                                            <div class="col-sm-3 text-right">
+                                                                <button class="btn btn-sm btn-info text-darker-primary" onclick="GetAPEXContractDetails('{{$contract['conid']}}', '{{$contract['hcfid']}}', '<?= $contract['dateto'] ?>','<?= $contract['datefrom'] ?>','<?= $contract['amount'] ?>')">
+                                                                    Tranches
+                                                                </button>
+                                                                 @if (session()->get('leveid') == 'PRO')
+                                                                <a class="btn btn-sm btn-warning" data-toggle="modal" data-target="#editcontractstatus" onclick="EditContractStatus('<?= $contract['conid'] ?>',
+                                                                    '<?= htmlspecialchars(json_encode($hcf), ENT_QUOTES, 'UTF-8') ?>',
+                                                                    '<?= $contract['transcode'] ?>',
+                                                                    '<?= $contract['baseamount'] ?>',
+                                                                    '<?= $contract['datefrom'] ?>',
+                                                                    '<?= $contract['dateto'] ?>')">Status</a> 
+                                                                    <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal" data-target="#editcontract" onclick="EditContract('<?= $contract['conid'] ?>','<?= $contract['amount'] ?>','<?= $contract['transcode'] ?>','<?= htmlspecialchars(json_encode($hcf), ENT_QUOTES, 'UTF-8') ?>')"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit Contract"></i></a> 
+                                                                @endif
+                                                               
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
                             @else
                             <tr>
                                 <td colspan="5" class="text-center">NO DATA FOUND</td>
@@ -96,14 +162,61 @@
                                 <td colspan="5" class="text-center">NO DATA FOUND</td>
                             </tr>
                             @endif
+                            
                         </tbody>
 
                     </table>
+
+
                 </div>
             </div>
         </div>
     </div>
 
+<script>
+    document.addEventListener("DOMContentLoaded", function() {
+        var filterInput = document.getElementById("filterInput");
+        var table = document.getElementById("table");
+        var paginationDiv = document.getElementById("pagination");
+
+     
+
+
+        // Filter table on input change
+        filterInput.addEventListener("keyup", function() {
+            // Reset to first page when filtering
+            currentPage = 1;
+
+            var filterValue = filterInput.value.toLowerCase();
+            var rows = table.getElementsByTagName("tr");
+
+            for (var i = 1; i < rows.length; i++) { // Start from index 1 to exclude header
+                var row = rows[i];
+                if (!row.classList.contains("exclude-row")) {
+                    var cells = row.getElementsByTagName("td");
+                    var found = false;
+
+                    for (var j = 0; j < 3; j++) { // Iterate only over the first three columns
+                        var cell = cells[j];
+                        if (cell.textContent.toLowerCase().indexOf(filterValue) > -1) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (found) {
+                        row.style.display = "";
+                    } else {
+                        row.style.display = "none";
+                    }
+                }
+            }
+
+            
+       
+        });
+    });
+</script>
 <div class="modal" id="add-contract">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
@@ -477,5 +590,15 @@ function GetAPEXContractDetails(conid, hcfid, datefrom, dateto, amount) {
       window.location.href = "/apexassets?conid=" + conid + "&hcfid=" + hcfid + "&datefrom=" + datefrom + "&dateto=" + dateto + "&amount=" + amount;
 }
   </script>
+  <script>
+    function toggleDetails(transcode) {
+        var detailsRow = document.getElementById(transcode + "-details");
+        if (detailsRow.classList.contains("d-none")) {
+            detailsRow.classList.remove("d-none");
+        } else {
+            detailsRow.classList.add("d-none");
+        }
+    }
+</script>
 
     @endsection

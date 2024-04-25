@@ -266,10 +266,13 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
                 for (i = 0; i < showrows.length; i++) {
                     $("select#numrows").append(
                         $("<option>", {
-                            value: showrows[i],
+                            value: showrows[i] * 3,
                             text: showrows[i],
                         })
                     );
+                    259;
+                    297;
+                    278;
 
                     // debug
                     if (isNaN(showrows[i])) {
@@ -349,7 +352,7 @@ Important! Do not edit this plugin if you're not sure you're doing it right. The
             ) {
                 // Create div and select to filter
                 var filterbyDiv =
-                    '<div id="for_filter_by" class="for_filter_by" style="position:absolute; top:3px; right:8px;"><label for="filter_by">' +
+                    '<div id="for_filter_by" class="for_filter_by d-none" style="position:absolute; top:3px; right:8px;"><label for="filter_by">' +
                     translate(voc_filter_by) +
                     ': </label><select id="filter_by" class="btn btn-sm"></select> <input id="filter_input" type="text" placeholder="' +
                     translate(voc_type_here_filter) +

@@ -65,6 +65,8 @@ Route::middleware('Pro')->group(function () {
     Route::get('apexreports', [BudgetController::class, 'GetAPEXReports'])->name('apexreports');
     Route::get('apexreports/ledger', [BudgetController::class, 'GetAPEXLedger'])->name('apexreports/ledger');
     Route::get('ledger', [BudgetController::class, 'Ledger'])->name('ledger');
+    Route::get('ledger/hcpn', [BudgetController::class, 'GetHCPNLedger'])->name('ledger/hcpn');
+    Route::get('hcpnassets', [BudgetController::class, 'GetHCPNAssets'])->name('hcpnassets');
 
 });
 

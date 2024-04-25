@@ -18,9 +18,59 @@
 <script src="{{ asset('admin_assets/js/slimselect.min.js') }}"></script>
 <link href="{{ asset('admin_assets/css/slimselect.min.css') }}" rel="stylesheet">
 
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const input = document.getElementById("searchInput");
+  const table = document.getElementById("tablemanager");
+  const rows = table.getElementsByTagName("tr");
+  let noMatchRow = null; // Declare a variable to hold the reference to the "No matching records" row
+  
+  input.addEventListener("input", function() {
+    const filter = input.value.toUpperCase();
+    let visibleRowCount = 0;
+    for (let i = 1; i < rows.length; i++) {
+      if (rows[i].classList.contains("exclude-row")) {
+        continue; // Skip filtering rows with the "exclude-row" class
+      }
+      const cells = rows[i].getElementsByTagName("td");
+      let shouldHide = true;
+      for (let j = 0; j < cells.length; j++) {
+        const cellText = cells[j].textContent.toUpperCase();
+        if (cellText.includes(filter)) {
+          shouldHide = false;
+          break;
+        }
+      }
+      rows[i].style.display = shouldHide ? "none" : "";
+      if (!shouldHide) {
+        visibleRowCount++;
+      }
+    }
+
+  });
+});
+</script>
+
+
+
 
 
 <style>
+  #searchInput {
+    position:absolute;
+  margin-top:-7px;
+  padding: 8px;
+  width: 440px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+#searchInput:focus {
+  outline: none;
+  border-color: dodgerblue;
+}
     .table-sm {
       font-size: 8px;
     }
@@ -134,7 +184,10 @@
         white-space: nowrap;
         text-overflow: ellipsis;
     }
-    
+    #for_numrows
+   {
+    display:none;
+   }
     
   </style>
 </head>
@@ -147,7 +200,7 @@
     <!-- End of Sidebar -->
 
     <!-- Content Wrapper -->
-    <div id="content-wrapper" class="d-flex flex-column bg-gradient-dark">
+    <div id="content-wrapper" class="d-flex flex-column bg-gradient-light" style="min-width:1000px;">
 
       <!-- Main Content -->
       <div id="content">
@@ -365,13 +418,6 @@ function DisplayUserDetails(userid, username, leveid) {
       disableFilterBy: [1]
     })  </script>
 
-  <!-- FILE INPUT SCRIPT -->
-  <script>
-    $(".custom-file-input").on("change", function () {
-      var fileName = $(this).val().split("\\").pop();
-      $(this).siblings(".custom-file-label").addClass("selected").html(fileName);
-    })  
-  </script>
 
 
   <!-- SCRIPT FOR LOADER -->
@@ -388,35 +434,7 @@ function DisplayUserDetails(userid, username, leveid) {
     // Event listener for window load
     window.addEventListener('load', showContent)  </script>
   <!-- SCRIPT FOR EDITING TABLE CELLS -->
-  <script>
-    function makeEditable(button) {
-      var row = button.parentNode.parentNode;
-      var cells = row.getElementsByClassName('editable');
 
-      for (var i = 0; i < cells.length; i++) {
-        cells[i].contentEditable = true;
-      }
-
-      button.innerHTML = 'Save';
-      button.onclick = function () {
-        saveChanges(this);
-      };
-    }
-
-    function saveChanges(button) {
-      var row = button.parentNode.parentNode;
-      var cells = row.getElementsByClassName('editable');
-
-      for (var i = 0; i < cells.length; i++) {
-        cells[i].contentEditable = false;
-      }
-
-      button.innerHTML = 'Change Status';
-      button.onclick = function () {
-        makeEditable(this);
-      };
-    }
-  </script>
 
   <script>
     $(document).ready(function () {
@@ -436,6 +454,17 @@ function DisplayUserDetails(userid, username, leveid) {
 <script>
     new SlimSelect({
         select: "#select"
+    });
+
+    new SlimSelect({
+        select: "#select2"
+    });
+
+    new SlimSelect({
+        select: "#select3"
+    });
+    new SlimSelect({
+        select: "#hcpn"
     });
 </script>
 

@@ -12,10 +12,15 @@
         
         <div class="col-md">
             <div class="card shadow mb-4">
-                <div class="card-body">
+                <div class="card-body bg-gradient-light">
                     <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content2">
-                        <table class="table table-sm table-hover table-bordered table-light" id="tablemanager"width="100%"
+                    <div style="position:absolute; top:13px; right:460px">
+                  
+                         <input type="text" id="searchInput">
+                    </div>
+                        <table class="table table-sm table-hover table-bordered" id="tablemanager"width="100%"
                             cellspacing="0">
+                            <caption>List of Health Care Provider Networks</caption>
                             <div class="row" style="margin-bottom: 7px;">
                                 <div class="col"></div>
                                 <div class="col"></div>
@@ -67,22 +72,24 @@
       @else
         <div class="col-md">
             <div class="card shadow mb-4">
-                <div class="card-body">
+                <div class="card-body bg-gradient-light">
                     <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content2">
-                        <div style="position:absolute; top:13px; right:550px">
+                        <div style="position:absolute; top:13px; right:460px">
                             <a class="btn btn-link btn-sm" data-toggle="modal" data-target="#add-hcpn" style="text-decoration:
-                                none; "><i class="fas fa-plus fa-sm text-info-40"></i> Add Health Care Provider Network
+                                none; "><i class="fas fa-plus fa-sm text-info-40"></i> Add HCPN
                             </a>
+                              <input type="text" id="searchInput">
                         </div>
-                        <table class="table table-sm table-hover table-bordered table-light" id="tablemanager" width="100%"
+                        <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
                             cellspacing="0">
+                            <caption>List of Health Care Provider Networks</caption>
                             <div class="row" style="margin-bottom: 7px;">
                                 <div class="col"></div>
                                 <div class="col"></div>
                             </div>
                             <thead>
-                                <tr>
-                                    <th>Health care Provider Networks</th>
+                                <tr class="exclude-row">
+                                    <th class="disableSort">Health care Provider Networks</th>
                                     <th class="text-center disableSort">Accreditation</th>
                                     <th class="text-center disableSort">License Validity</th>
                                     <th class="disableSort disableFilterBy">

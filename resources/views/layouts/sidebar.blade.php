@@ -17,12 +17,12 @@
 
 
 
-    <hr class="sidebar-divider {{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}
+    <hr class="sidebar-divider {{ session()->get('leveid') === 'HCPN' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'STAFF' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}">
 
-      <li class="nav-item {{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}
+      <li class="nav-item {{ session()->get('leveid') === 'HCPN' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'STAFF' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}">
@@ -30,7 +30,7 @@
                         <i class="fas fa-fw fa-users"></i>
                             <span>User Details</span></a>
                     </li>
-                    <li class="nav-item {{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}
+                    <li class="nav-item {{ session()->get('leveid') === 'HCPN' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'STAFF' ? 'd-none' : '' }}
     {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}">
@@ -40,7 +40,7 @@
                         <i class="fas fa-fw fa-lock"></i>
                             <span>Login Details</span></a>
                     </li>
-    <li class="nav-item  {{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}
+    <li class="nav-item  {{ session()->get('leveid') === 'HCPN' ? 'd-none' : '' }}
     {{ (request()->is('pro')) ? 'active' : '' }} {{ (request()->is('proaccess')) ? 'active' : '' }}
     {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }} 
     {{ session()->get('leveid') === 'STAFF' ? 'd-none' : '' }}
@@ -49,7 +49,7 @@
             <i class="fas fa-fw fa-sitemap"></i>
             <span>Regional Offices</span></a>
     </li>
-    <li class="nav-item  {{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}
+    <li class="nav-item  {{ session()->get('leveid') === 'HCPN' ? 'd-none' : '' }}
     {{ (request()->is('managingboard')) ? 'active' : '' }}
     {{ (request()->is('mbaccess')) ? 'active' : '' }}
     {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }} 
@@ -69,7 +69,7 @@
     <li class="nav-item {{ (request()->is('hcpncontract')) ? 'active' : '' }}
                     {{ session()->get('leveid') === 'STAFF' ? 'd-none' : '' }}
                     {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}
-                    {{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}" id="accordion">
+                    " id="accordion">
         <a class="nav-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
             aria-controls="collapseOne">
             <i class="fas fa-fw fa-chart-bar"></i><span>&nbsp;Budget Utilization</span>
@@ -78,13 +78,17 @@
             {{ (request()->is('hcpncontract')) ? 'show' : '' }}
             {{ (request()->is('apexcontract')) ? 'show' : '' }}
             {{ (request()->is('apexassets')) ? 'show' : '' }}
+            {{ (request()->is('hcpnassets')) ? 'show' : '' }}
+            {{ (request()->is('facilitycontracts')) ? 'show' : '' }}
             {{ (request()->is('userlevel')) ? 'show' : '' }}
             {{ (request()->is('useraccess')) ? 'show' : '' }}" data-parent="#accordion">
        
             <div class="bg-white py-2 collapse-inner rounded">
                 <ul class="navbar-nav">
                     <li class="nav-item">
-                        <a class="collapse-item {{ (request()->is('hcpncontract')) ? 'active' : '' }}" href="/hcpncontract">
+                        <a class="collapse-item {{ (request()->is('hcpncontract')) ? 'active' : '' }}
+                                    {{ (request()->is('hcpnassets')) ? 'active' : '' }}
+            {{ (request()->is('facilitycontracts')) ? 'active' : '' }}" href="/hcpncontract">
                         <span>HCPN Contracts</span></a>
                     </li>
                     <li class="nav-item}">
@@ -137,7 +141,8 @@
     <li class="nav-item {{ (request()->is('viewbudget')) ? 'active' : '' }}
  {{ session()->get('leveid') === 'STAFF' ? 'd-none' : '' }}
  {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}
- {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
+ {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}
+ {{ session()->get('leveid') === 'HCPN' ? 'd-none' : '' }}">
         <a class="nav-link" href="/DATESETTINGS">
             <i class="fas fa-fw fa-calendar"></i>
             <span>Date Settings</span></a>

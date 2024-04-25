@@ -16,26 +16,29 @@
         <!-- CONTRACT TABLE -->
         <div class="card shadow mb-4">
             
-            <div class="card-body">
+            <div class="card-body bg-gradient-light">
                 
                 <div class="table-responsive-sm"
                     style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                  
-                    <table class="table table-sm table-hover table-bordered table-striped" id="tablemanager"
+                  <div style="position:absolute; top:13px; right:460px ">
+                            
+                            <input type="text" id="searchInput">
+                        </div>
+                    <table class="table table-sm table-hover table-bordered" id="tablemanager"
                         width="100%" cellspacing="0">
                         <div class="row" style="margin-bottom: 7px;">
                             <div class="col"></div>
                             <div class="col"></div>
                         </div>
                         <thead>
-                           <tr>
-                                <th class="text-center">Contract Number</td>
-                                <th  class="text-center" id="max-width-column">HCPN</th>
-                                <th class="text-center">Estimated Amount</th>
-                                <th class="text-center">Released Amount</th>
-                                <th class="text-center">Released Date</th>
-                                <th class="text-center">Released By</th>
-                                <th class="text-center disableFilterBy">Date Covered</th>
+                           <tr class="exclude-row">
+                                <th class="text-center disableSort">Contract Number</td>
+                                <th  class="text-center disableSort" id="max-width-column">HCPN</th>
+                                <th class="text-center disableSort">Contract Amount</th>
+                                    <th class="text-center">Current Tranch</th>
+                                    <th class="text-center disableSort disableFilterBy">Used Tranch Budget</th>
+                                    <th class="text-center disableSort disableFilterBy">No. of Claims</th>
+                                
                           
                                 <th class="disableSort disableFilterBy text-center">Action</th>
                             </tr>
@@ -53,40 +56,104 @@
 @endphp
 
                                 <td>{{ $mb['hcfname'] }}</td>
-                                <td><strong>&#8369;</strong> &nbsp;{{ number_format((double) $contract['baseamount'], 2) }}</td>
+                        
                                 <td><strong>&#8369;</strong> &nbsp;{{ number_format((double) $contract['amount'], 2) }}</td>
-                                <td class="text-center"> {{ DateTime::createFromFormat('m-d-Y', $contract['datecreated'])->format('M j, Y') }}</td>
-                                @php
-            $releasedby = json_decode($contract['createdby'], true);
-@endphp
-                                <td class="text-center">{{ $releasedby['firstname'] . ' ' . $releasedby['lastname'] }}</td>
-                                <td class="text-center">{{ DateTime::createFromFormat('m-d-Y', $contract['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $contract['dateto'])->format('M j, Y') }}</td>
-                              
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-link text-darker-primary" onclick="GetAPEXContractDetails('{{$contract['conid']}}', '<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>', '<?= $contract['dateto'] ?>','<?= $contract['datefrom'] ?>','<?= $contract['amount'] ?>')">
-                                        <i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i>
-                                    </button>
-                                   
-                                </td>
-                            </tr>
-                            @else
-                            <tr>
-                                <td colspan="5" class="text-center">NO DATA FOUND</td>
-                            </tr>
-                            @endif
-                            @endforeach
-                            @else
-                            <tr>
-                                <td colspan="5" class="text-center">NO DATA FOUND</td>
-                            </tr>
-                            @endif
-                        </tbody>
+                                 @if ($contract['traches'] == 1)
+                                                <td class="text-center">1ST</td>
+                                                @if ($contract['percentage'] < 0)
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span> OVER OF 1ST TRANCH</td>
+                                                @elseif ($contract['percentage'] < 45)
+                                                <td class="text-center"><span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 1ST TRANCH</td>
+                                                @elseif ($contract['percentage'] < 55)
+                                                <td class="text-center"><span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 1ST TRANCH</td>
+                                                @else
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 1ST TRANCH</td>
+                                                @endif
 
-                    </table>
+                                 @elseif ($contract['traches'] == 2)
+                                                <td class="text-center">2ND</td>
+                                                @if ($contract['percentage'] < 0)
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span> OVER OF 2ND TRANCH</td>
+                                                @elseif ($contract['percentage'] < 60)
+                                                <td class="text-center"><span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 2ND TRANCH</td>
+                                                @elseif ($contract['percentage'] < 70)
+                                                <td class="text-center"><span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 2ND TRANCH</td>
+                                                @else
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 2ND TRANCH</td>
+                                                @endif
+                                @elseif ($contract['traches'] == 3)
+                                                <td class="text-center">3RD</td>
+                                                 @if ($contract['percentage'] < 0)
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span> OVER OF 3RD TRANCH</td>
+                                                @elseif ($contract['percentage'] < 80)
+                                                <td class="text-center"><span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 3RD TRANCH</td>
+                                                @elseif ($contract['percentage'] < 90)
+                                                <td class="text-center"><span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 3RD TRANCH</td>
+                                                @else
+                                                <td class="text-center"><span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span> USED OF 3RD TRANCH</td>
+                                                @endif
+                                                @else
+                                                <td class="text-center">N/A</td>
+                                                <td class="text-center">N/A</td>
+                                @endif
+                                                <td class="text-center">{{$contract['totalclaims']}}</td>
+                               <td class="text-center">
+                                                    <button class="btn-info btn-sm" id="{{$contract['transcode']}}" onclick="toggleDetails('{{$contract['transcode']}}')"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></button>
+                                                </td>
+                            </tr>
+                            <tr id="{{$contract['transcode']}}-details" class="d-none exclude-row">
+                                                <td colspan="8">
+                                                    <div class="card card-body bg-light">
+                                                        <div class="row d-flex align-items-center">
+                                                            <div class="col-sm-2">
+                                                                <span class="text-secondary font-weight-bold">ESTIMATED AMOUNT</span></br>
+                                                                <span><strong>&#8369;</strong> &nbsp;{{ number_format((double) $contract['baseamount'], 2) }}</span>
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <span class="text-secondary font-weight-bold">RELEASED BY</span></br>
+                                                                 @php
+            $createdby = json_decode($contract['createdby'], true);
+                                                @endphp
+                                                                @if ($createdby == null)
+                                                                    <span>NO DATA FOUND</span>      
+                                                                @else
+                                                                    <span>{{ $createdby['firstname'] . " " . $createdby['lastname'] }}</span>
+                                                                @endif
+                                                            </div>
+                                                            <div class="col-sm-2">
+                                                                <span class="text-secondary font-weight-bold">DATE RELEASED</span></br>
+                                                                <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datecreated'])->format('M j, Y') }}</span>
+                                                            </div>
+                                                            <div class="col-sm-3">
+                                                                <span class="text-secondary font-weight-bold">CONTRACT COVERAGE</span></br>
+                                                                <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $contract['dateto'])->format('M j, Y') }}</span>
+                                                            </div>
+                                                            <div class="col-sm-3 text-right">
+                                                            <button class="btn btn-sm btn-info" onclick="GetAPEXContractDetails('{{$contract['conid']}}', '<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>', '<?= $contract['dateto'] ?>','<?= $contract['datefrom'] ?>','<?= $contract['amount'] ?>')">
+                                        Tranches
+                                    </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        @else
+                                            <tr>
+                                                <td colspan="5" class="text-center">NO DATA FOUND</td>
+                                            </tr>
+                                        @endif
+                                    @endforeach
+                                @else
+                                    <tr>
+                                        <td colspan="5" class="text-center">NO DATA FOUND</td>
+                                    </tr>
+                                @endif
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
     <!-- ADD CONTRACT MODAL -->
     <div class="modal" id="add-contract">
@@ -394,4 +461,14 @@ function GetAPEXContractDetails(conid, hcfid, datefrom, dateto, amount) {
       window.location.href = "/facilityassets?conid=" + conid + "&hcfid=" + hcfid + "&datefrom=" + datefrom + "&dateto=" + dateto + "&amount=" + amount;
 }
   </script>
+  <script>
+    function toggleDetails(transcode) {
+        var detailsRow = document.getElementById(transcode + "-details");
+        if (detailsRow.classList.contains("d-none")) {
+            detailsRow.classList.remove("d-none");
+        } else {
+            detailsRow.classList.add("d-none");
+        }
+    }
+</script>
     @endsection

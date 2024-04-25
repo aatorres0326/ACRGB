@@ -27,7 +27,7 @@ class UsersManageController extends Controller
         $userLevel = json_decode($decodedapiUserLevel['result'], true);
 
         // Debug: Dump the user list
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
 
         $decodedMB = $apiMB->json();
 
@@ -67,7 +67,7 @@ class UsersManageController extends Controller
         $userLevel = collect($userLevel);
         $userInfoList = $userInfoList->sortByDesc('datecreated');
 
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
@@ -143,7 +143,7 @@ class UsersManageController extends Controller
 
         $userLevel = json_decode($decodedapiUserLevel['result'], true);
 
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
 
         $decodedMB = $apiMB->json();
 
@@ -197,7 +197,7 @@ class UsersManageController extends Controller
         $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
 
 
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard/ACTIVE');
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
 
         $decodedMB = $apiMB->json();
 

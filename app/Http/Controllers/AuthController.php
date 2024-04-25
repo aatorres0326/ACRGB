@@ -142,7 +142,11 @@ class AuthController extends Controller
                         return response()->json(['error' => 'Failed to fetch data from API'], $apiPro->status());
                     }
                 } else {
-                    return view('dashboard', compact('result'));
+                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+                    $decodedMB = $apiMB->json();
+                    $ManagingBoard = json_decode($decodedMB['result'], true);
+
+                    return view('dashboard', compact('ManagingBoard'));
                 }
             } else {
                 return redirect()->back()->with('error', $response['message']);

@@ -55,10 +55,11 @@ class AreaController extends Controller
     public function INSERTManagingBoard(Request $request)
     {
         // Dump the incoming request data for debugging
-        dd($request->all());
+
+
 
         $now = new DateTime();
-        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTManagingBoard', [
+        $AddProResponse = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTHCPN', [
             'mbname' => $request->input('mbname'),
             'datecreated' => $now->format('m-d-Y'),
             'createdby' => $request->input('createdby'),
@@ -68,7 +69,7 @@ class AreaController extends Controller
         ]);
 
         // Dump the response for debugging
-        dd($AddProResponse->json());
+
 
         if ($AddProResponse->successful()) {
             return redirect('/managingboard');
@@ -157,8 +158,14 @@ class AreaController extends Controller
         $decodedHCFUnderPro = $ApiHCFUnderPro->json();
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
+        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro');
 
-        return view('AreaManagement/pro-access-assignment', compact('RoleIndex', 'SelectedProID', 'SelectedProName', 'ManagingBoard', 'HCFUnderPro'));
+        $decodedPro = $apiPro->json();
+
+        $RegionalOffices = json_decode($decodedPro['result'], true);
+
+
+        return view('AreaManagement/pro-access-assignment', compact('RoleIndex', 'SelectedProID', 'SelectedProName', 'ManagingBoard', 'HCFUnderPro', 'RegionalOffices'));
     }
 
     public function INSERTROLEINDEXPRO(Request $request)

@@ -9,9 +9,13 @@ $now->format('Y-m-d');
 
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
-        <div class="card-body">
+        <div class="card-body bg-gradient-light">
             <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                <table class="table table-sm table-hover table-bordered table-light" id="tablemanager" width="100%" cellspacing="0">
+             <div style="position:absolute; top:13px; right:460px">
+                  
+                         <input type="text" id="searchInput">
+                    </div>
+                <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%" cellspacing="0">
                     <div class="row" style="margin-bottom: 7px;">
                         <div class="col"></div>
                         <div class="col"></div>
@@ -20,21 +24,21 @@ $now->format('Y-m-d');
 
                     @if (session()->get('leveid') == 'PHIC')
                      <thead>
-                        <tr>
-                            <th class="d-none">Facility ID</th>
-                            <th>Facility</th>
-                            <th class="text-center">Address</th>
-                            <th class="text-center">TYPE</th>
-                            <th class="text-center {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}{{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}">Regional Office</th>
-                            <th class="text-center">Accreditation</th>
-                            <th class="text-center">HCPN</th>
+                        <tr class="exclude-row">
+                            
+                            <th class="disableSort">Facility</th>
+                            <th class="text-center disableSort">Address</th>
+                            <th class="text-center disableSort">TYPE</th>
+                            <th class="text-center disableSort {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}{{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}">Regional Office</th>
+                            <th class="text-center disableSort">Accreditation</th>
+                            <th class="text-center disableSort">HCPN</th>
                             <th class="disableSort disableFilterBy text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach($HCFUnderPro as $facility)
                         <tr>
-                            <td class="d-none">{{ $facility['hcfid'] }}</td>
+                            
                             <td>{{ $facility['hcfname'] }}</td>
                             <td class="text-center">{{ $facility['hcfaddress'] }}</td>
                             <td class="text-center">{{ $facility['type'] }}</td>
@@ -68,11 +72,11 @@ $now->format('Y-m-d');
                     </tbody>
                     @elseif (session()->get('leveid') == 'PRO')
                       <thead>
-                        <tr>
-                            <th>Facility</th>
-                            <th class="text-center">Address</th>
-                            <th class="text-center">Accreditation</th>
-                            <th class="text-center">HCPN</th>
+                        <tr class="exclude-row">
+                            <th class="disableSort">Facility</th>
+                            <th class="text-center disableSort">Address</th>
+                            <th class="text-center disableSort">Accreditation</th>
+                            <th class="text-center disableSort">HCPN</th>
                         </tr>
                     </thead>
                     <tbody>
