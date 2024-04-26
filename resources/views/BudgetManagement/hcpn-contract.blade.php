@@ -29,7 +29,7 @@
                                     <th class="text-center disableSort">Current Tranch</th>
                                     <th class="text-center disableSort disableFilterBy">Used Tranch Budget</th>
                                     <th class="text-center disableSort disableFilterBy">No. of Claims</th>
-                                    <th class="disableSort disableFilterBy text-center {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}">Action</th>
+                                    <th class="disableSort disableFilterBy text-center">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -88,7 +88,7 @@
                                                 <td class="text-center">{{$contract['totalclaims']}}</td>
                                                
                                                 <td class="text-center">
-                                                    <button class="btn-info btn-sm" id="{{$contract['transcode']}}" onclick="toggleDetails('{{$contract['transcode']}}')"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></button>
+                                                    <button class="btn-outline-primary btn-sm" id="{{$contract['transcode']}}" onclick="toggleDetails('{{$contract['transcode']}}')">View</button>
                                                 </td>
                                             </tr>
                                             <tr id="{{$contract['transcode']}}-details" class="d-none exclude-row">
@@ -119,18 +119,18 @@
                                                                 <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $contract['dateto'])->format('M j, Y') }}</span>
                                                             </div>
                                                             <div class="col-sm-3 text-right">
-                                                                <button class="btn btn-sm btn-info" title="View Tranches" onclick="ViewTranches('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>' )">Tranches</button>
-                                                                <button class="btn btn-sm btn-primary" title="View Facility Contracts" onclick="GetContractDetails('<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>' )">Facilities</button>
+                                                                <button class="btn btn-sm btn-outline-info" title="View Tranches" onclick="ViewTranches('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>' )">Tranches</button>
+                                                                <button class="btn btn-sm btn-outline-primary" title="View Facility Contracts" onclick="GetContractDetails('<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>' )">Facilities</button>
                                                                 @if (session()->get('leveid') == 'PRO')
                                                                     <a class="btn btn-sm btn-warning" data-toggle="modal" title="Change Status" data-target="#editcontractstatus" onclick="EditContractStatus('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['transcode'] ?>')">Status</a>
                                                                 @if ($contract['traches'] == 0)
-                                                                <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal" data-target="#editcontract" onclick="EditContract(
+                                                                <a class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editcontract" onclick="EditContract(
                                                                     '<?= $contract['conid'] ?>',
                                                                     '<?= $contract['amount'] ?>',
                                                                     '<?= $contract['transcode'] ?>'
                                                                 )"><i class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit Contract" ></i></a>
                                                                 @else
-                                                                 <a class="btn btn-sm btn-link text-darker-warning disabled" data-toggle="modal" data-target="#editcontract" onclick="EditContract(
+                                                                 <a class="btn btn-sm btn-outline-warning disabled" data-toggle="modal" data-target="#editcontract" onclick="EditContract(
                                                                     '<?= $contract['conid'] ?>',
                                                                     '<?= $contract['amount'] ?>',
                                                                     '<?= $contract['transcode'] ?>'
@@ -144,13 +144,13 @@
                                             </tr>
                                         @else
                                             <tr>
-                                                <td colspan="5" class="text-center">NO DATA FOUND</td>
+                                                <td>NO DATA FOUND</td>
                                             </tr>
                                         @endif
                                     @endforeach
                                 @else
                                     <tr>
-                                        <td colspan="5" class="text-center">NO DATA FOUND</td>
+                                        <td>NO DATA FOUND</td>
                                     </tr>
                                 @endif
                             </tbody>
@@ -159,6 +159,7 @@
                 </div>
             </div>
         </div>
+      
     @if (session()->get('leveid') == 'PRO')
         <!-- ADD CONTRACT MODAL -->
         <div class="modal" id="add-contract">
@@ -171,6 +172,10 @@
                     </div>
                     <!-- Modal body -->
                     <div class="modal-body">
+                                                @if ($ManagingBoard2 == null)
+                                                                 <h5 class="text-center">NO ASSIGNED ACCESS</h5>
+                          
+                            @else
                         <form action="{{ route('AddContract') }}" method="POST">
                             @csrf
                             <div class="form-row">
@@ -182,12 +187,17 @@
                             <div class="form-row">
                                 <div class="form-group col">
                                     <label for="hcpn">HCPN</label>
-                                    <select name="mb" id="seledtedhcf" class="form-control">
-                                        <option value="" data-base-amount="">Select HCPN</option>
+                                  
+                                        
+                   
+                              <select name="mb" id="seledtedhcf" class="form-control" required>
+                            <option value="" data-base-amount="">Select HCPN</option>
                                         @foreach ($ManagingBoard2 as $mb)
                                             <option value="{{ $mb['controlnumber']}}" data-base-amount="{{ $mb['baseamount'] }}">{{ $mb['mbname']}}</option>
                                         @endforeach
-                                    </select>
+                                          </select>
+                                        
+                                  
                                 </div>
                             </div>
                             <div class="form-row">
@@ -216,6 +226,7 @@
                                 <button type="submit" class="btn btn-primary">Add</button> <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
                             </div>
                         </form>
+                        @endif
                     </div>
                 </div>
             </div>

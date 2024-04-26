@@ -86,6 +86,10 @@
             <div class="bg-white py-2 collapse-inner rounded">
                 <ul class="navbar-nav">
                     <li class="nav-item">
+                         <li class="nav-item}">
+                        <a class="collapse-item {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}{{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}{{ (request()->is('/budgetutilization/probudget')) ? 'active' : '' }}" href="/budgetutilization/probudget">
+                        <span>PRO Funds</span></a>
+                    </li>
                         <a class="collapse-item {{ (request()->is('hcpncontract')) ? 'active' : '' }}
                                     {{ (request()->is('hcpnassets')) ? 'active' : '' }}
             {{ (request()->is('facilitycontracts')) ? 'active' : '' }}" href="/hcpncontract">
@@ -95,10 +99,7 @@
                         <a class="collapse-item {{ (request()->is('apexcontract')) ? 'active' : '' }} {{ (request()->is('apexassets')) ? 'active' : '' }}" href="/apexcontract">
                         <span>APEX Facility Contracts</span></a>
                     </li>
-                     <li class="nav-item}">
-                        <a class="collapse-item {{ (request()->is('terminatedcontract')) ? 'active' : '' }}" href="/terminatedcontract">
-                        <span>Terminated Contracts</span></a>
-                    </li>
+                    
                 </ul>
             </div>
         </div>
@@ -123,15 +124,15 @@
                         <span>Subsidiary Ledger</span></a>
                     </li>
                     <li class="nav-item}">
-                        <a class="collapse-item {{ (request()->is('apexreports/ledger')) ? 'active' : '' }} {{ (request()->is('apexreports')) ? 'active' : '' }}" href="/apexreports">
-                        <span>APEX Facilities</span></a>
+                        <a class="collapse-item {{ (request()->is('terminatedcontract')) ? 'active' : '' }}" href="#">
+                        <span>Terminated Contracts</span></a>
                     </li>
                 </ul>
             </div>
         </div>
     </li>
 
- <li class="nav-item {{ (request()->is('viewbudget')) ? 'active' : '' }}
+ <li class="nav-item d-none {{ (request()->is('viewbudget')) ? 'active' : '' }}
  {{ session()->get('leveid') === 'STAFF' ? 'd-none' : '' }}
  {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
         <a class="nav-link" data-toggle="modal" data-target="#view-budget">
@@ -148,15 +149,13 @@
             <span>Date Settings</span></a>
     </li>
 
-    <hr class="sidebar-divider d-none d-md-block">
+ 
 
-    <div class="text-center d-none d-md-inline">
-        <button class="rounded-circle border-0" id="sidebarToggle"></button>
-    </div>
+    
 </ul>
 
-<!-- VIEW BUDGET MODAL -->
-<div class="modal" id="view-budget">
+<!-- VIEW BUDGET MODAL 
+<div class="modal" id="view-budget d-none">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
                
@@ -199,7 +198,7 @@
                 
             </div>
         </div>
-    </div>
+    </div> -->
 
 
 

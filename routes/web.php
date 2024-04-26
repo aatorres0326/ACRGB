@@ -79,6 +79,7 @@ Route::middleware('MB')->group(function () {
 Route::middleware('PHIC')->group(function () {
     Route::get('proaccess', [AreaController::class, 'GetProAccess'])->name('proaccess');
     Route::get('pro', [AreaController::class, 'GetRegionalOffice']);
+    Route::get('budgetutilization/probudget', [BudgetController::class, 'GETPROFUND']);
     Route::get('assets', [AssetsController::class, 'GetAssets']);
     Route::put('REMOVEROLEINDEXPRO', [AreaController::class, 'REMOVEROLEINDEXPRO'])->name('REMOVEROLEINDEXPRO');
     Route::post('INSERTROLEINDEXPRO', [AreaController::class, 'INSERTROLEINDEXPRO'])->name('INSERTROLEINDEXPRO');

@@ -5,7 +5,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-md">
-            <h4 class="text-center text-white">{{ $SelectedProName }}</h4>
+            <h4 class="text-center text-primary">{{ $SelectedProName }}</h4>
         </div>
     </div>
     </br>
@@ -18,11 +18,11 @@
                     <h5 class="text-success" style="position:absolute; left:20px; top:13px;">ENABLED ACCESS PERMISSION</h5>
                     <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size: 10px;" id="content">
                         <table class="table table-sm table-hover table-bordered table-light" width="100%" cellspacing="0">
-                            <div style="position:absolute; top:13px; right:20px" class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
-                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration: none;">
+                            <div style="position:absolute; top:13px; right:20px;" class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
+                                <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration: none;">
                                     <i class="fas fa-plus fa-sm"></i> Add Access
                                 </button>
-                                <button class="btn btn-warning btn-sm" data-toggle="modal" data-target="#remove-access" style="text-decoration: none;">
+                                <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#remove-access" style="text-decoration: none;">
                                     <i class="fas fa-minus fa-sm"></i> Remove Access
                                 </button>
                             </div>

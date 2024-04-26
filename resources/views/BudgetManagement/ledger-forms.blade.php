@@ -2,7 +2,9 @@
 @section('contents')
 <div id="content">
   <div class="container-fluid" >
-
+  @if ($HCFUnderPro == null)
+                                            <h3 class="text-center">NO ASSIGNED ACCESS</h3>
+                                            @else
     <div class="row">
         <div class="col col-md-5 container bg-light p-3 border border-info rounded">
             <h4 class="text-center">HCPN Ledger</h4><br>
@@ -12,16 +14,18 @@
             <label for="hcpn">HCPN</label>
         </div>
         <div class="col col-md-8">
+          
             <select class="form-control hcpn-select" id="hcpn" required>
-                <option value="">SELECT NETWORK</option>
+                <option class="ml-2" value="">&nbsp;&nbsp;SELECT NETWORK</option>
                 <!-- Iterate over $MBUnderPro array to generate options -->
                 @foreach ($MBUnderPro as $hcpn)
                     <option value="{{ $hcpn['controlnumber'] }}">{{ $hcpn['mbname'] }}</option>
                 @endforeach
             </select>
+          
         </div>
     </div>
-    <br>
+   
     <div class="form-row">
         <div class="col col-md-4 mt-2">
             <label for="contract">Contract Number</label>
@@ -31,6 +35,14 @@
                 <option value="">SELECT CONTRACT</option>
                 <!-- Options will be dynamically populated based on selection in HCPN -->
             </select>
+        </div>
+    </div>
+      <div class="form-row">
+        <div class="col col-md-4 mt-2">
+            <label for="contract">Contract Coverage</label>
+        </div>
+        <div class="col col-md-8">
+            <input id="coverage" class="form-control" readonly>
         </div>
     </div>
     <br>
@@ -57,7 +69,10 @@
             var mb = JSON.parse(contract.hcfid);
             if (mb.controlnumber === selectedHCPN) {
                 var option = document.createElement('option');
+                 var coverage = document.getElementById('coverage');
+                 coverage.value = contract.datefrom;
                 option.value = contract.conid;
+                
                 option.textContent = contract.transcode;
                 contractSelect.appendChild(option);
             }
@@ -85,12 +100,14 @@
         </select>
     </div>
     <div class="col col-md-8" id="nonapex">
+       
          <select type="text" class="form-control" id="select2" required>
                         <option value="">SELECT FACILITY</option>
             @foreach ($HCFUnderPro as $hcf)
                 <option value="{{ $hcf['hcfcode'] }}">{{ $hcf['hcfname'] }}</option>
             @endforeach
         </select>
+       
     </div>
     <div class="col col-md-8" id="apex" style="display: none;">
          <select type="text" class="form-control" id="select3" required>
@@ -124,6 +141,7 @@
     </div>
 
   </div>
+  @endif
 </div>
 <script>
     document.getElementById('selectType').addEventListener('change', function() {

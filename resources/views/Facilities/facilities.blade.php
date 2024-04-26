@@ -15,12 +15,13 @@ $now->format('Y-m-d');
                   
                          <input type="text" id="searchInput">
                     </div>
+                   
                 <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%" cellspacing="0">
                     <div class="row" style="margin-bottom: 7px;">
                         <div class="col"></div>
                         <div class="col"></div>
                     </div>
-                   
+                    <caption>List of Facilities</caption>
 
                     @if (session()->get('leveid') == 'PHIC')
                      <thead>
@@ -80,19 +81,23 @@ $now->format('Y-m-d');
                         </tr>
                     </thead>
                     <tbody>
+                         @if ($HCFUnderPro == null)
+                            <tr><td>No Data Found</td></tr>
+                            @else
                         @foreach($HCFUnderPro as $facility)
                         <tr>
                             <td class="d-none">{{ $facility['hcfid'] }}</td>
                             <td>{{ $facility['hcfname'] }}</td>
                             <td class="text-center">{{ $facility['hcfaddress'] }}</td>
                             @php
-        $mb = json_decode($facility['mb']);
+            $mb = json_decode($facility['mb']);
                             @endphp
                                  <td class="text-center">{{ $facility['hcfcode'] }}</td>
                             <td class="text-center">{{ $mb->mbname }}</td>
                        
                         </tr>
                         @endforeach
+                        @endif
                     </tbody>
                     @else
                     @foreach($HCFUnderPro as $facility)

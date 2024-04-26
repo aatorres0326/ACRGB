@@ -46,8 +46,6 @@
         <div class="row d-flex">
             <div class="col-md-12 col-12">
                 <div class="table-responsive-sm">
-                   
-
         <table class="table table-sm table-hover table-bordered" id="assetsTable" width="100%"
                         cellspacing="0">
                         <div class="row" style="margin-bottom: 5px;">
@@ -60,7 +58,7 @@
                                 <th class="text-center">Transaction Date</th>
                                 <th class="text-center">Particulars</th>
                                 <th class="text-center">Receipt Number</th>
-                                
+                                <th class="text-center">Account</th>
                                 <th class="text-center">Credit</th>
                                 <th class="text-center">Debit</th>
                                 <th class="text-center"> Running Balance</th>
@@ -84,6 +82,7 @@
                                 <td class="text-center">{{ $ledger['particular'] }}</td>
 
                                 <td class="text-center">{{ $ledger['voucher'] }}</td>
+                                <td class="text-center">{{ $ledger['account'] }}</td>
 
                                 <td class="text-center text-success font-weight-bold">&#8369; {{ number_format((double) $ledger['credit'], 2)}}</td>
                                 <td class="text-center text-danger font-weight-bold">&#8369; {{ number_format((double) $ledger['debit'], 2)}}</td>

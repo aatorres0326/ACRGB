@@ -451,6 +451,22 @@ class BudgetController extends Controller
 
         return view('BudgetManagement/hcpn-ledger', compact('ManagingBoard', 'HCPNledger', 'SelectedConID', 'SelectedConNumber', 'Contract'));
     }
+    public function GETPROFUND()
+    {
+
+        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro');
+
+        $decodedPro = $apiPro->json();
+
+        $RegionalOffices = json_decode($decodedPro['result'], true);
+
+        // GET MANAGING BOARD FOR SIDEBAR
+        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        $decodedMB = $apiMB->json();
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+        return view('BudgetManagement/pro-budget', compact('RegionalOffices', 'ManagingBoard'));
+    }
 
 }
 

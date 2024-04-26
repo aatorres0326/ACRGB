@@ -34,7 +34,7 @@
                                     
 
                               
-                                    <th class="disableSort disableFilterBy">
+                                    <th class="text-center disableSort disableFilterBy">Action
                                     </th>
                                 </tr>
                             </thead>
@@ -51,11 +51,11 @@
                                     
                                     
                                  
-                                    <td style="width:50px;">
-                                        <center><button class="btn btn-sm btn-success" onclick="DisplayMbDetails(
+                                    <td class="text-center"style="width:50px;">
+                                        <center><button class="btn-sm btn-outline-primary" onclick="DisplayMbDetails(
                                                     '<?=$MB['controlnumber']?>',
                                                      '<?=$MB['mbname']?>'                                                  
-                                 )"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></button></center>
+                                 )">View</button></center>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -92,13 +92,16 @@
                                     <th class="disableSort">Health care Provider Networks</th>
                                     <th class="text-center disableSort">Accreditation</th>
                                     <th class="text-center disableSort">License Validity</th>
-                                    <th class="disableSort disableFilterBy">
+                                    <th class="text-center disableSort disableFilterBy">Action
                                     </th>
                                 </tr>
                             </thead>
  
 
                            <tbody>
+                            @if ($HCFUnderPro == null)
+                            <tr><td>No Data Found</td></tr>
+                            @else
 @foreach ($HCFUnderPro as $MB)
        
             <tr>
@@ -106,16 +109,17 @@
                 <td>{{ $MB['mbname'] }}</td>
                  <td class="text-center">{{ $MB['controlnumber'] }}</td>
                                     <td class="text-center">{{ DateTime::createFromFormat('m-d-Y', $MB['licensedatefrom'])->format('F j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $MB['licensedateto'])->format('F j, Y') }}</td>
-                <td style="width:50px;">
+                <td class="text-center" style="width:50px;">
                     <center>
-                        <button class="btn btn-sm btn-success text-darker-primary"  data-toggle="tooltip" title="View" onclick="DisplayMbDetails('{{$MB['controlnumber']}}', '{{$MB['mbname']}}')">
-                            <i class="fas fa-fw fa-eye"></i>
+                        <button class="btn-outline-primary btn-sm"  data-toggle="tooltip" title="View" onclick="DisplayMbDetails('{{$MB['controlnumber']}}', '{{$MB['mbname']}}')">
+                            View
                         </button>
                     </center>
                 </td>
             </tr>
        
     @endforeach
+    @endif
 </tbody>
 
                         </table>
@@ -140,6 +144,10 @@
                 </div>
                 <!-- Modal body -->
                 <div class="modal-body">
+                     @if ($HCFUnderPro == null)
+                                                                 <h5 class="text-center">NO ASSIGNED ACCESS</h5>
+                          
+                            @else
                     <form action="{{ route('INSERTManagingBoard') }}" method="POST" class=" p-2">
                         @csrf
                          <input type="text" class="form-control d-none" name="createdby" 
@@ -188,6 +196,7 @@
                                 class="btn btn-danger" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
+                    @endif
                 </div>
                 <!-- Modal footer -->
             </div>

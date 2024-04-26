@@ -58,13 +58,13 @@ document.addEventListener("DOMContentLoaded", function() {
 <style>
   #searchInput {
     position:absolute;
-  margin-top:-7px;
-  padding: 8px;
+
+  padding: 5px;
   width: 440px;
   box-sizing: border-box;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 4px;
+  font-size: 13px;
 }
 
 #searchInput:focus {
@@ -465,6 +465,9 @@ function DisplayUserDetails(userid, username, leveid) {
     });
     new SlimSelect({
         select: "#hcpn"
+    });
+    new SlimSelect({
+        select: "#selectedhcf"
     });
 </script>
 

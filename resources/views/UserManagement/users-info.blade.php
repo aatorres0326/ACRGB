@@ -85,7 +85,8 @@
                         <tr>
                             <th>Name</th>
                             <th class="text-center">Login Credential</th>
-                            
+                            <th class="text-center">Email</th>
+                            <th class="text-center">Contact Number</th>
                             <th class="text-center">Creation Date</th>
                             <th class="text-center d-none">Created By</th>
                             <th class="disableSort disableFilterBy text-center">Action</th>
@@ -112,7 +113,8 @@
                             @else
                             <td class="text-center">{{ $login }}</td>
                             @endif
-
+                            <td class="text-center">{{ $user['email'] }}</td>
+                            <td class="text-center">{{ $user['contact'] }}</td>
                        
                            
 

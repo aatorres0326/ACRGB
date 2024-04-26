@@ -40,9 +40,9 @@
                                     <th class="text-center disableSort">Tranch</th>
                                     <th class="text-center disableSort disableFilterBy">Used Budget</th>
                                     <th class="text-center disableSort disableFilterBy">No. of Claims</th>
-                           @if (session()->get('leveid') == 'PRO')
+                       
                                 <th class="disableSort disableFilterBy text-center">Action</th>
-                                @endif
+
                             </tr>
                         </thead>
                             </tr>

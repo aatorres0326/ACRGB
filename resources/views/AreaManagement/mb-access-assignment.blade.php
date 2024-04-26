@@ -17,11 +17,11 @@
     <div class="row">
         
         <div class="col-md">
-             <h5 class="text-success" style="position:absolute; left:20px; top:13px;">ENABLED ACCESS PERMISSION</h5>
+             <h5 class="text-success" style="position:absolute; left:20px;">ENABLED ACCESS PERMISSION</h5>
                    <div style="position:absolute; top:13px; right:20px" class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}">
-                    <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration:
+                    <a class="btn-outline-info btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration:
                         none;"><i class="fas fa-plus fa-sm text-info-40"></i> Add Access
-                    </a> <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#remove-access" style="text-decoration:
+                    </a> <a class="btn-outline-warning btn-sm" data-toggle="modal" data-target="#remove-access" style="text-decoration:
                         none;"><i class="fas fa-trash fa-sm "></i> Remove Access
                     </a>
                 </div>
