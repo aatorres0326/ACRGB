@@ -8,7 +8,7 @@
         <div class="row">
            
             <div class="col-md-4 text-center text-primary"><h4><strong>{{ $MBName }}</strong></h4></div>
-            <div class="col-md-4 text-center"><h6>Contract Number : {{ $TransCode }}</h6></div>
+            <div class="col-md-4 text-center"><h6>Reference Number : {{ $TransCode }}</h6></div>
             <div class="col-md-4 text-center"><h6>Contract Amount :<strong>&#8369;</strong> &nbsp;{{ number_format((double) $ContractAmount, 2) }}</h6></div>
 
         </div>
@@ -32,7 +32,7 @@
                         </div>
                         <thead>
                            <tr class="exclude-row">
-                                <th class="text-center disableSort">Contract Number</td>
+                                <th class="text-center disableSort">Reference Number</td>
                                 <th  class="text-center disableSort" id="max-width-column">HCPN</th>
                                 <th class="text-center disableSort">Contract Amount</th>
                                     <th class="text-center">Current Tranch</th>
@@ -98,7 +98,7 @@
                                 @endif
                                                 <td class="text-center">{{$contract['totalclaims']}}</td>
                                <td class="text-center">
-                                                    <button class="btn-info btn-sm" id="{{$contract['transcode']}}" onclick="toggleDetails('{{$contract['transcode']}}')"><i class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></button>
+                                                    <button class="btn-outline-primary btn-sm" id="{{$contract['transcode']}}" onclick="toggleDetails('{{$contract['transcode']}}')">View</button>
                                                 </td>
                             </tr>
                             <tr id="{{$contract['transcode']}}-details" class="d-none exclude-row">
@@ -126,10 +126,14 @@
                                                             </div>
                                                             <div class="col-sm-3">
                                                                 <span class="text-secondary font-weight-bold">CONTRACT COVERAGE</span></br>
-                                                                <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $contract['dateto'])->format('M j, Y') }}</span>
+                                                                                                                                     @php
+            $condate = json_decode($contract['contractdate'], true);
+                                                @endphp
+                                                            
+                                                                <span>{{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}</span>
                                                             </div>
                                                             <div class="col-sm-3 text-right">
-                                                            <button class="btn btn-sm btn-info" onclick="GetAPEXContractDetails('{{$contract['conid']}}', '<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>', '<?= $contract['dateto'] ?>','<?= $contract['datefrom'] ?>','<?= $contract['amount'] ?>')">
+                                                            <button class="btn-sm btn-outline-info" onclick="GetAPEXContractDetails('{{$contract['conid']}}', '<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>')">
                                         Tranches
                                     </button>
                                                             </div>
@@ -170,7 +174,7 @@
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md">
-                                <label for="transcode">Contract Number</label>
+                                <label for="transcode">Reference Number</label>
                                 <input type="text" name="transcode" class="form-control" placeholder="Transaction #"
                                     double>
                             </div>
@@ -210,16 +214,13 @@
                                     placeholder="Enter amount" double required>
                             </div>
                         </div>
-
-
-
                         <div class="modal-footer">
                             <button type="submit" class="btn btn-primary">Add</button> <button type="button"
                                 class="btn btn-danger" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
                 </div>
-                <!-- Modal footer -->
+
             </div>
         </div>
     </div>
@@ -230,19 +231,17 @@
     <div class="modal" id="editcontract">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
-                <!-- Modal Header -->
                 <div class="modal-header  bg-gradient-light">
                     <h6 class="modal-title">Edit Contract</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <!-- Modal body -->
                 <div class="modal-body">
                     <form action="{{ route('EditHCPNContract') }}" method="POST">
                         @method('PUT')
                         @csrf
                         <div class="form-row">
                             <div class="form-group col-md">
-                                <label for="e_transcode">Contract Number</label>
+                                <label for="e_transcode">Reference Number</label>
                                 <input type="text" name="e_transcode" class="form-control" placeholder="Transaction #"
                                     double>
                                 <input type="text" name="e_conid" class="d-none" placeholder="Transaction #" double>
@@ -295,12 +294,10 @@
      <div class="modal" id="editcontractstatus">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
-                <!-- Modal Header -->
                 <div class="modal-header  bg-gradient-light">
                     <h6 class="modal-title">Edit Contract Status</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
-                <!-- Modal body -->
                 <div class="modal-body">
                     <form action="{{ route('EditContractStatus') }}" method="POST">
                         @method('PUT')
@@ -315,7 +312,7 @@
                         </div>
                           <div class="form-row">
                             <div class="form-group col">
-                                <label for="contract">Contract Number</label>
+                                <label for="contract">Reference Number</label>
                               
                                 <input type="text" name="contract" class="form-control" readonly>
                             </div>
@@ -364,32 +361,24 @@
     </script>
    <script>
     function EditContractStatus(conid, hcpn, contract) {
-        // Parse the JSON string
         var hcpnObject = JSON.parse(hcpn);
-
-        // Extract the value of hcfname
         var mbname = hcpnObject.mbname;
-
-        // Set the value of the element with the name 'es_conid'
         document.getElementsByName("es_conid")[0].setAttribute("value", conid);
-        // Set the value of the element with the name 'es_apex'
         document.getElementsByName("es_hcpn")[0].setAttribute("value", mbname);
         document.getElementsByName("contract")[0].setAttribute("value", contract);
     }
 </script>
-      <!-- SCRIPT FOR GETTING BASE AMOUNT ON AD CONTRACT MODAL -->
+      <!-- SCRIPT FOR GETTING BASE AMOUNT ON ADD CONTRACT MODAL -->
 <script>
     document.getElementById('seledtedhcf').addEventListener('change', function() {
         var selectedOption = this.options[this.selectedIndex];
         var baseAmount = selectedOption.getAttribute('data-base-amount');
-        
-        // Check if baseAmount is "NO DATA FOUND" or not present
+    
         if (!baseAmount || baseAmount.trim() === '' || baseAmount.trim().toUpperCase() === 'NO DATA FOUND') {
-            baseAmount = '0'; // Set baseAmount to '0'
+            baseAmount = '0'; 
         } else {
-            // Convert baseAmount to number and round to 2 decimal places
+
             baseAmount = parseFloat(baseAmount).toFixed(2);
-            // Add commas for thousands separators
             baseAmount = baseAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
         }
         document.getElementById('baseamount').value = baseAmount;
@@ -398,20 +387,12 @@
 
     <script>
         function formatNumber(input) {
-            // Get input value and remove non-numeric characters
             let value = input.value.replace(/[^0-9.]/g, '');
-
-            // Split the value into integer and decimal parts
             let parts = value.split('.');
             let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-
-            // Ensure there are only two decimal places
             let decimalPart = parts[1] ? '.' + parts[1].slice(0, 2) : '';
-
-            // Combine integer and decimal parts with commas
             let formattedValue = integerPart + decimalPart;
 
-            // Update input value with formatted number
             input.value = formattedValue;
         }
     </script>
@@ -434,30 +415,23 @@
 </script>
     <script>
 function GetContractDetails(hcpn) {
-    // Storing user details in localStorage
    var hcpnObject = JSON.parse(hcpn);
 
-        // Extract the value of hcfname
         var mbname = hcpnObject.mbname;
         var controlnumber = hcpnObject.controlnumber;
          localStorage.setItem('ConNumber', controlnumber);
-    localStorage.setItem('MBName', mbname);
-   
- 
-    // Redirecting to the new page
+    localStorage.setItem('MBName', mbname); 
       window.location.href = "/facilitycontracts?controlnumber=" + controlnumber + "&mbname=" + mbname;
 }
   </script>
       <script>
 function GetAPEXContractDetails(conid, hcfid, datefrom, dateto, amount) {
-    // Storing user details in localStorage
     localStorage.setItem('getConID', conid);
     localStorage.setItem('getHCFID', hcfid);
     localStorage.setItem('getDateFrom', datefrom);
     localStorage.setItem('getDateTo', dateto);
     localStorage.setItem('getAmount', amount);
  
-    // Redirecting to the new page
       window.location.href = "/facilityassets?conid=" + conid + "&hcfid=" + hcfid + "&datefrom=" + datefrom + "&dateto=" + dateto + "&amount=" + amount;
 }
   </script>

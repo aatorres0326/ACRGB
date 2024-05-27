@@ -5,7 +5,7 @@
     <div class="container-fluid">
         <center>
             <strong>
-                <h4 class="text-info">
+                <h4 class="text-primary">
 @php
 $hcfname = json_decode($SelectedHCFID, true);
 @endphp
@@ -18,50 +18,55 @@ $hcfname = json_decode($SelectedHCFID, true);
    <div class="row text-center align-items-end">
 
     <div class="col-md-10">
-        <!-- Adjusted the columns -->
         <div class="row">
             <div class="col-md-4 mb-2">
-               
-                  
-            
-                        <strong><p class="card-text text-white">CONTRACT AMOUNT : &nbsp;<span id="contractamount" class="text-info">{{ number_format((double) $SelectedAmount, 2) }}</span></p></strong>
-              
+                <strong><p class="card-text">CONTRACT AMOUNT : &nbsp;<span id="contractamount" class="text-primary">{{ number_format((double) $SelectedAmount, 2) }}</span></p></strong>
             </div>
             <div class="col-md-4 mb-2">
-               
-                         <strong><p class="card-text text-white">RELEASED AMOUNT : &nbsp;<span id="totalreleased" class="text-success"></span></p></strong>
-            
+                <strong><p class="card-text">RELEASED AMOUNT : &nbsp;<span id="totalreleased" class="text-success"></span></p></strong>   
             </div>
             <div class="col-md-4 mb-2">
-          
-                          <strong> <p class="card-text text-white">REMAINING AMOUNT : &nbsp;<span id="remainingamount" class="text-warning"></span></p></strong>
-     
+                <strong> <p class="card-text">REMAINING AMOUNT : &nbsp;<span id="remainingamount" class="text-warning"></span></p></strong>
             </div>
         </div>
     </div>
         <div class="col-md-2 mb-2">
-        <!-- Move the button here -->
         <div class="mt-auto">
-            <a class="btn btn-sm btn-primary" data-toggle="modal" data-target="#release-tranch" style="float:right;">Release Tranch</a>
+                     @if ($Assets != null)
+           @php
+    $releaseTranch = false;
+    foreach ($Assets as $assets) {
+        $conid = json_decode($assets['conid'], true);
+        $tranch = json_decode($assets['tranchid'], true);
+        if (str_contains($tranch['tranchtype'], '3RD')) {
+            $releaseTranch = true;
+            break;
+        }
+    }
+@endphp
+
+@if ($releaseTranch)
+    <a class="btn btn-sm btn-outline-primary disabled" data-toggle="modal" data-target="#release-tranch" style="float:right;">Release Tranch</a>
+@else
+    <button class="btn-sm btn-outline-primary" data-toggle="modal" data-target="#release-tranch" style="float:right;">Release Tranch</button>
+@endif
+@else
+    <button class="btn-sm btn-outline-primary" data-toggle="modal" data-target="#release-tranch" style="float:right;">Release Tranch</button>
+@endif
         </div>
     </div>
 </div>
-
         <div class="row d-flex">
             <div class="col-md-12 col-12">
-                <div class="table-responsive-sm">
-                   
-
+                <div class="table-responsive-sm">                  
                     <table class="table table-sm table-hover table-bordered table-light" id="assetsTable" width="100%"
                         cellspacing="0">
                         <div class="row" style="margin-bottom: 5px;">
                             <div class="col"></div>
-           
                         </div>
                         <thead>
                             <tr>
                                 <th class="d-none">Asset ID</th>
-
                                 <th class="text-center">Tranch</th>
                                 <th class="text-center">Receipt Number</th>
                                 <th class="text-center">Contract Number</th>
@@ -81,25 +86,18 @@ $hcfname = json_decode($SelectedHCFID, true);
 
                             <tr>
                                 <td class="d-none">{{ $assets['assetid']}}</td>
-
                                 <td class="text-center">{{ $tranch['tranchtype']}}</td>
                                 <td class="text-center">{{ $assets['receipt']}}</td>
-
                                 <td class="text-center">{{ $conid['transcode']}}</td>
-
                                 <td class="text-center">{{ number_format((double) $assets['amount'], 2)}}</td>
                                 <td class="text-center">{{ DateTime::createFromFormat('m-d-Y', $assets['datereleased'])->format('F j, Y') }}</td>
-
                             </tr>
-
                             @endforeach
-
                             @else
                             <tr>
                                 <td colspan="8">No data found</td>
                             </tr>
                             @endif
-
                         </tbody>
                     </table>
                 </div>
@@ -157,42 +155,75 @@ $hcfname = json_decode($SelectedHCFID, true);
                                 </div>
                             </div>
                             <div class="form-row">
-                                <div class="form-group col-md-3">
+                                <div class="form-group col-md-5">
                                     <label for="tranch">Tranch</label>
                                     <select name="tranch" id="tranch" class="form-control"
-                                        onchange="updatePercentage()">
-                                        @foreach ($Tranch as $tranch)
-                                        <option value="{{ $tranch['tranchid'] }}"
-                                            data-percent="{{ $tranch['percentage'] }}">{{ $tranch['tranchtype'] }}</option>
-                                        @endforeach
+                                        onchange="updatePercentage()" required>
+                                        <option>Select Tranche</option>
+                                       @if ($Assets != null)
+                                                                          @php
+    $hasFirstTranch = false;
+    $hasSecondTranch = false;
+    $hasThirdTranch = false;
+    foreach ($Assets as $asset) {
+        $tranch = json_decode($asset['tranchid'], true);
+        if (str_contains($tranch['tranchtype'], '1ST')) {
+            $hasFirstTranch = true;
+        }
+        if (str_contains($tranch['tranchtype'], '2ND')) {
+            $hasSecondTranch = true;
+        }
+        if (str_contains($tranch['tranchtype'], '3RD')) {
+            $hasThirdTranch = true;
+        }
+    }
+@endphp
+
+@php
+    $displayedTranchTypes = [];
+@endphp
+
+@foreach ($Tranch as $tranch)
+    @if (!($hasFirstTranch && str_contains($tranch['tranchtype'], '1ST')))
+        @if (!($hasSecondTranch && str_contains($tranch['tranchtype'], '2ND')))
+            <option value="{{ $tranch['tranchid'] }}" data-percent="{{ $tranch['percentage'] }}">{{ $tranch['tranchtype'] }} TRANCHE</option>
+        @endif
+    @endif
+@endforeach
+@else
+@foreach ($Tranch as $tranch)
+<option value="{{ $tranch['tranchid'] }}" data-percent="{{ $tranch['percentage'] }}">{{ $tranch['tranchtype'] }} TRANCHE</option>
+@endforeach
+@endif
+
                                     </select>
                                 </div>
-                                <div class="form-group col-md-3">
-                                    <label for="e_amount">Percentage</label>
+                                <div class="form-group col-md-2">
+                                    <label for="e_amount">%</label>
                                     <input type="num" id="percent" class="form-control" name="percent"
-                                        value="{{ $Tranch[0]['percentage'] }}" readonly>
+                                        value="" readonly>
                                 </div>
-                                <div class="form-group col-md-6">
+                                <div class="form-group col-md-5">
                                     <label for="e_amount">Tranch Amount</label>
                                     <input type="text" name="tranch_amount" id="tranch_amount" value=""
-                                        class="form-control" oninput="formatNumber(this)" double readonly>
+                                        class="form-control" oninput="formatNumber(this)" double readonly required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label for="e_amount">Receipt Number</label>
-                                    <input type="text" name="receipt" class="form-control">
+                                    <input type="text" name="receipt" class="form-control" required>
                                 </div>
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label for="datereleased">Released Date</label>
-                                    <input type="date" name="datereleased" class="form-control">
+                                    <input type="date" name="datereleased" class="form-control" required>
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="submit" class="btn btn-primary">Save</button> <button type="button"
-                                    class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                <button type="submit" class="btn-sm btn-outline-primary">Save</button> <button type="button"
+                                    class="btn-sm btn-outline-danger" data-dismiss="modal">Cancel</button>
                             </div>
                         </form>
                     </div>
@@ -202,25 +233,31 @@ $hcfname = json_decode($SelectedHCFID, true);
     </div>
 
     <script>
-        function updatePercentage() {
-            var selectElement = document.getElementById('tranch');
-            var selectedIndex = selectElement.selectedIndex;
-            var selectedOption = selectElement.options[selectedIndex];
-            var percent = parseFloat(selectedOption.getAttribute('data-percent'));
+function updatePercentage() {
+    var selectElement = document.getElementById('tranch');
+    var selectedIndex = selectElement.selectedIndex;
+    var selectedOption = selectElement.options[selectedIndex];
+    
+    var percent = "";
+    var computedAmount = "";
 
-            var selectContract = parseFloat(document.getElementById('contract').value);
-            var computedAmount = (selectContract * percent) / 100;
-            document.getElementById('tranch_amount').value = computedAmount.toFixed(2);
-            document.getElementById('percent').value = percent;
-        }
+    if (selectedOption.textContent !== "Select Tranche") {
+        percent = parseFloat(selectedOption.getAttribute('data-percent'));
+        var selectContract = parseFloat(document.getElementById('contract').value);
+        computedAmount = (selectContract * percent) / 100;
+        document.getElementById('tranch_amount').value = computedAmount.toFixed(2);
+    } else {
 
-        function formatNumber(input) {
-            // Implement your own number formatting logic here if needed
-        }
+document.getElementById('tranch_amount').value = computedAmount;
+    }
+
+    
+    document.getElementById('percent').value = percent;
+}
+
     </script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Calculate total released amount
         var totalReleasedAmount = 0;
         var releasedAmounts = document.querySelectorAll("#assetsTable tbody tr td:nth-child(5)");
         releasedAmounts.forEach(function(element) {
@@ -228,13 +265,11 @@ $hcfname = json_decode($SelectedHCFID, true);
         });
         document.getElementById("totalreleased").textContent = numberWithCommas(totalReleasedAmount.toFixed(2));
 
-        // Calculate remaining amount
         var contractAmount = parseFloat(document.getElementById("contractamount").textContent.replace(/[^0-9.-]+/g, ""));
         var remainingAmount = contractAmount - totalReleasedAmount;
         document.getElementById("remainingamount").textContent = numberWithCommas(remainingAmount.toFixed(2));
     });
 
-    // Function to add commas to numbers
     function numberWithCommas(number) {
         return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
@@ -242,7 +277,6 @@ $hcfname = json_decode($SelectedHCFID, true);
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Sort table by date released
         sortTableByDateReleased();
     });
 

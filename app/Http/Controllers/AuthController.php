@@ -27,8 +27,8 @@ class AuthController extends Controller
             'username' => $request->input('username'),
             'userpassword' => $request->input('password'),
         ];
-
-        $apiUrl = 'http://localhost:7001/ACRGB/ACRGBINSERT/UserLogin';
+        $UserLogin = env('API_USER_LOGIN');
+        $apiUrl = $UserLogin;
 
         $response = Http::post($apiUrl, $loginData);
 
@@ -46,103 +46,74 @@ class AuthController extends Controller
                 if ($result['status'] === '1') {
                     return view('auth/changelogin', compact('result'));
                 } elseif ($result['leveid'] === 'PRO') {
-                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-
-                    $decodedMB = $apiMB->json();
                     $SessionUserID = session()->get('userid');
-                    $ManagingBoard = json_decode($decodedMB['result'], true);
-                    $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID . "/PRO");
+
+                    $GetHCPNwithPRO = env('API_GET_HCPN_USING_PRO_USERID');
+                    $ApiHCFUnderPro = Http::withoutVerifying()->get($GetHCPNwithPRO . '/' . $SessionUserID . "/PRO");
                     $decodedHCFUnderPro = $ApiHCFUnderPro->json();
                     $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
-                    return view('AreaManagement/managing-board', compact('ManagingBoard', 'HCFUnderPro'));
+                    return view('AreaManagement/managing-board', compact('HCFUnderPro'));
                 } elseif ($result['leveid'] === 'MB') {
-                    // Assuming $apiResponse contains the JSON response from your API
-                    $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthCareFacility/ACTIVE');
 
-                    // Debug: Dump the HTTP response
-
-
-                    // Extract the JSON response body
+                    $GetFacility = env('API_GET_ALL_FACILITIES');
+                    $apiResponse = Http::withoutVerifying()->get($GetFacility);
                     $decodedResponse = $apiResponse->json();
-
-                    // Extract the result array
                     $facilities = json_decode($decodedResponse['result'], true);
-                    $SessionUserID = session()->get('userid');
-                    $ApiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetMBUsingUserIDMBID/' . $SessionUserID);
-                    $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                    $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
-                    // GET MANAGING BOARD FOR SIDEBAR
-                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+                    $GetHCPN = env('API_GET_HCPN');
+                    $apiMB = Http::withoutVerifying()->get($GetHCPN);
                     $decodedMB = $apiMB->json();
                     $ManagingBoard = json_decode($decodedMB['result'], true);
 
 
-                    return view('Facilities/facilities', compact('facilities', 'HCFUnderPro', 'ManagingBoard'));
+                    return view('Facilities/facilities', compact('facilities', 'ManagingBoard'));
                 } elseif ($result['leveid'] === 'ADMIN') {
-                    $apiUserInfo = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserInfo/ACTIVE');
 
-
-                    $apiUser = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUser/ACTIVE');
-                    $apiLevel = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetUserLevel/ACTIVE');
-
-                    // Extract the JSON response body
-
-                    $decodedUserInfo = $apiUserInfo->json();
-
+                    $GetUser = env('API_GET_USER');
+                    $apiUser = Http::withoutVerifying()->get($GetUser . '/ACTIVE');
                     $decodedapiUser = $apiUser->json();
-                    $decodedapiLevel = $apiLevel->json();
-
-
-
-                    // Extract the result array
-                    $userInfoList = json_decode($decodedUserInfo['result'], true);
-
-
                     $userlogin = json_decode($decodedapiUser['result'], true);
-                    $userLevel = json_decode($decodedapiLevel['result'], true);
-
-                    $userInfoList = collect($userInfoList);
-
-
                     $userlogin = collect($userlogin);
-                    $userLevel = collect($userLevel);
+
+                    $GetUserInfo = env('API_GET_USER_INFO');
+                    $apiUserInfo = Http::withoutVerifying()->get($GetUserInfo . '/ACTIVE');
+                    $decodedUserInfo = $apiUserInfo->json();
+                    $userInfoList = json_decode($decodedUserInfo['result'], true);
+                    $userInfoList = collect($userInfoList);
                     $userInfoList = $userInfoList->sortByDesc('datecreated');
 
-                    // GET MANAGING BOARD FOR SIDEBAR
-                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-                    $decodedMB = $apiMB->json();
-                    $ManagingBoard = json_decode($decodedMB['result'], true);
+                    $GetUserLevel = env('API_GET_USER_LEVEL');
+                    $apiUserLevel = Http::withoutVerifying()->get($GetUserLevel . '/ACTIVE');
+                    $decodedapiLevel = $apiUserLevel->json();
+                    $userLevel = json_decode($decodedapiLevel['result'], true);
+                    $userLevel = collect($userLevel);
 
-                    return view('UserManagement/users-info', compact('userInfoList', 'userlogin', 'userLevel', 'ManagingBoard'));
+                    return view('UserManagement/users-info', compact('userInfoList', 'userlogin', 'userLevel'));
                 } elseif ($result['leveid'] === 'PHIC') {
                     // API FOR PRO
-                    $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro');
+                    $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
+                    $apiPro = Http::withoutVerifying()->get($GetRegionalOffice);
 
-                    // Check if the request was successful
+
                     if ($apiPro->successful()) {
                         $decodedPro = $apiPro->json();
-                        // Check if 'result' key exists in the decoded JSON
+
                         if (isset($decodedPro['result'])) {
                             $RegionalOffices = json_decode($decodedPro['result'], true);
-                            // Pass data to the view and return it
 
-                            // GET MANAGING BOARD FOR SIDEBAR
-                            $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-                            $decodedMB = $apiMB->json();
-                            $ManagingBoard = json_decode($decodedMB['result'], true);
-                            return view('AreaManagement/pro-management', compact('RegionalOffices', 'ManagingBoard'));
+                            return view('AreaManagement/pro-management', compact('RegionalOffices'));
                         } else {
-                            // Handle case where 'result' key is missing
+
                             return response()->json(['error' => 'Unexpected response format from API'], 500);
                         }
                     } else {
-                        // Handle unsuccessful API request
+
                         return response()->json(['error' => 'Failed to fetch data from API'], $apiPro->status());
                     }
                 } else {
-                    $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+                    $GetHCPN = env('API_GET_HCPN');
+                    $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
                     $decodedMB = $apiMB->json();
                     $ManagingBoard = json_decode($decodedMB['result'], true);
 
@@ -156,11 +127,9 @@ class AuthController extends Controller
         }
     }
 
-
     private function startUserSession($userData)
     {
         $userDetails = json_decode($userData['did'], true);
-
 
         session([
             'userid' => $userData['userid'],

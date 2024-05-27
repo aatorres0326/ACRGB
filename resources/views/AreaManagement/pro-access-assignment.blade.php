@@ -10,19 +10,26 @@
     </div>
     </br>
 
-    <!-- ADDED TABLE -->
+
     <div class="row">
         <div class="col-md">
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <h5 class="text-success" style="position:absolute; left:20px; top:13px;">ENABLED ACCESS PERMISSION</h5>
-                    <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size: 10px;" id="content">
-                        <table class="table table-sm table-hover table-bordered table-light" width="100%" cellspacing="0">
-                            <div style="position:absolute; top:13px; right:20px;" class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
-                                <button class="btn btn-outline-info btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration: none;">
+                    <h5 class="text-success" style="position:absolute; left:20px; top:13px;">ENABLED ACCESS PERMISSION
+                    </h5>
+                    <div class="table-responsive-sm"
+                        style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size: 10px;"
+                        id="content">
+                        <table class="table table-sm table-hover table-bordered table-light" width="100%"
+                            cellspacing="0">
+                            <div style="position:absolute; top:13px; right:20px;"
+                                class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
+                                <button class="btn btn-outline-info btn-sm" data-toggle="modal"
+                                    data-target="#add-access" style="text-decoration: none;">
                                     <i class="fas fa-plus fa-sm"></i> Add Access
                                 </button>
-                                <button class="btn btn-outline-warning btn-sm" data-toggle="modal" data-target="#remove-access" style="text-decoration: none;">
+                                <button class="btn btn-outline-warning btn-sm" data-toggle="modal"
+                                    data-target="#remove-access" style="text-decoration: none;">
                                     <i class="fas fa-minus fa-sm"></i> Remove Access
                                 </button>
                             </div>
@@ -32,12 +39,16 @@
                                     <th class="d-none"></th>
                                     <th>Health Care Provider Networks</th>
                                     <th class="text-center">Accreditation</th>
-                                    <th class="text-center {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : ''}} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : ''}}">Action</th>
+                                    <th
+                                        class="text-center {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : ''}} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : ''}}">
+                                        Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if ($HCFUnderPro === null)
-                                    <tr><td class="text-center">NO DATA FOUND</td></tr>
+                                    <tr>
+                                        <td class="text-center">NO DATA FOUND</td>
+                                    </tr>
                                 @else
                                     @foreach($HCFUnderPro as $mb)
                                         <tr>
@@ -59,7 +70,7 @@
 <div class="modal" id="add-access">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <!-- Modal Header -->
+
             <div class="modal-header bg-info text-white">
                 <h5>ADD ACCESS PERMISSION</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -70,9 +81,12 @@
                         @csrf
                         <div class="card shadow mb-4">
                             <div class="card-body">
-                                <h6><span> Add access to </span><span class="text-primary">{{ $SelectedProName }}</span></h6>
-                                <div class="table-responsive-sm" style="overflow-y:auto; max-height: 400px;margin-top:25px; margin-bottom: 10px; font-size: 10px;">
-                                    <table class="table table-sm table-hover table-bordered table-striped table-light" width="100%" cellspacing="0">
+                                <h6><span> Add access to </span><span class="text-primary">{{ $SelectedProName }}</span>
+                                </h6>
+                                <div class="table-responsive-sm"
+                                    style="overflow-y:auto; max-height: 400px;margin-top:25px; margin-bottom: 10px; font-size: 10px;">
+                                    <table class="table table-sm table-hover table-bordered table-striped table-light"
+                                        width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th>Health Care Provider Networks</th>
@@ -82,28 +96,31 @@
                                         </thead>
                                         <tbody class="protable">
                                             @foreach($ManagingBoard as $mb)
-                                                @php
-    $hideData = false;
-    foreach ($RegionalOffices as $Pro) {
-        $roleIndexData = $RoleIndex->where('accessid', $mb['controlnumber'])->where('userid', $Pro['procode'])->first();
-        if ($roleIndexData) {
-            $hideData = true;
-            break;
-        }
-    }
-                                                @endphp
-                                                @if(!$hideData)
-                                                    <tr>
-                                                        <td type="text" class="d-none" name="mbid" id="mbid">{{ $mb['controlnumber'] }}</td>
-                                                        <td>{{ $mb['mbname'] }}</td>
-                                                        <td class="text-center">{{ $mb['controlnumber'] }}</td>
-                                                        <td class="text-center">
-                                                            <center>
-                                                                <input class="form-control" style="width: 16px; height: 16px;" type="checkbox" id="addaccesbox" value="" data-mbid="{{ $mb['controlnumber'] }}">
-                                                            <center>
-                                                        </td>
-                                                    </tr>
-                                                @endif
+                                                                                        @php
+                                                                                            $hideData = false;
+                                                                                            foreach ($RegionalOffices as $Pro) {
+                                                                                                $roleIndexData = $RoleIndex->where('accessid', $mb['controlnumber'])->where('userid', $Pro['procode'])->first();
+                                                                                                if ($roleIndexData) {
+                                                                                                    $hideData = true;
+                                                                                                    break;
+                                                                                                }
+                                                                                            }
+                                                                                        @endphp
+                                                                                        @if(!$hideData)
+                                                                                            <tr>
+                                                                                                <td type="text" class="d-none" name="mbid" id="mbid">
+                                                                                                    {{ $mb['controlnumber'] }}</td>
+                                                                                                <td>{{ $mb['mbname'] }}</td>
+                                                                                                <td class="text-center">{{ $mb['controlnumber'] }}</td>
+                                                                                                <td class="text-center">
+                                                                                                    <center>
+                                                                                                        <input class="form-control" style="width: 16px; height: 16px;"
+                                                                                                            type="checkbox" id="addaccesbox" value=""
+                                                                                                            data-mbid="{{ $mb['controlnumber'] }}">
+                                                                                                        <center>
+                                                                                                </td>
+                                                                                            </tr>
+                                                                                        @endif
                                             @endforeach
                                         </tbody>
                                     </table>
@@ -121,8 +138,10 @@
                 </div>
             </div>
             <div class="mt-5 text-center">
-                <button id="openAddAccessModal" style="margin-top:-50px;" class="btn btn-info" data-toggle="modal" data-target="#addaccess" >Add</button>
-                <button type="button" style="margin-top:-50px;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                <button id="openAddAccessModal" style="margin-top:-50px;" class="btn btn-info" data-toggle="modal"
+                    data-target="#addaccess">Add</button>
+                <button type="button" style="margin-top:-50px;" class="btn btn-danger"
+                    data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -131,20 +150,23 @@
 <div class="modal" id="addaccess">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
-            <!-- Modal Header -->
+
             <div class="modal-header bg-info text-white">
                 <h6 class="modal-title">ADD ACCESS TO SELECTED NETWORKS</h6>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <!-- Modal body -->
+
             <div class="modal-body">
                 <form action="{{ route('INSERTROLEINDEXPRO') }}" method="POST">
                     @csrf
                     <h5 class="text-center">{{ $SelectedProName }}</h5>
-                    <div class="card bg-light text-dark" style="color:black; max-height: 250px; overflow-y:scroll; overflow-x:hidden;">
-                        </br>                      
+                    <div class="card bg-light text-dark"
+                        style="color:black; max-height: 250px; overflow-y:scroll; overflow-x:hidden;">
+                        </br>
                         @foreach($ManagingBoard as $mb)
-                            <h6 id="confirmsubmission"><span class="col-md-8">{{$mb['mbname']}}</span><span class="col-md-4 text-center controlnumber" style="float:right">{{$mb['controlnumber']}}</span></h6>
+                            <h6 id="confirmsubmission"><span class="col-md-8">{{$mb['mbname']}}</span><span
+                                    class="col-md-4 text-center controlnumber"
+                                    style="float:right">{{$mb['controlnumber']}}</span></h6>
                         @endforeach
                         </br>
                     </div>
@@ -169,7 +191,7 @@
         <div class="modal-content">
             <!-- Modal Header -->
             <div class="modal-header bg-warning text-white">
-                <h5 >REMOVE ACCESS PERMISSION</h5>
+                <h5>REMOVE ACCESS PERMISSION</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body" style="overflow-y:auto;">
@@ -178,9 +200,12 @@
                         @csrf
                         <div class="card shadow mb-4">
                             <div class="card-body">
-                                <h6><span> Remove access from </span><span class="text-primary">{{ $SelectedProName }}</span></h6>
-                                <div class="table-responsive-sm" style="overflow-y:auto; max-height: 400px;margin-top:25px; margin-bottom: 10px; font-size; 10px;">
-                                    <table class="table table-sm table-hover table-bordered table-striped table-light" width="100%" cellspacing="0">
+                                <h6><span> Remove access from </span><span
+                                        class="text-primary">{{ $SelectedProName }}</span></h6>
+                                <div class="table-responsive-sm"
+                                    style="overflow-y:auto; max-height: 400px;margin-top:25px; margin-bottom: 10px; font-size; 10px;">
+                                    <table class="table table-sm table-hover table-bordered table-striped table-light"
+                                        width="100%" cellspacing="0">
                                         <thead>
                                             <tr>
                                                 <th class="d-none"></th>
@@ -191,7 +216,9 @@
                                         </thead>
                                         <tbody>
                                             @if ($HCFUnderPro === null)
-                                                <tr><td class="text-center">NO DATA FOUND</td></tr>
+                                                <tr>
+                                                    <td class="text-center">NO DATA FOUND</td>
+                                                </tr>
                                             @else
                                                 @foreach($HCFUnderPro as $mb)
                                                     <tr>
@@ -199,8 +226,10 @@
                                                         <td class="text-center">{{ $mb['controlnumber'] }}</td>
                                                         <td class="text-center">
                                                             <center>
-                                                                <input class="form-control" style="width: 16px; height: 16px;" type="checkbox" id="addaccesbox" value="" data-mbid="{{ $mb['controlnumber'] }}">
-                                                            <center>
+                                                                <input class="form-control" style="width: 16px; height: 16px;"
+                                                                    type="checkbox" id="addaccesbox" value=""
+                                                                    data-mbid="{{ $mb['controlnumber'] }}">
+                                                                <center>
                                                         </td>
                                                     </tr>
                                                 @endforeach
@@ -220,8 +249,10 @@
                     </form>
                 </div>
                 <div class="mt-5 text-center">
-                    <button id="openRemoveAccessModal" style="margin-top:-50px;" class="btn btn-warning" data-toggle="modal" data-target="#removeaccess" >Remove</button>
-                    <button type="button" style="margin-top:-50px;" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                    <button id="openRemoveAccessModal" style="margin-top:-50px;" class="btn btn-warning"
+                        data-toggle="modal" data-target="#removeaccess">Remove</button>
+                    <button type="button" style="margin-top:-50px;" class="btn btn-danger"
+                        data-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -232,24 +263,25 @@
 <div class="modal" id="removeaccess">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
-            <!-- Modal Header -->
+
             <div class="modal-header bg-warning text-white">
                 <h6 class="modal-title">REMOVE ACCESS TO SELECTED NETWORKS</h6>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
-            <!-- Modal body -->
+
             <div class="modal-body">
                 <form action="{{ route('REMOVEROLEINDEXPRO') }}" method="POST">
                     @method('PUT')
                     @csrf
                     <h5 class="text-center">{{ $SelectedProName }}</h5>
-                    <div class="card bg-light text-dark" style="color:black; max-height: 250px; overflow-y:scroll; overflow-x:hidden;">
-                        </br> 
-                        @if ($HCFUnderPro === null)    
-                            <h6> No Data Found </h6>
-                        @else                 
-                            @foreach($HCFUnderPro as $mb)
-                                <h6 id="confirmremovesubmission"><span class="col-md-8">{{$mb['mbname']}}</span><span class="col-md-4 text-center controlnumber" style="float:right">{{$mb['controlnumber']}}</span></h6>
+                    <div class="card bg-light text-dark"
+                        style="color:black; max-height: 250px; overflow-y:scroll; overflow-x:hidden;">
+                        </br>
+                        @if ($HCFUnderPro === null)                          <h6> No Data Found </h6>
+                            @else                           @foreach($HCFUnderPro as $mb)
+                            <h6 id="confirmremovesubmission"><span class="col-md-8">{{$mb['mbname']}}</span><span
+                                    class="col-md-4 text-center controlnumber"
+                                    style="float:right">{{$mb['controlnumber']}}</span></h6>
                             @endforeach
                         @endif
                         </br>
@@ -269,69 +301,6 @@
 </div>
 <!-- END OF REMOVE ACCESS MODAL ******************************************************************************************************************************************************************* -->
 
-<script>
-    var mbCheckboxes = document.querySelectorAll('input[type="checkbox"][data-mbid]');
-
-    mbCheckboxes.forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-            var mbid = this.getAttribute('data-mbid');
-            var textarea = document.querySelector('#add-access #accessid');
-
-            if (this.checked) {
-                textarea.value += mbid + ', ';
-            } else {
-                textarea.value = textarea.value.replace(mbid + ', ', '');
-            }
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("openAddAccessModal").addEventListener("click", function() {
-            var accessIdValue = document.getElementById("accessid").value;
-
-            document.getElementById("confirmaccessid").value = accessIdValue;
-
-            var h6Elements = document.querySelectorAll('#addaccess h6');
-
-            h6Elements.forEach(function(element) {
-                var controlNumberElement = element.querySelector('.text-center.controlnumber');
-                if (controlNumberElement) {
-                    var controlNumber = controlNumberElement.innerText.trim();
-                    if (!accessIdValue.includes(controlNumber)) {
-                        element.classList.add('d-none');
-                    } else {
-                        element.classList.remove('d-none');
-                    }
-                }
-            });
-        });
-    });
-</script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById("openRemoveAccessModal").addEventListener("click", function() {
-            var accessIdValue = document.getElementById("accessid").value;
-
-            document.getElementById("confirmremoveaccessid").value = accessIdValue;
-
-            var h6Elements = document.querySelectorAll('#removeaccess h6');
-
-            h6Elements.forEach(function(element) {
-                var controlNumberElement = element.querySelector('.text-center.controlnumber');
-                if (controlNumberElement) {
-                    var controlNumber = controlNumberElement.innerText.trim();
-                    if (!accessIdValue.includes(controlNumber)) {
-                        element.classList.add('d-none');
-                    } else {
-                        element.classList.remove('d-none');
-                    }
-                }
-            });
-        });
-    });
-</script>
+<script src="{{ asset('js/pro-access.js') }}"></script>
 
 @endsection

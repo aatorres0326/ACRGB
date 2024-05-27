@@ -1,11 +1,12 @@
 @extends('layouts.app')
 
 @section('contents')
-<div class="container-fluid">
-    <?php
+<?php
 $now = new DateTime();
 $now->format('Y-m-d');
     ?>
+<div class="container-fluid">
+ 
 
    
     <div class="card shadow mb-4">
@@ -13,7 +14,7 @@ $now->format('Y-m-d');
             <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
              <div style="position:absolute; top:13px; right:460px">
                   
-                      <input type="text" id="searchInput">
+                         <input type="text" id="searchInput">
                     </div>
                    
                 <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%" cellspacing="0">
@@ -55,7 +56,7 @@ $now->format('Y-m-d');
         </thead>
         <tbody>
             @foreach($HCFUnderPro as $facility)
-            @if ($facility['type'] == "NONAPEX")
+            @if ($facility['type'] == "APEX")
                                         <tr>
                                             <td>{{ $facility['hcfname'] }}</td>
                                             <td class="text-center">{{ $facility['hcfaddress'] }}</td>
@@ -130,18 +131,19 @@ $now->format('Y-m-d');
             <tr><td>No Data Found</td></tr>
             @else
         @foreach($HCFUnderPro as $facility)
-        
+        @if ($facility['type'] == "APEX")
         <tr>
             <td class="d-none">{{ $facility['hcfid'] }}</td>
             <td>{{ $facility['hcfname'] }}</td>
             <td class="text-center">{{ $facility['hcfaddress'] }}</td>
             @php
-                $mb = json_decode($facility['mb']);
+                    $mb = json_decode($facility['mb']);
             @endphp
                 <td class="text-center">{{ $facility['hcfcode'] }}</td>
             <td class="text-center">{{ $mb->mbname }}</td>
 
         </tr>
+        @endif
         @endforeach
         @endif
     </tbody>
@@ -158,7 +160,22 @@ $now->format('Y-m-d');
     </tr>
     @endforeach
     <textarea class="d-none" id="add-access"></textarea>
- 
+    <script>
+        var mbCheckboxes = document.querySelectorAll('input[type="checkbox"][data-hcf]');
+
+        mbCheckboxes.forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                var hcf = this.getAttribute('data-hcf');
+                var textarea = document.querySelector('#add-access textarea');
+
+                if (this.checked) {
+                    textarea.value += hcf + ', ';
+                } else {
+                    textarea.value = textarea.value.replace(hcf + ', ', '');
+                }
+            });
+        })
+    </script>
     @endif
 @endif
                 </table>
@@ -220,28 +237,14 @@ $now->format('Y-m-d');
 </div>
 
 
+
 <script>
-    var mbCheckboxes = document.querySelectorAll('input[type="checkbox"][data-hcf]');
-
-    mbCheckboxes.forEach(function (checkbox) {
-        checkbox.addEventListener('change', function () {
-            var hcf = this.getAttribute('data-hcf');
-            var textarea = document.querySelector('#add-access textarea');
-
-            if (this.checked) {
-                textarea.value += hcf + ', ';
-            } else {
-                textarea.value = textarea.value.replace(hcf + ', ', '');
-            }
-        });
-    });
-
     function HCFTagging(hcfcode, hcfname, type) {
         document.getElementsByName("t_hcfcode")[0].setAttribute("value", hcfcode);
         document.getElementsByName("t_hcfname")[0].setAttribute("value", hcfname);
         document.getElementsByName("t_type")[0].setAttribute("value", type);
     }
-
+    
     document.addEventListener("DOMContentLoaded", function() {
         const typeSelect = document.getElementById('t_type');
         const Appelate = document.getElementById('appelate');

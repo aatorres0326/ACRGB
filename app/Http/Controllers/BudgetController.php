@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use DateTime;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Http\Request;
+
 
 
 class BudgetController extends Controller
@@ -14,12 +16,13 @@ class BudgetController extends Controller
 
     public function GetHealthFacilityBudget(Request $request)
     {
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN);
         $decodedMB = $apiMB->json();
-
         $ManagingBoard = json_decode($decodedMB['result'], true);
+
         if (session()->get('leveid') == 'MB') {
+
             $datefrom = $request->input('datefrom');
             $datef = date_create($datefrom);
             $datefromformat = date_format($datef, "m-d-Y");
@@ -28,7 +31,8 @@ class BudgetController extends Controller
             $datetoformat = date_format($datet, "m-d-Y");
             $mbid = session()->get('userid');
 
-            $GetHCFBudget = Http::get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthFacilityBadget/MB/' . $mbid . '/' . $datefromformat . '/' . $datetoformat);
+            $GetBudget = env('API_GET_BUDGET');
+            $GetHCFBudget = Http::get($GetBudget . '/MB/' . $mbid . '/' . $datefromformat . '/' . $datetoformat);
             $decodedHCFBudget = $GetHCFBudget->json();
             $HCFBudget = json_decode($decodedHCFBudget['result'], true);
 
@@ -42,93 +46,81 @@ class BudgetController extends Controller
             $datetoformat = date_format($datet, "m-d-Y");
             $mbid = $request->input('mb');
 
-            $GetHCFBudget = Http::get('http://localhost:7001/ACRGB/ACRGBFETCH/GetHealthFacilityBadget/PHICPRO/' . $mbid . '/' . $datefromformat . '/' . $datetoformat);
+            $GetBudget = env('API_GET_BUDGET');
+            $GetHCFBudget = Http::get($GetBudget . '/PHICPRO/' . $mbid . '/' . $datefromformat . '/' . $datetoformat);
             $decodedHCFBudget = $GetHCFBudget->json();
             $HCFBudget = json_decode($decodedHCFBudget['result'], true);
+
         }
 
         return view('BudgetManagement/hcfbudget', compact('HCFBudget', 'ManagingBoard', 'mbid', 'datetoformat', 'datefromformat'));
-
     }
+
     public function GetHCPNContract()
     {
         $SessionUserID = session()->get('userid');
 
+        $GetContract = env('API_GET_CONTRACT');
+
         // GET HCPN CONTRACT
         if (session()->get('leveid') == 'PRO') {
 
-            $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetContract/ACTIVE/' . $SessionUserID . '/PRO');
+            $apiContract = Http::withoutVerifying()->get($GetContract . '/ACTIVE/' . $SessionUserID . '/PRO');
             $decodedapiContract = $apiContract->json();
             $Contract = json_decode($decodedapiContract['result'], true);
+
         } else {
-            $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetContract/ACTIVE/0/PHICHCPN');
+
+            $apiContract = Http::withoutVerifying()->get($GetContract . '/ACTIVE/0/PHICHCPN');
             $decodedapiContract = $apiContract->json();
             $Contract = json_decode($decodedapiContract['result'], true);
 
         }
 
-
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-        $decodedMB = $apiMB->json();
-        $ManagingBoard = json_decode($decodedMB['result'], true);
-
-        $apiMB2 = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID . '/PRO');
+        $GetHCPNwithPro = env('API_GET_HCPN_USING_PRO_USERID');
+        $apiMB2 = Http::withoutVerifying()->get($GetHCPNwithPro . '/' . $SessionUserID . '/PRO');
         $decodedMB2 = $apiMB2->json();
         $ManagingBoard2 = json_decode($decodedMB2['result'], true);
 
-        return view('BudgetManagement/hcpn-contract', compact('Contract', 'ManagingBoard', 'ManagingBoard2'));
+        $ConDate = env('API_GET_CONTRACT_DATE');
+        $GetConDate = Http::withoutVerifying()->get($ConDate . '/ACTIVE');
+        $decodedapi = $GetConDate->json();
+        $ContractDate = json_decode($decodedapi['result'], true);
+
+        return view('BudgetManagement/hcpn-contract', compact('Contract', 'ManagingBoard2', 'ContractDate'));
     }
+
     public function AddContract(Request $request)
     {
-        $datefrom = $request->input('datefrom');
-        $datef = date_create($datefrom);
-        $datefromformat = date_format($datef, "m-d-Y");
-        $dateto = $request->input('dateto');
-        $datet = date_create($dateto);
-        $datetoformat = date_format($datet, "m-d-Y");
         $amount = preg_replace('/[^0-9.]/', '', $request->input('amount'));
         $baseamount = preg_replace('/[^0-9.]/', '', $request->input('baseamount'));
         $now = new DateTime();
         $sessionuserid = session()->get('userid');
 
-        $response = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTCONTRACT', [
+        $InsertContract = env('API_INSERT_CONTRACT');
+        $response = Http::post($InsertContract, [
             'hcfid' => $request->input('mb'),
             'createdby' => $sessionuserid,
             'datecreated' => $now->format('m-d-Y'),
-            'datefrom' => $datefromformat,
-            'dateto' => $datetoformat,
+            'contractdate' => $request->input('contractperiod'),
             'amount' => $amount,
             'transcode' => $request->input('transcode'),
             'baseamount' => $baseamount,
         ]);
+
         if ($response->successful()) {
-
             return back();
-
         }
-
-
     }
 
     public function EditHCPNContract(Request $request)
     {
-        $datefrom = $request->input('e_datefrom');
-        $datef = date_create($datefrom);
-        $datefromformat = date_format($datef, "m-d-Y");
-        $dateto = $request->input('e_dateto');
-        $datet = date_create($dateto);
-        $datetoformat = date_format($datet, "m-d-Y");
         $amount = preg_replace('/[^0-9.]/', '', $request->input('e_amount'));
-
-
-
-
-        $response = Http::put('http://localhost:7001/ACRGB/ACRGBUPDATE/UPDATECONTRACT', [
+        $UpdateContract = env('API_UPDATE_CONTRACT');
+        $response = Http::put($UpdateContract, [
             'conid' => $request->input('e_conid'),
-            'hcfid' => $request->input('hcpn'),
-            'datefrom' => $datefromformat,
-            'dateto' => $datetoformat,
+            'hcfid' => $request->input('e_controlnumber'),
+            'contractdate' => $request->input('contractperiod'),
             'amount' => $amount,
             'transcode' => $request->input('e_transcode'),
 
@@ -137,24 +129,22 @@ class BudgetController extends Controller
         if ($response->successful()) {
             return back();
         }
-
     }
     public function EditContractStatus(Request $request)
     {
-        $enddate = $request->input('enddate');
+        $enddate = $request->input('endDate');
         $datef = date_create($enddate);
         $enddateformat = date_format($datef, "m-d-Y");
 
-
-
-
-        $response = Http::put('http://localhost:7001/ACRGB/ACRGBUPDATE/TAGGINGCONTRACT', [
+        $ContractTagging = env('API_CONTRACT_TAGGING');
+        $response = Http::put($ContractTagging, [
             'conid' => $request->input('es_conid'),
             'stats' => $request->input('status'),
             'enddate' => $enddateformat,
-            'remarks' => $request->input('                                                                                                                                 remarks'),
+            'remarks' => $request->input('remarks'),
 
         ]);
+
         if ($response->successful()) {
             return back();
         }
@@ -164,93 +154,90 @@ class BudgetController extends Controller
     {
         $SessionUserID = session()->get('userid');
         // GET FACILITIES
-        $apiResponse = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GETALLFACILITY');
+        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+        $apiResponse = Http::withoutVerifying()->get($GetAllFacility);
         $decodedResponse = $apiResponse->json();
         $Facilities = json_decode($decodedResponse['result'], true);
 
         // GET CONTRACT
-        $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetContract/ACTIVE/0/PHICAPEX');
+        $GetContract = env('API_GET_CONTRACT');
+        $apiContract = Http::withoutVerifying()->get($GetContract . '/ACTIVE/0/PHICAPEX');
         $decodedapiContract = $apiContract->json();
         $Contract = json_decode($decodedapiContract['result'], true);
 
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-        $decodedMB = $apiMB->json();
-        $ManagingBoard = json_decode($decodedMB['result'], true);
+        $ConDate = env('API_GET_CONTRACT_DATE');
+        $GetConDate = Http::withoutVerifying()->get($ConDate . '/ACTIVE');
+        $decodedapi = $GetConDate->json();
+        $ContractDate = json_decode($decodedapi['result'], true);
 
-
-
-        return view('BudgetManagement/apex-contract', compact('Contract', 'ManagingBoard', 'Facilities'));
+        return view('BudgetManagement/apex-contract', compact('Contract', 'Facilities', 'ContractDate'));
     }
 
     public function GetAPEXAssets(Request $request)
     {
         $SelectedConID = $request->query('conid', '');
-        $SelectedHCFID = $request->query('hcfid', '');
-        $SelectedDateTo = $request->query('dateto', '');
-        $SelectedDateFrom = $request->query('datefrom', '');
+        $SelectedHCF = $request->query('hcfname', '');
+        $SelectedPercent = $request->query('percentage', '');
+        $SelectedHCFCode = $request->query('hcfcode', '');
         $SelectedAmount = $request->query('amount', '');
+        $SelectedContract = $request->query('transcode', '');
         $SessionUserID = session()->get('userid');
         // GET FACILITIES
-        $getAssets = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetAssets/ACTIVE/' . $SelectedConID);
-        $decodedResponse = $getAssets->json();
+        $GetAssets = env('API_GET_ASSETS');
+        $Assets = Http::withoutVerifying()->get($GetAssets . '/ACTIVE/' . $SelectedConID);
+        $decodedResponse = $Assets->json();
         $Assets = json_decode($decodedResponse['result'], true);
 
-
         // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
-        $apiTranch = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetTranch/ACTIVE');
+        $GetTranch = env('API_GET_TRANCH');
+        $apiTranch = Http::withoutVerifying()->get($GetTranch . '/ACTIVE');
         $decodedapiTranch = $apiTranch->json();
         $Tranch = json_decode($decodedapiTranch['result'], true);
 
-
-
-
-        return view('BudgetManagement/apex-assets', compact('ManagingBoard', 'Assets', 'SelectedConID', 'SelectedHCFID', 'SelectedDateTo', 'SelectedDateFrom', 'SelectedAmount', 'Tranch'));
+        return view('BudgetManagement/apex-assets', compact('Assets', 'SelectedConID', 'SelectedHCF', 'SelectedAmount', 'Tranch', 'SelectedContract', 'SelectedHCFCode', 'SelectedPercent'));
     }
     public function GetHCPNAssets(Request $request)
     {
         $SelectedConID = $request->query('conid', '');
         $SelectedHCPN = $request->query('hcpn', '');
+        $SelectedPercent = $request->query('percentage', '');
         $SelectedControlNumber = $request->query('controlnumber', '');
         $SelectedAmount = $request->query('amount', '');
         $SelectedContract = $request->query('transcode', '');
         $SessionUserID = session()->get('userid');
         // GET FACILITIES
-        $getAssets = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetAssets/ACTIVE/' . $SelectedConID);
-        $decodedResponse = $getAssets->json();
+        $GetAssets = env('API_GET_ASSETS');
+        $Assets = Http::withoutVerifying()->get($GetAssets . '/ACTIVE/' . $SelectedConID);
+        $decodedResponse = $Assets->json();
         $Assets = json_decode($decodedResponse['result'], true);
 
-
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-        $decodedMB = $apiMB->json();
-        $ManagingBoard = json_decode($decodedMB['result'], true);
-
-        $apiTranch = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetTranch/ACTIVE');
+        $GetTranch = env('API_GET_TRANCH');
+        $apiTranch = Http::withoutVerifying()->get($GetTranch . '/ACTIVE');
         $decodedapiTranch = $apiTranch->json();
         $Tranch = json_decode($decodedapiTranch['result'], true);
 
-
-
-
-        return view('BudgetManagement/hcpn-assets', compact('ManagingBoard', 'Assets', 'SelectedConID', 'SelectedHCPN', 'SelectedAmount', 'Tranch', 'SelectedContract', 'SelectedControlNumber'));
+        return view('BudgetManagement/hcpn-assets', compact('Assets', 'SelectedConID', 'SelectedHCPN', 'SelectedAmount', 'Tranch', 'SelectedContract', 'SelectedControlNumber', 'SelectedPercent'));
     }
 
     public function INSERTASSETS(Request $request)
     {
         $released = $request->input('datereleased');
+
         if ($released) {
+
             $released = new DateTime($released);
             $released = $released->format('m-d-Y');
         }
+
         $now = new DateTime();
         $sessionuserid = session()->get('userid');
-
-        $response = Http::post('http://localhost:7001/ACRGB/ACRGBINSERT/INSERTASSETS', [
+        $InsertAssets = env('API_INSERT_ASSETS');
+        $response = Http::post($InsertAssets, [
             'hcfid' => $request->input('hcfid'),
             'tranchid' => $request->input('tranch'),
             'receipt' => $request->input('receipt'),
@@ -273,21 +260,17 @@ class BudgetController extends Controller
         $TransCode = $request->query('transcode', '');
         $SessionUserID = session()->get('userid');
 
-
-
         // GET HCPN CONTRACTS
-        $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetContract/ACTIVE/' . $ConNumber . '/HCPN');
+        $GetContract = env('API_GET_CONTRACT');
+        $apiContract = Http::withoutVerifying()->get($GetContract . '/ACTIVE/' . $ConNumber . '/HCPN');
         $decodedapiContract = $apiContract->json();
         $Contract = json_decode($decodedapiContract['result'], true);
 
         // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
-
-
-
-
 
         return view('BudgetManagement/facility-contracts', compact('Contract', 'ManagingBoard', 'MBName', 'ContractAmount', 'TransCode'));
     }
@@ -300,41 +283,41 @@ class BudgetController extends Controller
         $SelectedAmount = $request->query('amount', '');
         $SessionUserID = session()->get('userid');
         // GET FACILITIES ASSETS
-        $getAssets = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetAssets/ACTIVE/' . $SelectedConID);
-        $decodedResponse = $getAssets->json();
+        $GetAssets = env('API_GET_ASSETS');
+        $Assets = Http::withoutVerifying()->get($GetAssets . '/ACTIVE/' . $SelectedConID);
+        $decodedResponse = $Assets->json();
         $Assets = json_decode($decodedResponse['result'], true);
 
-
         // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
-        $apiTranch = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetTranch/ACTIVE');
+        $GetTranch = env('API_GET_TRANCH');
+        $apiTranch = Http::withoutVerifying()->get($GetTranch . '/ACTIVE');
         $decodedapiTranch = $apiTranch->json();
         $Tranch = json_decode($decodedapiTranch['result'], true);
 
-
-
-
         return view('BudgetManagement/facility-assets', compact('ManagingBoard', 'Assets', 'SelectedConID', 'SelectedHCFID', 'SelectedDateTo', 'SelectedDateFrom', 'SelectedAmount', 'Tranch'));
     }
-    public function GetTerminatedContract()
-    {
-        $SessionUserID = session()->get('userid');
+    // public function GetTerminatedContract()
+    // {
+    //     $SessionUserID = session()->get('userid');
 
-        // GET HCPN CONTRACT
-        $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetBalanceTerminatedContract/' . $SessionUserID . '/PRO');
-        $decodedapiContract = $apiContract->json();
-        $Contract = json_decode($decodedapiContract['result'], true);
+    //     // GET HCPN CONTRACT
+    //     $apiContract = Http::withoutVerifying()->get($SessionUserID . '/PRO');
+    //     $decodedapiContract = $apiContract->json();
+    //     $Contract = json_decode($decodedapiContract['result'], true);
 
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-        $decodedMB = $apiMB->json();
-        $ManagingBoard = json_decode($decodedMB['result'], true);
+    //     // GET MANAGING BOARD FOR SIDEBAR
+    //     $GetHCPN = env('API_GET_HCPN');
+    //     $apiMB = Http::withoutVerifying()->get($GetHCPN);
+    //     $decodedMB = $apiMB->json();
+    //     $ManagingBoard = json_decode($decodedMB['result'], true);
 
-        return view('BudgetManagement/terminated-contract', compact('Contract', 'ManagingBoard'));
-    }
+    //     return view('BudgetManagement/terminated-contract', compact('Contract', 'ManagingBoard'));
+    // }
 
     // HCPN REPORTS *******************************************************************************************************************************************************************
 
@@ -343,17 +326,19 @@ class BudgetController extends Controller
         $SessionUserID = session()->get('userid');
 
         // GET HCPN CONTRACT
-        $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetContract/ACTIVE/0/PHICAPEX');
+        $GetContract = env('API_GET_CONTRACT');
+        $apiContract = Http::withoutVerifying()->get($GetContract . '/ACTIVE/0/PHICAPEX');
         $decodedapiContract = $apiContract->json();
         $Contract = json_decode($decodedapiContract['result'], true);
 
-
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        // GET HCPN
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN);
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
-        $apiMB2 = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID . '/PRO');
+        $GetHCPNwihtPro = env('API_GET_HCPN_USING_PRO_USERID');
+        $apiMB2 = Http::withoutVerifying()->get($GetHCPNwihtPro . '/' . $SessionUserID . '/PRO');
         $decodedMB2 = $apiMB2->json();
         $ManagingBoard2 = json_decode($decodedMB2['result'], true);
 
@@ -369,20 +354,16 @@ class BudgetController extends Controller
         $SelectedAmount = $request->query('amount', '');
         $SessionUserID = session()->get('userid');
         // GET FACILITIES ASSETS
-        $getAssets = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetAssets/ACTIVE/' . $SelectedConID);
-        $decodedResponse = $getAssets->json();
+        $GetAssets = env('API_GET_ASSETS');
+        $Assets = Http::withoutVerifying()->get($GetAssets . '/ACTIVE/' . $SelectedConID);
+        $decodedResponse = $Assets->json();
         $Assets = json_decode($decodedResponse['result'], true);
 
-
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        // GET HCPN
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN);
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
-
-
-
-
-
 
         return view('BudgetManagement/apex-ledger', compact('ManagingBoard', 'Assets', 'SelectedConID', 'SelectedHCFID', 'SelectedDateTo', 'SelectedDateFrom', 'SelectedAmount'));
     }
@@ -390,36 +371,45 @@ class BudgetController extends Controller
     public function Ledger(Request $request)
     {
         $SessionUserID = session()->get('userid');
-
-
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        // GET ALL HCPN
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
         if (session()->get('leveid') == 'PRO') {
-            $ApiMBUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoardWithProID/' . $SessionUserID . "/PRO");
+            // GET ALL HCPN UNDER THE LOGGED IN PRO
+            $GetHCPNwithPro = env('API_GET_HCPN_USING_PRO_USERID');
+            $ApiMBUnderPro = Http::withoutVerifying()->get($GetHCPNwithPro . '/' . $SessionUserID . "/PRO");
             $decodedMBUnderPro = $ApiMBUnderPro->json();
             $MBUnderPro = json_decode($decodedMBUnderPro['result'], true);
-
-            $apiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetFacilityUsingProAccountUserID/' . $SessionUserID);
+            // GET ALL FACILITY UNDER THE LOGGED IN PRO
+            $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+            $apiHCFUnderPro = Http::withoutVerifying()->get($GetFacilitywithPro . '/' . $SessionUserID);
             $decodedHCFUnderPro = $apiHCFUnderPro->json();
             $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
         } else {
-
-            $ApiMBUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+            // GET HCPN
+            $GetHCPN = env('API_GET_HCPN');
+            $ApiMBUnderPro = Http::withoutVerifying()->get($GetHCPN);
             $decodedMBUnderPro = $ApiMBUnderPro->json();
             $MBUnderPro = json_decode($decodedMBUnderPro['result'], true);
-
-            $apiHCFUnderPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GETALLFACILITY');
+            // GET ALL FACILITY
+            $GetAllFacility = env('API_GET_ALL_FACILITIES');
+            $apiHCFUnderPro = Http::withoutVerifying()->get($GetAllFacility);
             $decodedHCFUnderPro = $apiHCFUnderPro->json();
             $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
+
         }
-        $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetContract/ACTIVE/0/PHICHCPN');
+        // GET ALL HCPN CONTRACTS
+        $GetContract = env('API_GET_CONTRACT');
+        $apiContract = Http::withoutVerifying()->get($GetContract . '/ACTIVE/0/PHICHCPN');
         $decodedapiContract = $apiContract->json();
         $HCPNContract = json_decode($decodedapiContract['result'], true);
-
-        $apiHCFapex = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GETALLFACILITY');
+        // GET ALL FACILITY
+        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+        $apiHCFapex = Http::withoutVerifying()->get($GetAllFacility);
         $decodedHCFapex = $apiHCFapex->json();
         $HCFapex = json_decode($decodedHCFapex['result'], true);
 
@@ -432,40 +422,156 @@ class BudgetController extends Controller
         $SelectedConNumber = $request->query('controlnumber', '');
         $SessionUserID = session()->get('userid');
         // GET FACILITIES ASSETS
-        $gethcpncontract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/PerContractLedger/' . $SelectedConNumber . '/' . $SelectedConID . '/HCPN');
+        $GetLedger = env('API_GET_LEDGER_PER_CONTRACT');
+        $gethcpncontract = Http::withoutVerifying()->get($GetLedger . '/' . $SelectedConNumber . '/' . $SelectedConID . '/HCPN');
         $decodedResponse = $gethcpncontract->json();
         $HCPNledger = json_decode($decodedResponse['result'], true);
 
-
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
+        // GET ALL HCPN
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
-
-        $apiContract = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetContract/ACTIVE/0/PHICHCPN');
+        $GetContract = env('API_GET_CONTRACT');
+        $apiContract = Http::withoutVerifying()->get($GetContract . '/ACTIVE/0/PHICHCPN');
         $decodedapiContract = $apiContract->json();
         $Contract = json_decode($decodedapiContract['result'], true);
-
-
 
         return view('BudgetManagement/hcpn-ledger', compact('ManagingBoard', 'HCPNledger', 'SelectedConID', 'SelectedConNumber', 'Contract'));
     }
     public function GETPROFUND()
     {
-
-        $apiPro = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetPro');
-
+        $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
+        $apiPro = Http::withoutVerifying()->get($GetRegionalOffice);
         $decodedPro = $apiPro->json();
-
         $RegionalOffices = json_decode($decodedPro['result'], true);
 
-        // GET MANAGING BOARD FOR SIDEBAR
-        $apiMB = Http::withoutVerifying()->get('http://localhost:7001/ACRGB/ACRGBFETCH/GetManagingBoard');
-        $decodedMB = $apiMB->json();
-        $ManagingBoard = json_decode($decodedMB['result'], true);
+        return view('BudgetManagement/pro-budget', compact('RegionalOffices'));
+    }
 
-        return view('BudgetManagement/pro-budget', compact('RegionalOffices', 'ManagingBoard'));
+    public function VIEWBUDGET(request $request)
+    {
+        $ConNumber = $request->query('controlNumber', '');
+
+        if ($ConNumber != null) {
+            $GetBudget = env('API_GET_SUMMARY');
+            $apiBudget = Http::withoutVerifying()->get($GetBudget . '/HCPN/' . $ConNumber);
+            $decodedBudget = $apiBudget->json();
+
+            if ($decodedBudget['success'] === false) {
+
+                $apiBudget = Http::withoutVerifying()->get($GetBudget . '/FACILITY/' . $ConNumber);
+                $decodedBudget = $apiBudget->json();
+            }
+
+            $Budget = json_decode($decodedBudget['result'], true);
+            $SessionUserID = session()->get('userid');
+
+            if (session()->get('leveid') == "PHIC") {
+
+                $GetHCPN = env('API_GET_HCPN');
+                $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+                $decodedMB = $apiMB->json();
+                $HCPN = json_decode($decodedMB['result'], true);
+
+                $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                $apiResponse = Http::withoutVerifying()->get($GetAllFacility);
+                $decodedResponse = $apiResponse->json();
+                $Facilities = json_decode($decodedResponse['result'], true);
+
+                return view('BudgetManagement/basebudget', compact('Budget', 'HCPN', 'Facilities'));
+
+            } elseif (session()->get('leveid') == "PRO") {
+
+                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                $ApiHCFUnderPro = Http::withoutVerifying()->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                $HCPN = json_decode($decodedHCFUnderPro['result'], true);
+
+                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                $apiHCFUnderPro = Http::withoutVerifying()->get($GetFacilitywithPro . '/' . $SessionUserID);
+                $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                $apiResponse = Http::withoutVerifying()->get($GetAllFacility);
+                $decodedResponse = $apiResponse->json();
+                $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+                return view('BudgetManagement/basebudget', compact('HCPN', 'Facilities', 'Budget', 'APEXFacilities'));
+
+            } else {
+
+                $GetHCPN = env('API_GET_HCPN');
+                $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+                $decodedMB = $apiMB->json();
+                $HCPN = json_decode($decodedMB['result'], true);
+                $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                $apiResponse = Http::withoutVerifying()->get($GetAllFacility);
+                $decodedResponse = $apiResponse->json();
+                $Facilities = json_decode($decodedResponse['result'], true);
+                return view('BudgetManagement/basebudget', compact('Budget', 'HCPN', 'Facilities'));
+
+            }
+
+
+        } else {
+
+            $SessionUserID = session()->get('userid');
+            $Budget = null;
+
+            if (session()->get('leveid') == "PHIC") {
+
+                $GetHCPN = env('API_GET_HCPN');
+                $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+                $decodedMB = $apiMB->json();
+                $HCPN = json_decode($decodedMB['result'], true);
+
+                $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                $apiResponse = Http::withoutVerifying()->get($GetAllFacility);
+                $decodedResponse = $apiResponse->json();
+                $Facilities = json_decode($decodedResponse['result'], true);
+
+                return view('BudgetManagement/basebudget', compact('HCPN', 'Facilities', 'Budget'));
+
+            } elseif (session()->get('leveid') == "PRO") {
+
+                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                $ApiHCPNUnderPro = Http::withoutVerifying()->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
+                $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
+
+                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                $apiHCFUnderPro = Http::withoutVerifying()->get($GetFacilitywithPro . '/' . $SessionUserID);
+                $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                $apiResponse = Http::withoutVerifying()->get($GetAllFacility);
+                $decodedResponse = $apiResponse->json();
+                $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+                return view('BudgetManagement/basebudget', compact('HCPN', 'Facilities', 'Budget', 'APEXFacilities'));
+
+            } else {
+
+                $GetHCPN = env('API_GET_HCPN');
+                $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+                $decodedMB = $apiMB->json();
+                $HCPN = json_decode($decodedMB['result'], true);
+
+                $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                $apiResponse = Http::withoutVerifying()->get($GetAllFacility);
+                $decodedResponse = $apiResponse->json();
+                $Facilities = json_decode($decodedResponse['result'], true);
+
+                return view('BudgetManagement/basebudget', compact('HCPN', 'Facilities', 'Budget'));
+
+            }
+
+
+        }
     }
 
 }
