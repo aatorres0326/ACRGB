@@ -10,15 +10,16 @@
     <!-- ************************************************************************************************************************************************ -->
     @if (session()->get('leveid') == 'PHIC')
 
-        <div class="col-md">
-            <div class="card shadow mb-4">
-                <div class="card-body bg-gradient-light">
-                    <div class="table-responsive-sm"
-                        style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content2">
-                        <div style="position:absolute; top:13px; right:460px">
 
-                            <input type="text" id="searchInput">
-                        </div>
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive-sm" style="overflow-y:auto; margin-top:25px; margin-bottom: 10px;"
+                    id="content2">
+                    <div style="position:absolute; top:13px; right:320px">
+
+                        <input type="text" id="searchInput">
+                    </div>
+                    <div class="card-body border rounded mt-2">
                         <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
                             cellspacing="0">
                             <caption>List of Health Care Provider Networks</caption>
@@ -60,8 +61,8 @@
                                             <td class="text-center">{{ $MB['bankname'] }}</td>
                                             <td class="text-center">{{ $MB['pro'] }}</td>
                                             <td class="text-center">
-                                                {{ DateTime::createFromFormat('m-d-Y', $MB['licensedatefrom'])->format('F j, Y') }}
-                                                to {{ DateTime::createFromFormat('m-d-Y', $MB['licensedateto'])->format('F j, Y') }}
+                                                {{ $MB['licensedatefrom']}}
+                                                to {{$MB['licensedateto']}}
                                             </td>
                                             <td class="text-center" style="width:50px;">
                                                 <center><button class="btn-sm btn-outline-primary"
@@ -77,25 +78,23 @@
                 </div>
             </div>
 
-        </div>
 
-        <!-- FOR PRO USER -->
-        <!-- ************************************************************************************************************************************************ -->
+
+            <!-- FOR PRO USER -->
+            <!-- ************************************************************************************************************************************************ -->
     @else
-        <div class="col-md">
-            <div class="card shadow mb-4">
-                <div class="card-body bg-gradient-light">
-                    <div class="table-responsive-sm"
-                        style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content2">
-                        <div style="position:absolute; top:13px; right:460px">
-                            <a class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#add-hcpn" style="text-decoration:
-                                                                                        none; "><i
-                                    class="fas fa-plus fa-sm text-info-40"></i>
-                                Add
-                                HCPN
-                            </a>&nbsp;
-                            <input type="text" id="searchInput">
-                        </div>
+
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <div class="table-responsive-sm"
+                    style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content2">
+                    <div style="position:absolute; top:13px; right:320px">
+                        <a class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#add-hcpn"
+                            style="text-decoration: none; "><i class="fas fa-plus fa-sm text-info-40"></i>&nbsp;New HCPN
+                        </a>&nbsp;
+                        <input type="text" id="searchInput">
+                    </div>
+                    <div class="card-body border rounded mt-2">
                         <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
                             cellspacing="0">
                             <caption>List of Health Care Provider Networks</caption>
@@ -111,7 +110,7 @@
                                     <th class="text-center disableSort">Bank Account</th>
                                     <th class="text-center disableSort">Bank Name</th>
                                     <th class="text-center disableSort">License Validity</th>
-                                    <th class="text-center disableSort">Remaining Days</th>
+                                    <th class="text-center disableSort">Status</th>
                                     <th class="text-center disableSort disableFilterBy">Action
                                     </th>
                                 </tr>
@@ -132,8 +131,11 @@
                                             <td class="text-center">{{ $MB['bankaccount'] }}</td>
                                             <td class="text-center">{{ $MB['bankname'] }}</td>
                                             <td class="text-center">
-                                                {{ DateTime::createFromFormat('m-d-Y', $MB['licensedatefrom'])->format('F j, Y') }}
-                                                to {{ DateTime::createFromFormat('m-d-Y', $MB['licensedateto'])->format('F j, Y') }}
+                                                {{$MB['licensedatefrom']}}
+                                                to
+                                                {{$MB['licensedateto']}}
+
+
                                             </td>
                                             <td class="text-center">
                                                 <span id="demo{{$index}}"></span>
@@ -148,7 +150,26 @@
 
 
                                         </tr>
+                                        <script>
+                                            var countDownDate{{$index}} = new Date("{{$MB['licensedateto']}}").getTime();
 
+                                            var x{{$index}} = setInterval(function () {
+                                                var now{{$index}} = new Date().getTime();
+                                                var distance{{$index}} = countDownDate{{$index}} - now{{$index}};
+
+                                                var days{{$index}} = Math.floor(distance{{$index}} / (1000 * 60 * 60 * 24));
+                                                var hours{{$index}} = Math.floor((distance{{$index}} % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                                                var minutes{{$index}} = Math.floor((distance{{$index}} % (1000 * 60 * 60)) / (1000 * 60));
+                                                var seconds{{$index}} = Math.floor((distance{{$index}} % (1000 * 60)) / 1000);
+
+                                                document.getElementById("demo{{$index}}").innerHTML = "ACTIVE";
+
+                                                if (distance{{$index}} < 0) {
+                                                    clearInterval(x{{$index}});
+                                                    document.getElementById("demo{{$index}}").innerHTML = "EXPIRED";
+                                                }
+                                            }, 1000);
+                                        </script>
                                     @endforeach
 
                                 @endif
@@ -162,24 +183,22 @@
         </div>
     @endif
 
-</div>
+    </div>
 
-</div>
-@if (session()->get('leveid') == 'PRO')
-    <div class="modal" id="add-hcpn">
-        <div class="modal-dialog modal-dialog-centered modal-md">
-            <div class="modal-content">
 
-                <div class="modal-header  bg-gradient-light">
-                    <h6 class="modal-title">ADD HEALTHCARE PROVIDER NETWORK</h6>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
 
-                <div class="modal-body">
-                    @if ($HCFUnderPro == null)
-                        <h5 class="text-center">NO ASSIGNED ACCESS</h5>
+    @if (session()->get('leveid') == 'PRO')
+        <div class="modal" id="add-hcpn">
+            <div class="modal-dialog modal-dialog-centered modal-md">
+                <div class="modal-content">
 
-                    @else
+                    <div class="modal-header bg-light">
+                        <h6 class="modal-title">ADD HEALTHCARE PROVIDER NETWORK</h6>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+
+                    <div class="modal-body">
+
                         <form action="{{ route('INSERTManagingBoard') }}" method="POST" class=" p-2">
                             @csrf
                             <input type="text" class="form-control d-none" name="createdby"
@@ -209,18 +228,18 @@
                                     <label>Address</label>
                                 </div>
                                 <div class="col col-md-9">
-                                    <input type="text" name="address" class="form-control" placeholder="Enter Network Address"
-                                        required>
+                                    <input type="text" name="address" class="form-control"
+                                        placeholder="Enter Network Address" required>
 
                                 </div>
                             </div>
                             <div class="form-row mb-2">
                                 <div class="col col-md-3 mt-2">
-                                    <label>Bank Account</label>
+                                    <label>Account</label>
                                 </div>
                                 <div class="col col-md-9">
                                     <input type="text" name="bankaccount" class="form-control"
-                                        placeholder="Enter Account Number" required>
+                                        placeholder="Enter Bank Account Number" required>
 
                                 </div>
                             </div>
@@ -264,34 +283,15 @@
                                     class="btn btn-danger" data-dismiss="modal">Cancel</button>
                             </div>
                         </form>
-                    @endif
-                </div>
 
+                    </div>
+
+                </div>
             </div>
         </div>
-    </div>
-@endif
-<script src="{{ asset('js/managing-board.js') }}"></script>
-<script>
-    var countDownDate{{$index}} = new Date("{{$MB['licensedateto']}}").getTime();
-
-    var x{{$index}} = setInterval(function () {
-        var now{{$index}} = new Date().getTime();
-        var distance{{$index}} = countDownDate{{$index}} - now{{$index}};
-
-        var days{{$index}} = Math.floor(distance{{$index}} / (1000 * 60 * 60 * 24));
-        var hours{{$index}} = Math.floor((distance{{$index}} % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        var minutes{{$index}} = Math.floor((distance{{$index}} % (1000 * 60 * 60)) / (1000 * 60));
-        var seconds{{$index}} = Math.floor((distance{{$index}} % (1000 * 60)) / 1000);
-
-        document.getElementById("demo{{$index}}").innerHTML = days{{$index}} + "d " + hours{{$index}} + "h " + minutes{{$index}} + "m " + seconds{{$index}} + "s ";
-
-        if (distance{{$index}} < 0) {
-            clearInterval(x{{$index}});
-            document.getElementById("demo{{$index}}").innerHTML = "EXPIRED";
-        }
-    }, 1000);
-</script>
+    @endif
+    <script src="{{ asset('js/managing-board.js') }}"></script>
 
 
-@endsection
+
+    @endsection

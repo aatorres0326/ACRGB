@@ -61,6 +61,15 @@ class UtilitiesController extends Controller
             return back();
         }
     }
+
+    public function ActivityLogs()
+    {
+        $ActLogs = env('API_GET_ACTIVITY_LOGS');
+        $GetActLogs = Http::withoutVerifying()->get($ActLogs);
+        $decodedapi = $GetActLogs->json();
+        $ActivityLogs = json_decode($decodedapi['result'], true);
+        return view('Utilities/activity-logs', compact('ActivityLogs'));
+    }
 }
 
 

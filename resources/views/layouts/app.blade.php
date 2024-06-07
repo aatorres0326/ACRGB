@@ -1,3 +1,7 @@
+@php
+  use Carbon\Carbon;
+  @endphp
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -9,18 +13,15 @@
   <meta name="author" content="">
   <title>ACR-GB</title>
   <link href="{{ asset('admin_assets/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">
-  <link
-    href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
-    rel="stylesheet">
+
   <link href="{{ asset('admin_assets/css/global.min.css') }}" rel="stylesheet">
   <link href="{{ asset('admin_assets/css/slimselect.min.css') }}" rel="stylesheet">
 
   <style>
     #searchInput {
       position: absolute;
-
       padding: 5px;
-      width: 440px;
+      width: 300px;
       box-sizing: border-box;
       border: 1px solid #ccc;
       border-radius: 4px;
@@ -45,7 +46,7 @@
       position: -webkit-sticky;
       top: 0px;
       z-index: 2;
-      background-color: #3C3D46;
+      background-color: #1a2247;
       color: white;
       font-size: 14px;
     }
@@ -161,19 +162,20 @@
 
     @include('layouts.sidebar')
 
-    <div id="content-wrapper" class="d-flex flex-column" style="min-width:1000px;">
+    <div id="content-wrapper" class="d-flex flex-column" style="background-color: white;">
       <div id="content">
 
         @include('layouts.navbar')
 
-        <div class="container-fluid">
-
+        <div class="container-fluid" style="margin-left: 265px; max-width: 1263px; min-width: 1263px;">
+          @include('layouts.header')
           @yield('contents')
+          @include('layouts.footer')
 
         </div>
       </div>
 
-      @include('layouts.footer')
+
 
     </div>
   </div>
@@ -188,7 +190,12 @@
       </div>
     </div>
   </div>
-
+  <script>
+    new SlimSelect({
+      select: '#select2'
+    })
+  </script>
+  </link>
   <script src="{{ asset('admin_assets/vendor/jquery/jquery.min.js') }}"></script>
   <script src="{{ asset('admin_assets/vendor/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
   <script src="{{ asset('admin_assets/vendor/jquery-easing/jquery.easing.min.js') }}"></script>

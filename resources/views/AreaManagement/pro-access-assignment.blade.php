@@ -3,26 +3,26 @@
 @section('contents')
 
 <div class="container-fluid">
-    <div class="row">
-        <div class="col-md">
-            <h4 class="text-center text-primary">{{ $SelectedProName }}</h4>
-        </div>
-    </div>
-    </br>
 
 
-    <div class="row">
-        <div class="col-md">
+    <div class="card shadow mb-2">
+        <div class="card-body">
+            <h6 class="text-primary ml-2 font-weight-bold">
+                {{ $SelectedProName }}
+            </h6>
+
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <h5 class="text-success" style="position:absolute; left:20px; top:13px;">ENABLED ACCESS PERMISSION
-                    </h5>
+
                     <div class="table-responsive-sm"
-                        style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size: 10px;"
-                        id="content">
-                        <table class="table table-sm table-hover table-bordered table-light" width="100%"
-                            cellspacing="0">
-                            <div style="position:absolute; top:13px; right:20px;"
+                        style="overflow-y:auto; margin-top:25px; margin-bottom: 10px; font-size: 14px;" id="content">
+                        <div style="position:absolute; top:13px; right:320px">
+
+                            <input type="text" id="searchInput">
+                        </div>
+                        <table class="table table-sm table-hover table-bordered table-light mt-2" id="tablemanager"
+                            width="100%" cellspacing="0">
+                            <!-- <div style="position:absolute; top:13px; right:20px;"
                                 class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
                                 <button class="btn btn-outline-info btn-sm" data-toggle="modal"
                                     data-target="#add-access" style="text-decoration: none;">
@@ -32,7 +32,7 @@
                                     data-target="#remove-access" style="text-decoration: none;">
                                     <i class="fas fa-minus fa-sm"></i> Remove Access
                                 </button>
-                            </div>
+                            </div> -->
 
                             <thead>
                                 <tr>
@@ -67,7 +67,7 @@
 </div>
 
 <!-- ADD ACCESS MODAL ****************************************************************************************************************************************** -->
-<div class="modal" id="add-access">
+<!-- <div class="modal" id="add-access">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
 
@@ -182,14 +182,14 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- END OF ADD ACCESS MODAL *************************************************************************************************************************************************** -->
 
 <!-- REMOVE ACCESS ***************************************************************************************************************************************************************** -->
-<div class="modal" id="remove-access">
+<!-- <div class="modal" id="remove-access">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <!-- Modal Header -->
+          
             <div class="modal-header bg-warning text-white">
                 <h5>REMOVE ACCESS PERMISSION</h5>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
@@ -298,7 +298,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
 <!-- END OF REMOVE ACCESS MODAL ******************************************************************************************************************************************************************* -->
 
 <script src="{{ asset('js/pro-access.js') }}"></script>

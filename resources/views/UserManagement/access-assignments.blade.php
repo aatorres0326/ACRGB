@@ -79,7 +79,7 @@
                                                     <tbody>
                                                         @foreach($ManagingBoard as $mb)
                                                                                     @php
-                                                                                        $roleIndexData = $RoleIndex->where('accessid', $mb['mbid'])->where('userid', $SelectedUserID)->first();
+                                                                                        $roleIndexData = $RoleIndex->where('accessid', $mb['controlnumber'])->where('userid', $SelectedUserID)->first();
 
                                                                                     @endphp
                                                                                     @if($roleIndexData)
@@ -166,7 +166,7 @@
                                                                             <tbody>
                                                                                 @foreach($ManagingBoard as $mb)
                                                                                                                         @php
-                                                                                                                            $roleIndexData = $RoleIndex->where('accessid', $mb['mbid'])->where('userid', $SelectedUserID)->first();
+                                                                                                                            $roleIndexData = $RoleIndex->where('accessid', $mb['controlnumber'])->where('userid', $SelectedUserID)->first();
 
                                                                                                                         @endphp
                                                                                                                         @if(!$roleIndexData)
@@ -177,7 +177,7 @@
                                                                                                                                 <td class="text-center">
                                                                                                                                     <center><input class="form-control"
                                                                                                                                             style="width: 16px; height: 16px;" type="checkbox"
-                                                                                                                                            id="addaccesbox" value="" data-mbid="{{ $mb['mbid'] }}">
+                                                                                                                                            id="addaccesbox" value="" data-mbid="{{ $mb['controlnumber'] }}">
                                                                                                                                         <center>
                                                                                                                                 </td>
                                                                                                                             </tr>

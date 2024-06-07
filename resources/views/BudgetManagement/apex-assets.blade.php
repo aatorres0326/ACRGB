@@ -4,7 +4,7 @@
 <div id="content">
     <div class="container-fluid">
         <div class="card shadow mb-4">
-            <div class="card-body bg-gradient-light">
+            <div class="card-body">
                 <center>
                     <h4 class="text-primary">
                         @php
@@ -70,6 +70,8 @@
                 <div class="row d-flex">
                     <div class="col-md-12 col-12">
                         <div class="table-responsive-sm">
+                            <div class="card shadow mb-4">
+                                <div class="card-body">
                             <table class="table table-sm table-hover table-bordered" id="assetsTable" width="100%"
                                 cellspacing="0">
                                 <div class="row" style="margin-bottom: 5px;">
@@ -112,6 +114,8 @@
                                 </tbody>
                             </table>
                         </div>
+                        </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -122,28 +126,43 @@
 <div class="modal" id="release-tranch">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
-            <div class="modal-header bg-gradient-light">
-                <h6 class="modal-title">Release Tranche</h6>
+            <div class="modal-header bg-light">
+                <h6 class="modal-title">Release Tranche to<span class="text-primary font-weight-bold">&nbsp;{{ $SelectedHCF }}</span></h6>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>
             <div class="modal-body">
                 <form action="{{ route('INSERTASSETS') }}" method="POST">
                             @csrf
-                            <div class="form-row">
-                                <div class="form-group col-md">
-
-                   
                                     <input type="text" name="hcfid" class="form-control d-none"
                                         value="{{ $SelectedHCFCode }}" readonly required>
                                     <input type="text" name="conid" class="d-none"
                                         value="{{ $SelectedConID }}" required>
+                
+                            <div id="prevbal" class="card" style="display:none">
+                            <div class="card-body">
+                            <h6>PREVIOUS CONTRACT</h6><hr>
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="e_amount">Contract Period</label>
+                                    <input type="text" value="" class="form-control"
+                                        double readonly>
                                    
-                                    <h4>{{ $SelectedHCF }}</h4>
-
-
-                                 
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="e_amount">Previous Balance</label>
+                                    <input type="text" value="" class="form-control"
+                                        double readonly>
+                                
                                 </div>
                             </div>
+                          
+                        
+                           
+                            </div>
+                            </div>
+
+                            <div class="card mt-3">
+                                <div class="card-body">
                             <div class="form-row">
                                 <div class="form-group col-md">
                                     <label for="e_amount">Contract Amount</label>
@@ -153,7 +172,7 @@
                             </div>
                             <div class="form-row">
                                 <div class="form-group col-md-5">
-                                    <label for="tranch">Tranch</label>
+                                    <label for="tranch">Tranche</label>
                                     <select name="tranch" id="tranch" class="form-control"
                                         onchange="updatePercentage()" required>
                                         <option>Select Tranche</option>
@@ -205,8 +224,17 @@
                                         value="" readonly>
                                 </div>
                                 <div class="form-group col-md-5">
-                                    <label for="e_amount">Tranch Amount</label>
-                                    <input type="text" name="tranch_amount" id="tranch_amount" value="" class="form-control" oninput="formatNumber(this)" double required>
+                                    <label for="e_amount">Tranche Amount</label>
+                                    <input type="text" name="tranch_amount" id="tranch_amount" value="" class="form-control" oninput="formatNumber(this)" double required readonly>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group col-md">
+                                    <label for="e_amount">Released Amount</label>
+                                    <input type="text" value="" class="form-control"
+                                        double readonly>
+                                    <input type="text" name="contract_amount" id="contract" value=""
+                                        class="form-control d-none" double readonly>
                                 </div>
                             </div>
                             <div class="form-row">
@@ -221,6 +249,8 @@
                                     <input type="date" name="datereleased" class="form-control" required>
                                 </div>
                             </div>
+                            </div>
+                            </div>
                             <div class="modal-footer">
                                 <button type="submit" class="btn-sm btn-outline-primary">Save</button> <button type="button"
                                     class="btn-sm btn-outline-danger" data-dismiss="modal">Cancel</button>
@@ -231,7 +261,19 @@
     </div>
 </div>
 
+<script>
+    document.getElementById('tranch').addEventListener('change', function () {
+        var selectedValue = this.value;
+        if (selectedValue === '46') {
+            document.getElementById('prevbal').style.display = 'block';
+    
+        } else {
+            document.getElementById('prevbal').style.display = 'none';
+          
+        }
+    });
 
+</script>
 
 <script src="{{ asset('js/apex-assets.js') }}"></script>
 

@@ -3,37 +3,18 @@
     <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
         <i class="fa fa-bars"></i>
     </button>
-    <span class="text-white">
-        {{ (request()->is('facilities')) ? 'Facility Management' : '' }}
-        {{ (request()->is('users')) ? 'User Management' : '' }}
-        {{ (request()->is('budgetmanagement')) ? 'Budget Management' : '' }}
-        {{ (request()->is('viewhcfbudget')) ? 'Budget Management / Facility Budget' : '' }}
-        {{ (request()->is('userlogins')) ? 'User Login Management' : '' }}
-        {{ (request()->is('userinfo')) ? 'User Information Management' : '' }}
-        {{ (request()->is('area')) ? 'Area Management' : '' }}
-        {{ (request()->is('userlevel')) ? 'Role Management' : '' }}
-        {{ (request()->is('useraccess')) ? 'User Login Management / Access Assignments' : '' }}
-        {{ (request()->is('managingboard')) ? 'Health Care Provider Networks' : '' }}
-        {{ (request()->is('mbaccess')) ? 'Health Care Provider Networks / Access Management' : '' }}
-        {{ (request()->is('pro')) ? 'PhilHealth Regional Offices' : '' }}
-        {{ (request()->is('proaccess')) ? 'PhilHealth Regional Offices / Access Management' : '' }}
-        {{ (request()->is('hcpncontract')) ? 'Health Care Provider Network Contracts' : '' }}
-        {{ (request()->is('apexcontract')) ? 'APEX Facility Contracts' : '' }}
-        {{ (request()->is('ledger')) ? 'Ledger Report Forms' : '' }}
-        {{ (request()->is('DATESETTINGS')) ? 'Date Settings' : '' }}
-        {{ (request()->is('facilitycontracts')) ? 'Health Care Provider Network Contracts / ' . $MBName : '' }}
 
-    </span>
+
     <ul class="navbar-nav ml-auto">
         <div class="topbar-divider d-none d-sm-block"></div>
         <li class="nav-item dropdown no-arrow">
             <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                <span class="mr-2 d-none d-lg-inline text-white-600 small">
+                <span class="mr-2 d-none d-lg-inline small font-weight-bold" style="color:#2a3b6d">
                     {{ session()->get('firstname') . " " . session()->get('lastname') . " "}}
                     <br>
                 </span>
-                <div class="rounded-circle border border-white p-1">
+                <div class="rounded-circle border border-secondary p-1">
                     <i class="fas fa-fw fa-user"></i>
                 </div>
             </a>

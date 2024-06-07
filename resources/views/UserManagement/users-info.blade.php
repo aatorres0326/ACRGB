@@ -10,11 +10,12 @@
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
 
-                <div class="modal-header  bg-gradient-light">
+                <div class="modal-header  bg-light">
                     <h6 class="modal-title">NEW USER</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
+                 
                     <form action="{{ route('addUserInfo') }}" method="POST">
                         @csrf
                         <div class="form-row mb-2 font-weight-bold">PERSONAL INFORMATION</div>
@@ -33,13 +34,6 @@
                                 <label for="lastname">Lastname</label>
                                 <input type="text" class="form-control" name="lastname" placeholder="Lastname">
                             </div>
-
-
-                            <div class="form-group col-md d-none">
-
-                                <input type="text" class="form-control d-none" name="createdby" placeholder="aatorres"
-                                    value="86">
-                            </div>
                         </div>
                         <div class="form-row mb-2 font-weight-bold">CONTACT DETAILS</div>
                         <div class="form-row">
@@ -57,8 +51,8 @@
 
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Add</button> <button type="button"
-                                class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-outline-primary btn-sm">Save</button> <button type="button"
+                                class="btn btn-outline-danger btn-sm" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
                 </div>
@@ -66,17 +60,13 @@
         </div>
     </div>
 
-
-
-
-
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
-        <div class="card-body bg-gradient-light">
+        <div class="card-body">
             <div class="table-responsive-sm"
-                style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;"
+                style="overflow-y:auto; max-height: 520px; min-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;"
                 id="content">
-                <div style="position:absolute; top:13px; right:460px">
+                <div style="position:absolute; top:13px; right:320px">
                     <button class="btn-outline-primary btn-sm" data-toggle="modal" data-target="#add-user" style="text-decoration:
                         none; cursor:pointer;"><i class="fas fa-plus fa-sm"></i> New User
                     </button>&nbsp;&nbsp;
@@ -106,13 +96,13 @@
                                                     <td>{{ $user['firstname'] . " " . $user['middlename'] . " " . $user['lastname']}}</td>
 
                                                     @php
-                                                        $login = "No Login Credentials";
-                                                        foreach ($userlogin as $userlog) {
-                                                            if ($userlog['did'] === $user['did']) {
-                                                                $login = $userlog['username'];
-                                                                break;
-                                                            }
-                                                        }
+    $login = "No Login Credentials";
+    foreach ($userlogin as $userlog) {
+        if ($userlog['did'] === $user['did']) {
+            $login = $userlog['username'];
+            break;
+        }
+    }
                                                     @endphp
                                                     @if (Str::contains($login, 'No Login Credentials'))
                                                         <td class="text-center" style="color: #e9967a">{{ $login }}</td>
@@ -132,18 +122,18 @@
                                                     <td>
                                                         <center>
                                                             @php
-                                                                $login = "Credentials Not Found";
-                                                                foreach ($userlogin as $userlog) {
-                                                                    if ($userlog['did'] === $user['did']) {
-                                                                        $login = $userlog['username'];
-                                                                        break;
-                                                                    }
-                                                                }
+    $login = "Credentials Not Found";
+    foreach ($userlogin as $userlog) {
+        if ($userlog['did'] === $user['did']) {
+            $login = $userlog['username'];
+            break;
+        }
+    }
                                                             @endphp
                                                             @if (Str::contains($login, 'Credentials Not Found'))
                                                                     <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin" onclick="addLogin(
                                                                                     '<?=$user['did']?>',
-                                                                                    '<?=$user['lastname']?>'
+                                                                                    '<?=$user['email']?>'
                                                                 )"><i class="fas fa-fw fa-plus" data-toggle="tooltip" title="Create Login"></i></a>
                                                             @else
                                                                 <a class="btn btn-sm btn-link disabled"><i class="fas fa-fw fa-plus"
@@ -181,16 +171,16 @@
                                 <form action="{{ route('addUserLogin') }}" method="POST">
                                     @csrf
                                     <input class="form-control d-none" type="text" name="did" id="did" />
-                                    <input class="d-none" type="text" name="userlastname" id="lastname" />
+                                
                                     <div class="form-row">
 
                                         <div class="form-group col-md-7">
-                                            <label for="firstnamee">Username</label>
-                                            <input class="form-control" type="text" name="username" id="username" />
+                                            <label for="email">Username</label>
+                                            <input class="form-control" type="email" name="emailc" id="emailc" readonly/>
                                         </div>
                                         <div class="form-group col-md-5">
                                             <label for="password">Password</label>
-                                            <input class="form-control" type="text" name="password" id=" password" />
+                                            <input class="form-control" type="text" name="password" id="password" readonly/>
                                         </div>
 
                                     </div>
@@ -209,7 +199,7 @@
                             </div>
 
                             <div class="modal-footer">
-                                <button type="submit" name="submitAdd" class="btn btn-primary">Save</button>
+                                <button type="submit" name="submitAdd" class="btn btn-outline-primary">Save</button>
                             </div>
                             </form>
                         </div>
@@ -225,7 +215,7 @@
                     <div class="modal-dialog modal-dialog-centered modal-md">
                         <div class="modal-content">
                          
-                            <div class="modal-header bg-gradient-light">
+                            <div class="modal-header bg-light">
                                 <h6 class="modal-title">UPDATE USER DETAILS</h6>
                                 <button type="button" class="close" data-dismiss="modal">&times;</button>
                             </div>
@@ -263,8 +253,8 @@
                                     </div>
                                     <input type="text" class="form-control d-none" name="edid" required>
                                     <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Add</button>
-                                        <button type="button" class="btn btn-danger"
+                                        <button type="submit" class="btn btn-outline-primary btn-sm">Save</button>
+                                        <button type="button" class="btn btn-outline-danger btn-sm"
                                             data-dismiss="modal">Cancel</button>
                                     </div>
                                 </form>

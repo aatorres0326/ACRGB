@@ -39,86 +39,86 @@
 <div id="content">
     <div class="container-fluid">
 
-        <div class="row">
-            <div class="col col-md-12 container">
-                <div class="card shadow mb-4">
-                    <div class="card-body">
 
-                        <h4 class="font-weight-bold text-primary">
-                            {{ session()->get('firstname') . " " . session()->get('middlename') . " " . session()->get('lastname') . " "}}
-                        </h4>
-                        <div class="form-row">
-                            <div class="col col-md-2 mt-2">
-                                <h6 class="font-weight-bold">CONTACT DETAILS</h6>
-                            </div>
-                            <div class="col col-md-3 mt-1"></div>
-                            <div class="col col-md-1 mt-1"></div>
-                            <div class="col col-md-2 mt-2">
-                                <h6 class="font-weight-bold">LOGIN DETAILS</h6>
-                            </div>
+        <div class="col-md-12 container">
+            <div class="card shadow mb-4">
+                <div class="card-body">
+
+                    <h4 class="font-weight-bold text-primary">
+                        {{ session()->get('firstname') . " " . session()->get('middlename') . " " . session()->get('lastname') . " "}}
+                    </h4>
+                    <div class="form-row">
+                        <div class="col col-md-2 mt-2">
+                            <h6 class="font-weight-bold">CONTACT DETAILS</h6>
                         </div>
-                        <div class="form-row">
-                            <div class="col col-md-2 mt-2">
-                                <label>Contact Number</label>
-                            </div>
-                            <div class="col col-md-3 mt-1">
-                                @php
-                                    $currentUserId = session()->get('userid');
-                                    $currentUserLogin = $userlogin->firstWhere('userid', $currentUserId);
-                                    $currentUserDid = $currentUserLogin['did'] ?? null;
-                                    $currentUserInfo = $userInfoList->firstWhere('did', $currentUserDid);
-                                @endphp
-
-                                @if ($currentUserInfo)
-                                    <input type="text" class="form-control" value="{{ $currentUserInfo['contact'] }}">
-                                @endif
-
-                            </div>
-                            <div class="col col-md-1 mt-1">
-
-                            </div>
-                            <div class="col col-md-2 mt-2">
-                                <label>Username</label>
-                            </div>
-                            <div class="col col-md-3 mt-1">
-                                @foreach ($userlogin as $logindetails)
-                                    @if ($logindetails['userid'] == session()->get('userid'))
-                                        <input type="text" class="form-control" value="{{ session()->get('username') }}">
-                                    @endif
-                                @endforeach
-                            </div>
+                        <div class="col col-md-3 mt-1"></div>
+                        <div class="col col-md-1 mt-1"></div>
+                        <div class="col col-md-2 mt-2">
+                            <h6 class="font-weight-bold">LOGIN DETAILS</h6>
                         </div>
-                        <div class="form-row">
-                            <div class="col col-md-2 mt-2">
-                                <label>Email</label>
-                            </div>
-                            <div class="col col-md-3 mt-1">
-                                @php
-                                    $currentUserId = session()->get('userid');
-                                    $currentUserLogin = $userlogin->firstWhere('userid', $currentUserId);
-                                    $currentUserDid = $currentUserLogin['did'] ?? null;
-                                    $currentUserInfo = $userInfoList->firstWhere('did', $currentUserDid);
-                                @endphp
-
-                                @if ($currentUserInfo)
-                                    <input type="text" class="form-control" value="{{ $currentUserInfo['email'] }}">
-                                @endif
-                            </div>
-                            <div class="col col-md-1 mt-1">
-
-                            </div>
-                            <div class="col col-md-2 mt-2">
-                                <button class="btn btn-outline-info btn-sm" data-toggle="modal"
-                                    data-target="#changepassword">Change Password</but>
-                            </div>
-                            <div class="col col-md-3 mt-1">
-                                <input type="text" class="form-control" value="" placeholder="●●●●●●●●●">
-                            </div>
-                        </div><br>
                     </div>
+                    <div class="form-row">
+                        <div class="col col-md-2 mt-2">
+                            <label>Contact Number</label>
+                        </div>
+                        <div class="col col-md-3 mt-1">
+                            @php
+                                $currentUserId = session()->get('userid');
+                                $currentUserLogin = $userlogin->firstWhere('userid', $currentUserId);
+                                $currentUserDid = $currentUserLogin['did'] ?? null;
+                                $currentUserInfo = $userInfoList->firstWhere('did', $currentUserDid);
+                            @endphp
+
+                            @if ($currentUserInfo)
+                                <input type="text" class="form-control" value="{{ $currentUserInfo['contact'] }}">
+                            @endif
+
+                        </div>
+                        <div class="col col-md-1 mt-1">
+
+                        </div>
+                        <div class="col col-md-2 mt-2">
+                            <label>Username</label>
+                        </div>
+                        <div class="col col-md-3 mt-1">
+                            @foreach ($userlogin as $logindetails)
+                                @if ($logindetails['userid'] == session()->get('userid'))
+                                    <input type="text" class="form-control" value="{{ session()->get('username') }}">
+                                @endif
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="col col-md-2 mt-2">
+                            <label>Email</label>
+                        </div>
+                        <div class="col col-md-3 mt-1">
+                            @php
+                                $currentUserId = session()->get('userid');
+                                $currentUserLogin = $userlogin->firstWhere('userid', $currentUserId);
+                                $currentUserDid = $currentUserLogin['did'] ?? null;
+                                $currentUserInfo = $userInfoList->firstWhere('did', $currentUserDid);
+                            @endphp
+
+                            @if ($currentUserInfo)
+                                <input type="text" class="form-control" value="{{ $currentUserInfo['email'] }}">
+                            @endif
+                        </div>
+                        <div class="col col-md-1 mt-1">
+
+                        </div>
+                        <div class="col col-md-2 mt-2">
+                            <button class="btn btn-outline-info btn-sm" data-toggle="modal"
+                                data-target="#changepassword">Change Password</but>
+                        </div>
+                        <div class="col col-md-3 mt-1">
+                            <input type="text" class="form-control" value="" placeholder="●●●●●●●●●">
+                        </div>
+                    </div><br>
                 </div>
             </div>
         </div>
+
     </div>
 
     <div class="modal" id="changepassword">

@@ -21,7 +21,7 @@
       <div class="col-xl-10 col-lg-12 col-md-0">
         <div class="card o-hidden border-0 shadow-lg my-5">
           <div class="card-body p-0">
-            
+
             <div class="row">
               <div class="col-lg-6">
                 <center><img class="mb-2 p-5" src="{{ asset('admin_assets/img/ACR_GBlogo.png') }}" alt="" width="350">
@@ -29,39 +29,46 @@
               </div>
               <div class="col-lg-6">
                 <div class="p-5">
-                  <form action="{{ route('login.action') }}" method="POST" class="user" style="max-height: 200px;">
+                  <form action="{{ route('login.action') }}" method="POST" class="user" style="min-height: 220px;">
                     @csrf
-                    
+
                     <div class="form-group">
-                      <input autocomplete="off" name="username" type="text" class="form-control form-control-user" id="exampleInputEmail"
-                        placeholder="Username" required>
+                      <input autocomplete="off" name="username" type="text" class="form-control form-control-user"
+                        id="exampleInputEmail" placeholder="Username" required>
                     </div>
                     <div class="form-group">
                       <input autocomplete="off" name="password" type="password" class="form-control form-control-user"
                         id="exampleInputPassword" placeholder="Password" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
                     @if ($errors->any() || session('error'))
-    <div class="alert alert-danger alert-dismissible alert-sm mt-2 fade show"style="position:relative;" role="alert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        @if ($errors->any())
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        @endif
-        @if (session('error'))
-            {{ session('error') }}
-        @endif
-    </div>
-@endif
+            <div class="alert alert-danger alert-dismissible alert-sm mt-1 fade show" style="position:relative;"
+            role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            @if ($errors->any())
+        <ul>
+        @foreach ($errors->all() as $error)
+      <li>{{ $error }}</li>
+    @endforeach
+        </ul>
+      @endif
+            @if (session('error'))
+        {{ session('error') }}
+      @endif
+            </div>
+          @endif
+                    <button type="submit" class="btn btn-primary btn-block btn-user">Login</button>
+                    <div class="text-center mt-2">
+                      <a class="btn-sm btn-link" style="cursor: pointer; text-decoration: none;"
+                        href="/ForgotPassword">Forgot
+                        Password?</a>
+                    </div>
+
                   </form>
 
 
-             
+
                 </div>
               </div>
             </div>

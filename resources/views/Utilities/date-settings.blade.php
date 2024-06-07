@@ -4,9 +4,9 @@
     <div class="container-fluid">
 
         <div class="row">
-            <div class="col col-md-6 container bg-light p-5 border border-info rounded">
-                <h4 class="text-center">COMPUTATION DATE</h4><br>
-                <h5>Current Date Settings</h5>
+            <div class="col col-md-6 container p-5 border rounded">
+                <h5 class="text-center">COMPUTATION DATE</h5><br>
+                <h6>Current Date Settings</h6>
                 <div class="form-row">
                     <div class="col col-md-3 mt-2">
                         <label>Date From</label>
@@ -27,7 +27,7 @@
                             readonly>
                     </div>
                 </div><br>
-                <h5>Update Date Settings</h5>
+                <h6>Update Date Settings</h6>
                 <form>
                     <div class="form-row">
                         <div class="col col-md-3 mt-2">
@@ -58,9 +58,9 @@
                         id="DateSettingConfirm">Update</button>
                 </div>
             </div>
-            <div class="col col-md-5 container bg-light p-5 border border-info rounded ml-2">
-                <h4 class="text-center">SKIP YEAR SETTINGS</h4><br>
-                <h5>Current Skip Year</h5>
+            <div class="col col-md-5 container p-5 border rounded ml-2">
+                <h5 class="text-center">SKIP YEAR SETTINGS</h5><br>
+                <h6>Current Skip Year</h6>
                 <div class="form-row">
                     <div class="col col-md-3 mt-2">
                         <label>Date From</label>
@@ -81,7 +81,7 @@
                             readonly>
                     </div>
                 </div><br>
-                <h5>Update Skip Year</h5>
+                <h6>Update Skip Year</h6>
                 <form>
                     <div class="form-row">
                         <div class="col col-md-3 mt-2">
@@ -118,7 +118,7 @@
 <div class="modal" id="confirmdatesetting">
     <div class="modal-dialog modal-dialog-centered modal-md">
         <div class="modal-content">
-            <div class="modal-header  bg-gradient-light">
+            <div class="modal-header  bg-light">
                 <h6 class="modal-title">CONFIRMATION</h6>
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
             </div>

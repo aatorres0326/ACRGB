@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Session;
 
+
 class AuthController extends Controller
 {
 
@@ -14,12 +15,32 @@ class AuthController extends Controller
     {
         return view('auth/login');
     }
+    public function ForgotPassword()
+    {
+        return view('auth/forgot-password');
+    }
 
-    public function changelogin()
+    public function ResetPassword(request $request)
+    {
+        $Forgotpass = env('API_FORGOT_PASSWORD');
+        $response = Http::post($Forgotpass, [
+            'emailto' => $request->input('email'),
+        ]);
+
+        if ($response['success'] == true) {
+
+            return view('errors/success-reset-password');
+
+        } elseif ($response['success'] == false) {
+
+            return view('errors/invalid-email');
+        }
+    }
+
+    public function ChangeLogin()
     {
         return view('auth/changelogin');
     }
-
 
     public function loginAction(Request $request)
     {
@@ -53,7 +74,7 @@ class AuthController extends Controller
                     $decodedHCFUnderPro = $ApiHCFUnderPro->json();
                     $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
-                    return view('AreaManagement/managing-board', compact('HCFUnderPro'));
+                    return view('dashboard', compact('HCFUnderPro'));
                 } elseif ($result['leveid'] === 'MB') {
 
                     $GetFacility = env('API_GET_ALL_FACILITIES');
@@ -89,7 +110,7 @@ class AuthController extends Controller
                     $userLevel = json_decode($decodedapiLevel['result'], true);
                     $userLevel = collect($userLevel);
 
-                    return view('UserManagement/users-info', compact('userInfoList', 'userlogin', 'userLevel'));
+                    return view('dashboard', compact('userInfoList', 'userlogin', 'userLevel'));
                 } elseif ($result['leveid'] === 'PHIC') {
                     // API FOR PRO
                     $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
@@ -102,7 +123,7 @@ class AuthController extends Controller
                         if (isset($decodedPro['result'])) {
                             $RegionalOffices = json_decode($decodedPro['result'], true);
 
-                            return view('AreaManagement/pro-management', compact('RegionalOffices'));
+                            return view('dashboard', compact('RegionalOffices'));
                         } else {
 
                             return response()->json(['error' => 'Unexpected response format from API'], 500);
@@ -117,7 +138,7 @@ class AuthController extends Controller
                     $decodedMB = $apiMB->json();
                     $ManagingBoard = json_decode($decodedMB['result'], true);
 
-                    return view('dashboard', compact('ManagingBoard'));
+                    return redirect('dashboard');
                 }
             } else {
                 return redirect()->back()->with('error', $response['message']);

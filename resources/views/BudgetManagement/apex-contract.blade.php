@@ -9,18 +9,18 @@
 
         <!-- CONTRACT TABLE -->
         <div class="card shadow mb-4">
-            <div class="card-body bg-gradient-light">
+            <div class="card-body">
                 <div class="table-responsive-sm"
                     style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                    <div style="position:absolute; top:13px; right:460px">
+                    <div style="position:absolute; top:13px; right:320px">
                         @if (session()->get('leveid') == 'PRO')
-                            <a class="btn btn-link btn-sm " data-toggle="modal" data-target="#add-contract" text-decoration:
+                            <a class="btn btn-outline-primary btn-sm " data-toggle="modal" data-target="#add-contract" text-decoration:
                                 none;><i class="fas fa-plus fa-sm text-info-40"></i> Add Contract
                             </a>
                         @endif
-                        <input type="text" id="searchInput">
+                        <input type="text" id="searchInput">&nbsp;
                     </div>
-
+<div class="card-body border rounded mt-2">
                     <table class="table table-sm table-hover table-bordered display" id="tablemanager" width="100%"
                         cellspacing="0">
                         <caption>List of APEX Contracts</caption>
@@ -139,7 +139,7 @@
                                                                                         </tr>
                                                                                         <tr id="{{$contract['transcode']}}-details" class="d-none exclude-row">
                                                                                             <td colspan="8">
-                                                                                                <div class="card card-body bg-light">
+                                                                                                <div class="card card-body border border-secondary">
                                                                                                     <div class="row d-flex align-items-center">
                                                                                                         <div class="col-sm-2">
                                                                                                             <span class="text-secondary font-weight-bold">ESTIMATED
@@ -204,30 +204,14 @@
                                                                             <td colspan="5" class="text-center">NO DATA FOUND</td>
                                                                         </tr>
                                                                     @endif
-
-
-
-
-
-
                             @endforeach
                             @else
                                 <tr>
                                     <td colspan="5" class="text-center">NO DATA FOUND</td>
                                 </tr>
                             @endif
-
-
-
-
-
-
-
                         </tbody>
-
                     </table>
-
-
                 </div>
             </div>
         </div>
@@ -238,12 +222,14 @@
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
 
-                <div class="modal-header  bg-gradient-light">
+                <div class="modal-header bg-light">
                     <h6 class="modal-title">New Contract</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
                 <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
                     <form action="{{ route('AddContract') }}" method="POST">
                         @csrf
                         <div class="form-row">
@@ -265,12 +251,6 @@
                                                 data-base-amount="{{ $facility['baseamount'] }}">{{ $facility['hcfname'] }}
                                             </option>
                                         @endif
-
-
-
-
-
-
                                     @endforeach
                                 </select>
                             </div>
@@ -312,10 +292,12 @@
 
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Add</button> <button type="button"
-                                class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Add</button> <button type="button"
+                                class="btn btn-sm btn-outline-danger" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
+                    </div>
+                    </div>
                 </div>
 
             </div>
@@ -328,12 +310,14 @@
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
 
-                <div class="modal-header  bg-gradient-light">
+                <div class="modal-header bg-light">
                     <h6 class="modal-title">Edit Contract</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
 
                 <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
                     <form action="{{ route('EditHCPNContract') }}" method="POST">
                         @method('PUT')
                         @csrf
@@ -379,10 +363,12 @@
                         </div>
 
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary">Save</button> <button type="button"
-                                class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                            <button type="submit" class="btn btn-sm btn-outline-primary">Save</button> <button type="button"
+                                class="btn btn-sm btn-outline-danger" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -392,11 +378,13 @@
     <div class="modal" id="editcontractstatus">
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
-                <div class="modal-header  bg-gradient-light">
+                <div class="modal-header  bg-light">
                     <h6 class="modal-title">TERMINATE CONTRACT</h6>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
                 </div>
                 <div class="modal-body">
+                    <div class="card">
+                        <div class="card-body">
                     <form action="{{ route('EditContractStatus') }}" method="POST">
                         @method('PUT')
                         @csrf
@@ -431,6 +419,8 @@
                                 class="btn btn-outline-warning btn-sm" data-dismiss="modal">Cancel</button>
                         </div>
                     </form>
+                    </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -443,6 +433,7 @@
     var yyyy = today.getFullYear();
     var formattedDate = yyyy + '-' + mm + '-' + dd;
     document.getElementById('todayDate').value = formattedDate;
+    
 </script>
 <script src="{{ asset('js/apex-contract.js') }}"></script>
 

@@ -101,7 +101,7 @@ class UsersManageController extends Controller
 
     public function addUserInfo(Request $request)
     {
-
+        $SessionUserID = session()->get('userid');
         $now = new DateTime();
         $InsertUserDetails = env('API_INSERT_USER_DETAILS');
         $response = Http::post($InsertUserDetails, [
@@ -111,12 +111,16 @@ class UsersManageController extends Controller
             'email' => $request->input('email'),
             'contact' => $request->input('contact'),
             'datecreated' => $now->format('m-d-Y'),
-            'createdby' => $request->input('createdby'),
+            'createdby' => $SessionUserID,
         ]);
 
-        if ($response->successful()) {
+        if ($response['success'] == true) {
+
             return redirect('/userinfo');
 
+        } elseif ($response['success'] == false) {
+
+            return view('errors/duplicate-email');
         }
 
     }
@@ -129,7 +133,7 @@ class UsersManageController extends Controller
         $InsertUser = env('API_INSERT_USER');
         $response = Http::post($InsertUser, [
             'did' => $request->input('did'),
-            'username' => $request->input('username'),
+            'username' => $request->input('emailc'),
             'userpassword' => $request->input('password'),
             'leveid' => $request->input('level'),
             'datecreated' => $now->format('m-d-Y'),

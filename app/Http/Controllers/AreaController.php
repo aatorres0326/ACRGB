@@ -50,7 +50,7 @@ class AreaController extends Controller
     public function INSERTManagingBoard(Request $request)
     {
 
-
+        $SessionUserID = session()->get('userid');
         $enddate = $request->input('licensedateto');
         $datef = date_create($enddate);
         $enddateformat = date_format($datef, "m-d-Y");
@@ -63,7 +63,7 @@ class AreaController extends Controller
         $AddProResponse = Http::post($InsertHCPN, [
             'mbname' => $request->input('mbname'),
             'datecreated' => $now->format('m-d-Y'),
-            'createdby' => $request->input('createdby'),
+            'createdby' => $SessionUserID,
             'controlnumber' => $request->input('accreditation'),
             'address' => $request->input('address'),
             'bankaccount' => $request->input('bankaccount'),
@@ -72,10 +72,11 @@ class AreaController extends Controller
             'licensedateto' => $enddateformat,
         ]);
 
-
         if ($AddProResponse->successful()) {
+
             return back();
         }
+
     }
 
 
@@ -92,7 +93,7 @@ class AreaController extends Controller
         $RoleIndex = collect($RoleIndex);
 
         $GetAllFacilities = env('API_GET_ALL_FACILITIES');
-        $facilityapiResponse = Http::withoutVerifying()->get($GetAllFacilities);
+        $facilityapiResponse = Http::withoutVerifying()->get($GetAllFacilities . "/ALL/0");
         $decodedFacilityResponse = $facilityapiResponse->json();
         $Facilities = json_decode($decodedFacilityResponse['result'], true);
         $Facilities = collect($Facilities);

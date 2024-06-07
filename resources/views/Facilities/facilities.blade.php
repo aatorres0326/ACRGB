@@ -9,13 +9,13 @@ $now->format('Y-m-d');
 
    
     <div class="card shadow mb-4">
-        <div class="card-body bg-gradient-light">
-            <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-             <div style="position:absolute; top:13px; right:460px">
+        <div class="card-body">
+            <div class="table-responsive-sm" style="overflow-y:auto; margin-top:25px; margin-bottom: 10px;" id="content">
+             <div style="position:absolute; top:13px; right:320px">
                   
                       <input type="text" id="searchInput">
                     </div>
-                   
+                <div class="card-body border rounded mt-2">
                 <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%" cellspacing="0">
                     <div class="row" style="margin-bottom: 7px;">
                         <div class="col"></div>
@@ -29,7 +29,7 @@ $now->format('Y-m-d');
                             <th class="text-center disableSort">Address</th>
                             <th class="text-center disableSort">TYPE</th>
                             <th class="text-center disableSort {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}{{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}">Regional Office</th>
-                            <th class="text-center disableSort">Accreditation</th>
+                            <th class="text-center disableSort">Hopspital Code</th>
                             <th class="text-center disableSort">HCPN</th>
                             <th class="disableSort disableFilterBy text-center">Action</th>
                         </tr>
@@ -48,7 +48,7 @@ $now->format('Y-m-d');
                 <th class="text-center disableSort">Address</th>
                 <th class="text-center disableSort">TYPE</th>
                 <th class="text-center disableSort {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}{{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}">Regional Office</th>
-                <th class="text-center disableSort">Accreditation</th>
+                <th class="text-center disableSort">Hopspital Code</th>
                 <th class="text-center disableSort">HCPN</th>
                 <th class="disableSort disableFilterBy text-center">Action</th>
             </tr>
@@ -85,7 +85,7 @@ $now->format('Y-m-d');
                                             @php
                 $matchFound = false;
                                             @endphp
-   
+
                                             @foreach ($ManagingBoard as $mb)
                                             @if ($facility['type'] == "NONAPEX")
                                                                                         @if ($mb['controlnumber'] == $facility['mb'])
@@ -95,14 +95,14 @@ $now->format('Y-m-d');
                                                                                         @endphp
                                                                                         @endif
                                                                                         @elseif ($facility['type'] == "APEX")
-                                                                                         @if ($mb['controlnumber'] == $parsedApexhcpn[0])
+                                                                                        @if ($mb['controlnumber'] == $parsedApexhcpn[0])
                                                                                         <td class="text-center">{{ $mb['mbname'] }}</td>
                                                                                         @php
                             $matchFound = true;
                                                                                         @endphp
                                                                                         @endif
                                                                                         @endif
-                                                                                       
+
                                             @endforeach
                                             @if (!$matchFound)
                                             <td class="text-center">N/A</td>
@@ -117,48 +117,53 @@ $now->format('Y-m-d');
             @endforeach
         </tbody>
     @elseif (session()->get('leveid') == 'PRO')
-    <thead>
-        <tr class="exclude-row">
-            <th class="disableSort">Facility</th>
-            <th class="text-center disableSort">Address</th>
-            <th class="text-center disableSort">Accreditation</th>
-            <th class="text-center disableSort">HCPN</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if ($HCFUnderPro == null)
-            <tr><td>No Data Found</td></tr>
-            @else
+        <thead>
+            <tr class="exclude-row">
+                <th class="disableSort">Facility</th>
+                <th class="text-center disableSort">Address</th>
+                <th class="text-center disableSort">Hopspital Code</th>
+                <th class="text-center disableSort">HCPN</th>
+            </tr>
+        </thead>
+        <tbody>
+            @if ($HCFUnderPro == null)
+                <tr><td>No Data Found</td></tr>
+                @else
+            @foreach($HCFUnderPro as $facility)
+
+            <tr>
+                <td class="d-none">{{ $facility['hcfid'] }}</td>
+                <td>{{ $facility['hcfname'] }}</td>
+                <td class="text-center">{{ $facility['hcfaddress'] }}</td>
+                @php
+                $mb = json_decode($facility['mb']);
+                @endphp
+                    <td class="text-center">{{ $facility['hcfcode'] }}</td>
+                <td class="text-center">{{ $mb->mbname }}</td>
+
+            </tr>
+            @endforeach
+            @endif
+        </tbody>
+    @else
+        <thead>
+            <tr class="exclude-row">
+                <th class="disableSort">Facility</th>
+                <th class="text-center disableSort">Address</th>
+                <th class="text-center disableSort">Hopspital Code</th>
+
+            </tr>
+        </thead>
         @foreach($HCFUnderPro as $facility)
-        
         <tr>
-            <td class="d-none">{{ $facility['hcfid'] }}</td>
             <td>{{ $facility['hcfname'] }}</td>
             <td class="text-center">{{ $facility['hcfaddress'] }}</td>
-            @php
-                $mb = json_decode($facility['mb']);
-            @endphp
-                <td class="text-center">{{ $facility['hcfcode'] }}</td>
-            <td class="text-center">{{ $mb->mbname }}</td>
+            <td class="text-center">{{ $facility['hcfcode'] }}</td>
 
         </tr>
         @endforeach
-        @endif
-    </tbody>
-    @else
-    @foreach($HCFUnderPro as $facility)
-    <tr>
-        <td class="d-none" name="hcfid" id="hcfid">{{ $facility['hcfid'] }}</td>
-        <td>{{ $facility['hcfname'] }}</td>
-        <td class="text-center">{{ $facility['hcfaddress'] }}</td>
-        <td class="text-center">{{ $facility['hcfcode'] }}</td>
-        <td class="text-center">
-            <center><input class="form-control" style="width: 16px; height: 16px;" type="checkbox" id="addaccesbox" value="" data-hcf="{{ $facility['hcfid'] }}"></center>
-        </td>
-    </tr>
-    @endforeach
-    <textarea class="d-none" id="add-access"></textarea>
- 
+
+
     @endif
 @endif
                 </table>
@@ -184,7 +189,7 @@ $now->format('Y-m-d');
                             <input type="text" name="t_hcfname" class="form-control" readonly required> 
                         </div>
                         <div class="form-group col-md-6">
-                            <label for="e_transcode">Accreditation Number</label>
+                            <label for="e_transcode">Hopspital Code</label>
                             <input type="text" name="t_hcfcode" class="form-control" readonly required>
                         </div>
                     </div>

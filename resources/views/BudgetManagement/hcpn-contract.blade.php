@@ -3,11 +3,13 @@
 @section('contents')
 <div id="content">
     <div class="container-fluid">
+
         <div class="card shadow mb-4">
-            <div class="card-body bg-gradient-light">
+            <div class="card-body">
+
                 <div class="table-responsive-sm"
                     style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                    <div style="position:absolute; top:13px; right:460px ">
+                    <div style="position:absolute; top:13px; right:320px">
                         @if (session()->get('leveid') == 'PRO')
                             <button class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#add-contract">
                                 <i class="fas fa-plus fa-sm text-info-40"></i> New HCPN Contract
@@ -15,188 +17,212 @@
                         @endif
                         <input type="text" id="searchInput">
                     </div>
-                    <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
-                        cellspacing="0">
-                        <caption>List of HCPN Contracts</caption>
-                        <div class="row" style="margin-bottom: 7px;">
-                            <div class="col"></div>
-                            <div class="col"></div>
-                        </div>
-                        <thead>
-                            <tr class="exclude-row">
-                                <th class="text-center disableSort">Reference Number</th>
-                                <th class="text-center disableSort" id="max-width-column">HCPN</th>
-                                <th class="text-center disableSort">Contract Amount</th>
-                                <th class="text-center disableSort">Current Tranche</th>
-                                <th class="text-center disableSort disableFilterBy">Used Tranche Budget</th>
-                                <th class="text-center disableSort disableFilterBy">No. of Claims</th>
-                                <th class="disableSort disableFilterBy text-center">Action</th>
-                            </tr>
-                        </thead>
-<tbody>
-    @if(isset($Contract) && is_iterable($Contract) && count($Contract) > 0)
-        @foreach($Contract as $contract)
-            @if ($contract != null)
-                        <tr>
-                            <td class="d-none">{{ $contract['conid'] }}</td>
-                            <td>{{ $contract['transcode'] }}</td>
-                            @php
-                $mb = json_decode($contract['hcfid'], true);
-                            @endphp
-                            <td>{{ $mb['mbname'] }}</td>
-                            <td><strong>&#8369;</strong> &nbsp;{{ number_format((double) $contract['amount'], 2) }}</td>
-                            @if ($contract['traches'] == 1)
-                                <td class="text-center">1ST</td>
-                                @if ($contract['percentage'] < 0)
-                                    <td class="text-center">
-                                        <span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span>
-                                        OVER OF 1ST TRANCHE
-                                    </td>
-                                @elseif ($contract['percentage'] < 45)
-                                    <td class="text-center">
-                                        <span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 1ST TRANCHE
-                                    </td>
-                                @elseif ($contract['percentage'] < 55)
-                                    <td class="text-center">
-                                        <span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 1ST TRANCHE
-                                    </td>
+
+                    <div class="card-body border rounded mt-2">
+                        <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
+                            cellspacing="0">
+                            <caption>List of HCPN Contracts</caption>
+                            <div class="row" style="margin-bottom: 7px;">
+                                <div class="col"></div>
+                                <div class="col"></div>
+                            </div>
+                            <thead>
+                                <tr class="exclude-row">
+                                    <th class="text-center disableSort">Reference Number</th>
+                                    <th class="text-center disableSort" id="max-width-column">HCPN</th>
+                                    <th class="text-center disableSort">Contract Amount</th>
+                                    <th class="text-center disableSort">Current Tranche</th>
+                                    <th class="text-center disableSort disableFilterBy">Used Tranche Budget</th>
+                                    <th class="text-center disableSort disableFilterBy">No. of Claims</th>
+                                    <th class="disableSort disableFilterBy text-center">Action</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+                                @if(isset($Contract) && is_iterable($Contract) && count($Contract) > 0)
+                                                        @foreach($Contract as $contract)
+                                                                                @if ($contract != null)
+                                                                                                        <tr>
+                                                                                                            <td class="d-none">{{ $contract['conid'] }}</td>
+                                                                                                            <td>{{ $contract['transcode'] }}</td>
+                                                                                                            @php
+                                                                                                                $mb = json_decode($contract['hcfid'], true);
+                                                                                                            @endphp
+                                                                                                            <td>{{ $mb['mbname'] }}</td>
+                                                                                                            <td><strong>&#8369;</strong>
+                                                                                                                &nbsp;{{ number_format((double) $contract['amount'], 2) }}</td>
+                                                                                                            @if ($contract['traches'] == 1)
+                                                                                                                            <td class="text-center">1ST</td>
+                                                                                                                            @if ($contract['percentage'] < 0)
+                                                                                                                                <td class="text-center">
+                                                                                                                                    <span
+                                                                                                                                        class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }}%</span>
+                                                                                                                                    OVER OF 1ST TRANCHE
+                                                                                                                                </td>
+                                                                                                                            @elseif ($contract['percentage'] < 45) <td class="text-center">
+                                                                                                                                    <span
+                                                                                                                                        class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    }}%</span>
+                                                                                                                                    USED OF 1ST TRANCHE
+                                                                                                                                </td>
+                                                                                                                            @elseif ($contract['percentage'] < 55) <td class="text-center">
+                                                                                                                                                <span class="text-darker-warning font-weight-bold">{{ number_format((double) 
+                                                                                                                                $contract['percentage'], 2) }}%</span>
+                                                                                                                                                USED OF 1ST TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @else
+                                                                                                                                <td class="text-center">
+                                                                                                                                    <span
+                                                                                                                                        class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            }}%</span>
+                                                                                                                                    USED OF 1ST TRANCHE
+                                                                                                                                </td>
+                                                                                                                            @endif
+                                                                                                            @elseif ($contract['traches'] == 2)
+                                                                                                                            <td class="text-center">2ND</td>
+                                                                                                                            @if ($contract['percentage'] < 0)
+                                                                                                                                            <td class="text-center">
+                                                                                                                                                <span class="text-danger font-weight-bold">{{ number_format(abs((double) 
+                                                                                                                                $contract['percentage']), 2) }}%</span>
+                                                                                                                                                OVER OF 2ND TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @elseif ($contract['percentage'] < 60) <td class="text-center">
+                                                                                                                                                <span class="text-success font-weight-bold">{{ number_format((double) 
+                                                                                                                                $contract['percentage'], 2) }}%</span>
+                                                                                                                                                USED OF 2ND TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @elseif ($contract['percentage'] < 70) <td class="text-center">
+                                                                                                                                                <span class="text-darker-warning font-weight-bold">{{ number_format((double) 
+                                                                                                                                $contract['percentage'], 2) }}%</span>
+                                                                                                                                                USED OF 2ND TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @else
+                                                                                                                                            <td class="text-center">
+                                                                                                                                                <span class="text-danger font-weight-bold">{{ number_format((double) 
+                                                                                                                                $contract['percentage'], 2) }}%</span>
+                                                                                                                                                USED OF 2ND TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @endif
+                                                                                                            @elseif ($contract['traches'] == 3)
+                                                                                                                            <td class="text-center">3RD</td>
+                                                                                                                            @if ($contract['percentage'] < 0)
+                                                                                                                                            <td class="text-center">
+                                                                                                                                                <span class="text-danger font-weight-bold">{{ number_format(abs((double) 
+                                                                                                                                $contract['percentage']), 2) }}%</span>
+                                                                                                                                                OVER OF 3RD TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @elseif ($contract['percentage'] < 80) <td class="text-center">
+                                                                                                                                                <span class="text-success font-weight-bold">{{ number_format((double) 
+                                                                                                                                $contract['percentage'], 2) }}%</span>
+                                                                                                                                                USED OF 3RD TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @elseif ($contract['percentage'] < 90) <td class="text-center">
+                                                                                                                                                <span class="text-darker-warning font-weight-bold">{{ number_format((double) 
+                                                                                                                                $contract['percentage'], 2) }}%</span>
+                                                                                                                                                USED OF 3RD TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @else
+                                                                                                                                            <td class="text-center">
+                                                                                                                                                <span class="text-danger font-weight-bold">{{ number_format((double) 
+                                                                                                                                $contract['percentage'], 2) }}%</span>
+                                                                                                                                                USED OF 3RD TRANCHE
+                                                                                                                                            </td>
+                                                                                                                            @endif
+                                                                                                            @else
+                                                                                                                <td class="text-center">N/A</td>
+                                                                                                                <td class="text-center">N/A</td>
+                                                                                                            @endif
+
+                                                                                                            <td class="text-center">{{ $contract['totalclaims'] }}</td>
+
+                                                                                                            <td class="text-center">
+                                                                                                                <button class="btn btn-outline-primary btn-sm" id="{{ $contract['transcode'] }}"
+                                                                                                                    onclick="toggleDetails('{{ $contract['transcode'] }}')">View</button>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                                        <tr id="{{ $contract['transcode'] }}-details" class="d-none exclude-row">
+                                                                                                            <td colspan="8">
+                                                                                                                <div class="card card-body border border-secondary">
+                                                                                                                    <div class="row d-flex align-items-center">
+                                                                                                                        <div class="col-sm-2">
+                                                                                                                            <span class="text-secondary font-weight-bold">ESTIMATED
+                                                                                                                                AMOUNT</span><br>
+                                                                                                                            <span><strong>&#8369;</strong>&nbsp;{{ number_format((double) $contract['baseamount'], 2)
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }}</span>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-sm-2">
+                                                                                                                            <span class="text-secondary font-weight-bold">RELEASED BY</span><br>
+                                                                                                                            @php
+                                                                                                                                $createdby = json_decode($contract['createdby'], true);
+                                                                                                                            @endphp
+                                                                                                                            @if ($createdby == null)
+                                                                                                                                <span>NO DATA FOUND</span>
+                                                                                                                            @else
+                                                                                                                                <span>{{ $createdby['firstname'] . " " . $createdby['lastname'] }}</span>
+                                                                                                                            @endif
+                                                                                                                        </div>
+                                                                                                                        <div class="col-sm-2">
+                                                                                                                            <span class="text-secondary font-weight-bold">DATE
+                                                                                                                                RELEASED</span><br>
+                                                                                                                            <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datecreated'])->format('M j, Y')
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                }}</span>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-sm-3">
+                                                                                                                            <span class="text-secondary font-weight-bold">CONTRACT
+                                                                                                                                COVERAGE</span><br>
+                                                                                                                            @php
+                                                                                                                                $condate = json_decode($contract['contractdate'], true);
+                                                                                                                            @endphp
+                                                                                                                            <span>{{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }}
+                                                                                                                                to
+                                                                                                                                {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}</span>
+                                                                                                                        </div>
+                                                                                                                        <div class="col-sm-3 text-right">
+                                                                                                                            <button class="btn btn-sm btn-outline-info" title="View Tranches"
+                                                                                                                                onclick="ViewTranches('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>', '<?= $contract['percentage'] ?>' )">Tranches</button>
+                                                                                                                            <button class="btn btn-sm btn-outline-primary"
+                                                                                                                                title="View Facility Contracts"
+                                                                                                                                onclick="GetContractDetails('<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>' )">Facilities</button>
+                                                                                                                            @if (session()->get('leveid') == 'PRO')
+                                                                                                                                <a class="btn btn-sm btn-outline-danger" data-toggle="modal"
+                                                                                                                                    title="Terminate Contract" data-target="#editcontractstatus"
+                                                                                                                                    onclick="EditContractStatus('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['transcode'] ?>')"><i
+                                                                                                                                        class="fas fa-fw fa-trash"></i></a>
+                                                                                                                                @if ($contract['traches'] == 0)
+                                                                                                                                    <a class="btn btn-sm btn-outline-warning" data-toggle="modal"
+                                                                                                                                        data-target="#editcontract"
+                                                                                                                                        onclick="EditContract('<?= $contract['conid'] ?>','<?= $contract['amount'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['transcode'] ?>')"><i
+                                                                                                                                            class="fas fa-fw fa-edit" data-toggle="tooltip"
+                                                                                                                                            title="Edit Contract"></i></a>
+                                                                                                                                @else
+                                                                                                                                    <a class="btn btn-sm btn-outline-warning disabled"
+                                                                                                                                        data-toggle="modal" data-target="#editcontract"
+                                                                                                                                        onclick="EditContract('<?= $contract['conid'] ?>','<?= $contract['amount'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['transcode'] ?>')"><i
+                                                                                                                                            class="fas fa-fw fa-edit" data-toggle="tooltip"
+                                                                                                                                            title="Edit Contract"></i></a>
+                                                                                                                                @endif
+                                                                                                                            @endif
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            </td>
+                                                                                                        </tr>
+                                                                                @else
+                                                                                    <tr>
+                                                                                        <td>NO DATA FOUND</td>
+                                                                                    </tr>
+                                                                                @endif
+                                                        @endforeach
                                 @else
-                                    <td class="text-center">
-                                        <span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 1ST TRANCHE
-                                    </td>
+                                    <tr>
+                                        <td>NO DATA FOUND</td>
+                                    </tr>
                                 @endif
-                            @elseif ($contract['traches'] == 2)
-                                <td class="text-center">2ND</td>
-                                @if ($contract['percentage'] < 0)
-                                    <td class="text-center">
-                                        <span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span>
-                                        OVER OF 2ND TRANCHE
-                                    </td>
-                                @elseif ($contract['percentage'] < 60)
-                                    <td class="text-center">
-                                        <span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 2ND TRANCHE
-                                    </td>
-                                @elseif ($contract['percentage'] < 70)
-                                    <td class="text-center">
-                                        <span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 2ND TRANCHE
-                                    </td>
-                                @else
-                                    <td class="text-center">
-                                        <span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 2ND TRANCHE
-                                    </td>
-                                @endif
-                            @elseif ($contract['traches'] == 3)
-                                <td class="text-center">3RD</td>
-                                @if ($contract['percentage'] < 0)
-                                    <td class="text-center">
-                                        <span class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['percentage']), 2) }}%</span>
-                                        OVER OF 3RD TRANCHE
-                                    </td>
-                                @elseif ($contract['percentage'] < 80)
-                                    <td class="text-center">
-                                        <span class="text-success font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 3RD TRANCHE
-                                    </td>
-                                @elseif ($contract['percentage'] < 90)
-                                    <td class="text-center">
-                                        <span class="text-darker-warning font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 3RD TRANCHE
-                                    </td>
-                                @else
-                                    <td class="text-center">
-                                        <span class="text-danger font-weight-bold">{{ number_format((double) $contract['percentage'], 2) }}%</span>
-                                        USED OF 3RD TRANCHE
-                                    </td>
-                                @endif
-                            @else
-                                <td class="text-center">N/A</td>
-                                <td class="text-center">N/A</td>
-                            @endif
+                            </tbody>
 
-                            <td class="text-center">{{ $contract['totalclaims'] }}</td>
-
-                            <td class="text-center">
-                                <button class="btn btn-outline-primary btn-sm" id="{{ $contract['transcode'] }}" onclick="toggleDetails('{{ $contract['transcode'] }}')">View</button>
-                            </td>
-                        </tr>
-                        <tr id="{{ $contract['transcode'] }}-details" class="d-none exclude-row">
-                            <td colspan="8">
-                                <div class="card card-body bg-light">
-                                    <div class="row d-flex align-items-center">
-                                        <div class="col-sm-2">
-                                            <span class="text-secondary font-weight-bold">ESTIMATED AMOUNT</span><br>
-                                            <span><strong>&#8369;</strong>&nbsp;{{ number_format((double) $contract['baseamount'], 2) }}</span>
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <span class="text-secondary font-weight-bold">RELEASED BY</span><br>
-                                            @php
-                $createdby = json_decode($contract['createdby'], true);
-                                            @endphp
-                                            @if ($createdby == null)
-                                                <span>NO DATA FOUND</span>
-                                            @else
-                                                <span>{{ $createdby['firstname'] . " " . $createdby['lastname'] }}</span>
-                                            @endif
-                                        </div>
-                                        <div class="col-sm-2">
-                                            <span class="text-secondary font-weight-bold">DATE RELEASED</span><br>
-                                            <span>{{ DateTime::createFromFormat('m-d-Y', $contract['datecreated'])->format('M j, Y') }}</span>
-                                        </div>
-                                        <div class="col-sm-3">
-                                            <span class="text-secondary font-weight-bold">CONTRACT COVERAGE</span><br>
-                                            @php
-                $condate = json_decode($contract['contractdate'], true);
-                                            @endphp
-                                            <span>{{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}</span>
-                                        </div>
-                                        <div class="col-sm-3 text-right">
-                                            <button class="btn btn-sm btn-outline-info" title="View Tranches" onclick="ViewTranches('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES,    'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>', '<?= $contract['percentage'] ?>' )">Tranches</button>
-                                            <button class="btn btn-sm btn-outline-primary" title="View Facility Contracts"
-                                                onclick="GetContractDetails('<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>' )">Facilities</button>
-                                            @if (session()->get('leveid') == 'PRO')
-                                                <a class="btn btn-sm btn-outline-danger" data-toggle="modal" title="Terminate Contract" data-target="#editcontractstatus"
-                                                    onclick="EditContractStatus('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['transcode'] ?>')"><i
-                                                            class="fas fa-fw fa-trash" ></i></a>
-                                                @if ($contract['traches'] == 0)
-                                                    <a class="btn btn-sm btn-outline-warning" data-toggle="modal" data-target="#editcontract"
-                                                        onclick="EditContract('<?= $contract['conid'] ?>','<?= $contract['amount'] ?>','<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>','<?= $contract['transcode'] ?>')"><i
-                                                            class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit Contract"></i></a>
-                                                @else
-                                                    <a class="btn btn-sm btn-outline-warning disabled" data-toggle="modal" data-target="#editcontract" onclick="EditContract(
-                                                                                                    '<?= $contract['conid'] ?>',
-                                                                                                    '<?= $contract['amount'] ?>',
-                                                                                                    '<?= htmlspecialchars(json_encode($mb), ENT_QUOTES, 'UTF-8') ?>',
-                                                                                                    '<?= $contract['transcode'] ?>'
-                                                                                                )"><i class="fas fa-fw fa-edit" data-toggle="tooltip"
-                                                            title="Edit Contract"></i></a>
-                                                @endif
-                                            @endif
-                                            </div>
-                                            </div>
-                                            </div>
-                                            </td>
-                                            </tr>
-            @else
-                <tr>
-                    <td>NO DATA FOUND</td>
-                </tr>
-            @endif
-        @endforeach
-    @else
-        <tr>
-            <td>NO DATA FOUND</td>
-        </tr>
-    @endif
-                                    </tbody>
-
-
-                    </table>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
@@ -207,59 +233,121 @@
             <div class="modal" id="add-contract">
                 <div class="modal-dialog modal-dialog-centered modal-md">
                     <div class="modal-content">
-                        <div class="modal-header  bg-gradient-light">
+                        <div class="modal-header  bg-light">
                             <h6 class="modal-title">New HCPN Contract</h6>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
-                            @if ($ManagingBoard2 == null)
-                                <h5 class="text-center">NO ASSIGNED ACCESS</h5>
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    @if ($ManagingBoard2 == null)
+                                        <h5 class="text-center">NO ASSIGNED ACCESS</h5>
+                                    @else
+                                        <form action="{{ route('AddContract') }}" method="POST">
+                                            @csrf
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label for="transcode">Reference Number</label>
+                                                    <input type="text" name="transcode" class="form-control"
+                                                        placeholder="Transaction #" double>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col">
+                                                    <label for="hcpn">HCPN</label>
+                                                    <select name="mb" id="selectedhcf" class="form-control" required>
+                                                        <option value="" data-base-amount="">Select HCPN</option>
+                                                        @foreach ($ManagingBoard2 as $mb)
+                                                            <option value="{{ $mb['controlnumber']}}"
+                                                                data-base-amount="{{ $mb['baseamount'] }}">
+                                                                {{ $mb['mbname']}}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col">
+                                                    <label for="hcpn">Contract Period</label>
+                                                    <select name="contractperiod" class="form-control" id="select2" required>
+                                                        <option value="">Select Contract Period</option>
+                                                        @foreach ($ContractDate as $condate)
+                                                            <option value="{{ $condate['condateid']}}">
+                                                                {{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }}
+                                                                -
+                                                                {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}
+                                                            </option>
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label for="baseamount">Base Amount</label>
+                                                    <input type="text" name="baseamount" id="baseamount" class="form-control"
+                                                        oninput="formatNumber(this)" placeholder="0" double required readonly>
+                                                </div>
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group col-md">
+                                                    <label for="amount">Set Contract Amount</label>
+                                                    <input type="text" name="amount" class="form-control"
+                                                        oninput="formatNumber(this)" placeholder="Enter amount" double required>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="submit" class="btn btn-sm btn-outline-primary">Add</button> <button
+                                                    type="button" class="btn btn-sm btn-outline-danger"
+                                                    data-dismiss="modal">Cancel</button>
+                                            </div>
+                                        </form>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END OF ADD CONTRACT MODAL -->
 
-                            @else
-                                <ul class="nav nav-tabs" id="contract-tabs" role="tablist">
-                                    <li class="nav-item">
-                                        <a class="nav-link text-black-50 active" id="new-contract" data-toggle="tab" href="#new-contract" role="tab"
-                                            aria-controls="home" aria-selected="true">New</a>
-                                    </li>
-                                    <li class="nav-item">
-                                        <a class="nav-link text-black-50" id="renew-contract" data-toggle="tab" href="#renew-contract" role="tab"
-                                            aria-controls="profile" aria-selected="false">Renew</a>
-                                    </li>
+            <!-- EDIT CONTRACT MODAL -->
+            <div class="modal" id="editcontract">
+                <div class="modal-dialog modal-dialog-centered modal-md">
+                    <div class="modal-content">
+                        <div class="modal-header bg-light">
+                            <h6 class="modal-title">Edit Contract</h6>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
 
-                                </ul>
-                                <hr class="sidebar-divider my-0">
-                                </br>
-                                
-                                    <form action="{{ route('AddContract') }}" method="POST">
+                        <div class="modal-body">
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <form action="{{ route('EditHCPNContract') }}" method="POST">
+                                        @method('PUT')
                                         @csrf
                                         <div class="form-row">
                                             <div class="form-group col-md">
-                                                <label for="transcode">Reference Number</label>
-                                                <input type="text" name="transcode" class="form-control" placeholder="Transaction #"
+                                                <label for="e_transcode">Reference Number</label>
+                                                <input type="text" name="e_transcode" class="form-control"
+                                                    placeholder="Transaction #" double>
+                                                <input type="text" name="e_conid" class="d-none" placeholder="Transaction #"
                                                     double>
                                             </div>
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col">
+
                                                 <label for="hcpn">HCPN</label>
-
-
-
-                                                <select name="mb" id="selectedhcf" class="form-control" required>
-                                                    <option value="" data-base-amount="">Select HCPN</option>
-                                                    @foreach ($ManagingBoard2 as $mb)
-                                                        <option value="{{ $mb['controlnumber']}}"
-                                                            data-base-amount="{{ $mb['baseamount'] }}">{{ $mb['mbname']}}</option>
-                                                    @endforeach
-                                                </select>
-
-
+                                                <input type="text" name="e_mbname" id="e_mbname" class="form-control" readonly>
+                                                <input type="text" name="e_controlnumber" class="d-none">
                                             </div>
                                         </div>
+
+
                                         <div class="form-row">
                                             <div class="form-group col">
                                                 <label for="hcpn">Contract Period</label>
-                                                <select name="contractperiod" class="form-control" id="select2" required>
+                                                <select name="e_contractperiod" class="form-control" id="select2" required>
                                                     <option value="">Select Contract Period</option>
                                                     @foreach ($ContractDate as $condate)
                                                         <option value="{{ $condate['condateid']}}">
@@ -273,87 +361,19 @@
                                         </div>
                                         <div class="form-row">
                                             <div class="form-group col-md">
-                                                <label for="baseamount">Base Amount</label>
-                                                <input type="text" name="baseamount" id="baseamount" class="form-control"
-                                                    oninput="formatNumber(this)" placeholder="0" double required readonly>
-                                            </div>
-                                        </div>
-                                        <div class="form-row">
-                                            <div class="form-group col-md">
-                                                <label for="amount">Set Contract Amount</label>
-                                                <input type="text" name="amount" class="form-control" oninput="formatNumber(this)"
-                                                    placeholder="Enter amount" double required>
+                                                <label for="e_amount">Set Contract Amount</label>
+                                                <input type="text" name="e_amount" class="form-control"
+                                                    oninput="formatNumber(this)" placeholder="Enter amount" double>
                                             </div>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="submit" class="btn btn-primary">Add</button> <button type="button"
-                                                class="btn btn-danger" data-dismiss="modal">Cancel</button>
+                                            <button type="submit" class="btn btn-sm btn-outline-primary">Save</button> <button
+                                                type="button" class="btn-sm btn btn-outline-danger"
+                                                data-dismiss="modal">Cancel</button>
                                         </div>
                                     </form>
-                            @endif
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- END OF ADD CONTRACT MODAL -->
-
-            <!-- EDIT CONTRACT MODAL -->
-            <div class="modal" id="editcontract">
-                <div class="modal-dialog modal-dialog-centered modal-md">
-                    <div class="modal-content">
-                        <div class="modal-header  bg-gradient-light">
-                            <h6 class="modal-title">Edit Contract</h6>
-                            <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        </div>
-                        <div class="modal-body">
-                            <form action="{{ route('EditHCPNContract') }}" method="POST">
-                                @method('PUT')
-                                @csrf
-                                <div class="form-row">
-                                    <div class="form-group col-md">
-                                        <label for="e_transcode">Reference Number</label>
-                                        <input type="text" name="e_transcode" class="form-control" placeholder="Transaction #"
-                                            double>
-                                        <input type="text" name="e_conid" class="d-none" placeholder="Transaction #" double>
-                                    </div>
                                 </div>
-                                <div class="form-row">
-                                    <div class="form-group col">
-
-                                        <label for="hcpn">HCPN</label>
-                                        <input type="text" name="e_mbname" id="e_mbname" class="form-control" readonly>
-                                        <input type="text" name="e_controlnumber" class="d-none">
-                                    </div>
-                                </div>
-
-
-                                <div class="form-row">
-                                    <div class="form-group col">
-                                        <label for="hcpn">Contract Period</label>
-                                        <select name="contractperiod" class="form-control" id="select2" required>
-                                            <option value="">Select Contract Period</option>
-                                            @foreach ($ContractDate as $condate)
-                                                <option value="{{ $condate['condateid']}}">
-                                                    {{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }}
-                                                    -
-                                                    {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}
-                                                </option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col-md">
-                                        <label for="e_amount">Set Contract Amount</label>
-                                        <input type="text" name="e_amount" class="form-control" oninput="formatNumber(this)"
-                                            placeholder="Enter amount" double>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Save</button> <button type="button"
-                                        class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -364,45 +384,50 @@
             <div class="modal" id="editcontractstatus">
                 <div class="modal-dialog modal-dialog-centered modal-md">
                     <div class="modal-content">
-                        <div class="modal-header  bg-gradient-light">
+                        <div class="modal-header bg-light">
                             <h6 class="modal-title">TERMINATE CONTRACT</h6>
                             <button type="button" class="close" data-dismiss="modal">&times;</button>
                         </div>
                         <div class="modal-body">
-                            <form action="{{ route('EditContractStatus') }}" method="POST">
-                                @method('PUT')
-                                @csrf
-                                <div class="form-row">
-                                    <div class="form-group col">
-                                        <label for="es_hcpn">HCPN</label>
-                                        <input type="text" name="es_conid" class="form-control d-none">
-                                        <input type="text" name="es_hcpn" class="form-control" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col">
-                                        <label for="contract">Reference Number</label>
-                                        <input type="text" name="contract" class="form-control" readonly>
-                                    </div>
-                                </div>
-                                <div class="form-row">
-                                    <div class="form-group col">
-                                        <label for="contract">End Date</label>
-                                        <input type="date" id="todayDate" name="endDate" class="form-control">
-                                    </div>
-                                </div>
+                            <div class="card shadow">
+                                <div class="card-body">
+                                    <form action="{{ route('EditContractStatus') }}" method="POST">
+                                        @method('PUT')
+                                        @csrf
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label for="es_hcpn">HCPN</label>
+                                                <input type="text" name="es_conid" class="form-control d-none">
+                                                <input type="text" name="es_hcpn" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label for="contract">Reference Number</label>
+                                                <input type="text" name="contract" class="form-control" readonly>
+                                            </div>
+                                        </div>
+                                        <div class="form-row">
+                                            <div class="form-group col">
+                                                <label for="contract">End Date</label>
+                                                <input type="date" id="todayDate" name="endDate" class="form-control">
+                                            </div>
+                                        </div>
                                         <input name="status" value="TERMINATE" class="d-none">
-                                <div class="form-row">
-                                    <div class="form-group col-md" id="remarks-field">
-                                        <label for="remarks">Remarks</label>
-                                        <input type="text" name="remarks" class="form-control">
-                                    </div>
+                                        <div class="form-row">
+                                            <div class="form-group col-md" id="remarks-field">
+                                                <label for="remarks">Remarks</label>
+                                                <input type="text" name="remarks" class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="submit" class="btn btn-outline-danger btn-sm">Save</button> <button
+                                                type="button" class="btn btn-outline-warning btn-sm"
+                                                data-dismiss="modal">Cancel</button>
+                                        </div>
+                                    </form>
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">Save</button> <button type="button"
-                                        class="btn btn-outline-warning btn-sm" data-dismiss="modal">Cancel</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -483,7 +508,7 @@
         var mbname = hcpnObject.mbname;
         var controlnumber = hcpnObject.controlnumber;
         localStorage.setItem('getConID', conid);
-        localStorage.setItem('getHCPN', mbname); 
+        localStorage.setItem('getHCPN', mbname);
         localStorage.setItem('getControlNumber', controlnumber);
         localStorage.setItem('getAmount', amount);
         localStorage.setItem('getTransCode', transcode);
@@ -499,6 +524,7 @@
         } else {
             detailsRow.classList.add("d-none");
         }
-    }
-</script>
+    }</script>
+
+
 @endsection

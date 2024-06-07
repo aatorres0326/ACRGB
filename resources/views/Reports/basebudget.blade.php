@@ -3,82 +3,79 @@
 
 <div id="content">
     <div class="container-fluid">
-  <div class="col col-md-12 container bg-gradient-light p-5 border ml-1 rounded">
-            <h5>VIEW BASE AMOUNT COMPUTATION</h5><br>
-       
-        <div class="form-row">
-    <div class="col col-md-3">
-        <form>
-        @csrf
-        <select class="form-control" id="selectType">
-            <option value="NONAPEX">NON APEX FACILITY</option>
-            <option value="APEX">APEX FACILITY</option>
-            <option value="HCPN">HCPN</option>
-        </select>
-    </div>
-    <div class="col col-md-7" style="display: none;" id="hcpn">
-       
-         <select type="text" class="form-control" id="select2">
-                        <option value="">SELECT HEALTH CARE PROVIDER NETWORK</option>
-                        @if ($HCPN == null)
-                        <option></option>
-                        @else
-            @foreach ($HCPN as $hcpn)
-                <option value="{{ $hcpn['controlnumber'] }}">{{ $hcpn['mbname'] }}</option>
-            @endforeach
-            @endif
-</select>
-</div>
-<div class="col col-md-7" style="display: none;" id="apex">
- <select type="text" class="form-control" id="select3">
-                        <option value="">SELECT APEX FACILITY</option>
-            @if ($Facilities == null)
-                        <option></option>
-                        @else
-                        @if (session()->get('leveid') === 'PHIC')
-            @foreach ($Facilities as $hcf)
-            @if ($hcf['type'] == "APEX")
-                <option value="{{ $hcf['hcfcode'] }}">{{ $hcf['hcfname'] }}</option>
-                @endif
-            @endforeach
-                    
-             @elseif (session()->get('leveid') === 'PRO')
-  @foreach ($APEXFacilities as $hcf)
-            @if ($hcf['type'] === "APEX")
-                <option value="{{ $hcf['hcfcode'] }}">{{ $hcf['hcfname'] }}</option>
-                @endif
-            @endforeach
-            @endif
-</select>
-</div>
-<div class="col col-md-7" id="nonapex">
- <select type="text" class="form-control" id="select">
-                        <option value="">SELECT NON APEX FACILITY</option>
-                        
-            @foreach ($Facilities as $hcf)
-            @if ($hcf['type'] != "APEX")
-                <option value="{{ $hcf['hcfcode'] }}">{{ $hcf['hcfname'] }}</option>
-                @endif
-            @endforeach
-            @endif
+        
+                
+                    <div class="card shadow mb-2">
+                        <div class="card-body">
+                 
+                    <div class="form-row">
+                        <div class="col col-md-3">
+                            <form>
+                                @csrf
+                                <select class="form-control" id="selectType">
+                                    <option value="NONAPEX">NON APEX FACILITY</option>
+                                    <option value="APEX">APEX FACILITY</option>
+                                    <option value="HCPN">HCPN</option>
+                                </select>
+                        </div>
+                                <div class="col col-md-7" style="display: none;" id="hcpn">
+                                    <select type="text" class="form-control" id="select2">
+                                    <option value="">SELECT HEALTH CARE PROVIDER NETWORK</option>
+                                    @if ($HCPN == null)
+                                    <option></option>
+                                    @else
+                                    @foreach ($HCPN as $hcpn)
+                                    <option value="{{ $hcpn['controlnumber'] }}">{{ $hcpn['mbname'] }}</option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                        </div>
+                        <div class="col col-md-7" style="display: none;" id="apex">
+                            <select type="text" class="form-control" id="select3">
+                                <option value="">SELECT APEX FACILITY</option>
+                                @if ($Facilities == null)
+                                <option></option>
+                                @else
+                                @if (session()->get('leveid') === 'PHIC')
+                                @foreach ($Facilities as $hcf)
+                                @if ($hcf['type'] == "APEX")
+                                <option value="{{ $hcf['hcfcode'] }}">{{ $hcf['hcfname'] }}</option>
+                                @endif
+                                @endforeach
+                                @elseif (session()->get('leveid') === 'PRO')
+                                @foreach ($APEXFacilities as $hcf)
+                                @if ($hcf['type'] === "APEX")
+                                <option value="{{ $hcf['hcfcode'] }}">{{ $hcf['hcfname'] }}</option>
+                                @endif
+                                @endforeach
+                                @endif
+                            </select>
+                        </div>
+                        <div class="col col-md-7" id="nonapex">
+                            <select type="text" class="form-control" id="select">
+                                <option value="">SELECT NON APEX FACILITY</option>       
+                                @foreach ($Facilities as $hcf)
+                                @if ($hcf['type'] != "APEX")
+                                <option value="{{ $hcf['hcfcode'] }}">{{ $hcf['hcfname'] }}</option>
+                                @endif
+                                @endforeach
+                                @endif  
+                            </select>
+
+                        </div>
+                        <input type="text" name="controlnumber" id="selectedValueInput" class="d-none" required>
+                        </br>
+                        <div class="col col-md-2 mt-1">
+                            <button class="btn btn-sm btn-outline-success" type="button" onclick="setControlNumberAndRedirect()">Generate</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            </div>
             
-        </select>
 
- </div>
- <input type="text" name="controlnumber" id="selectedValueInput" class="d-none" required>
- </br>
-<div class="col col-md-2 mt-1">
-        <button class="btn-sm btn-outline-info" type="button" onclick="setControlNumberAndRedirect()">View Amount</button>
-</div>
-</form>
-
- 
-</div>
-
-
-</div>
-<div class="card shadow mt-5 ml-1">
-                            <div class="card-body bg-gradient-light">
+<div class="card shadow mb-2">
+    <div class="card-body">
                           
                                 <div class="table-responsive-sm" style="overflow-y:auto; max-height: 300px;margin-top:25px; margin-bottom: 10px; font-size: 10px;">
 @if ($Budget == "123")
@@ -141,6 +138,8 @@
                             </div>
                         </div>
 </div>
+</div>
+
 <script src="{{ asset('js/basebudget.js') }}"></script>
 
     @endsection

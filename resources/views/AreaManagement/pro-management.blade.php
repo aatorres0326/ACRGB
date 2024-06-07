@@ -4,14 +4,15 @@
 
 <div class="container-fluid">
     <!-- REGIONAL OFFICE TABLE -->
-    <div class="col-md">
-        <div class="card shadow mb-4">
-            <div class="card-body bg-gradient-light">
-                <div class="table-responsive-sm"
-                    style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="tablemanager">
-                    <div style="position:absolute; top:13px; right:460px">
-                        <input type="text" class="form-control" id="searchInput">
-                    </div>
+
+    <div class="card shadow mb-4">
+        <div class="card-body">
+            <div class="table-responsive-sm"
+                style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="tablemanager">
+                <div style="position:absolute; top:13px; right:320px">
+                    <input type="text" class="form-control" id="searchInput">
+                </div>
+                <div class="card-body border rounded mt-2">
                     <table class="table table-sm table-hover table-bordered" width="100%" cellspacing="0">
                         <div class="row" style="margin-bottom: 7px;">
                             <div class="col"></div>
@@ -28,7 +29,7 @@
                         <tbody>
                             @if ($RegionalOffices == null)
                                 <tr>
-                                    <span>No Data Found</span>
+                                    <td>No Data Found</td>
                                 </tr>
                             @else
                                 @foreach($RegionalOffices as $pro)
@@ -50,14 +51,14 @@
             </div>
         </div>
     </div>
-</div>
 
-<script>
-    function DisplayMbDetails(proid, proname) {
-        localStorage.setItem('getProId', proid);
-        localStorage.setItem('getProName', proname);
-        window.location.href = "/proaccess?proid=" + proid + "&proname=" + proname;
-    }
-</script>
 
-@endsection
+    <script>
+        function DisplayMbDetails(proid, proname) {
+            localStorage.setItem('getProId', proid);
+            localStorage.setItem('getProName', proname);
+            window.location.href = "/proaccess?proid=" + proid + "&proname=" + proname;
+        }
+    </script>
+
+    @endsection

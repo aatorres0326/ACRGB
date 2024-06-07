@@ -25,7 +25,7 @@ function generateRandomPassword() {
     var numbers = "0123456789";
     var lowercaseLetters = "abcdefghijklmnopqrstuvwxyz";
     var uppercaseLetters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    var symbols = "!@#$%^&*()_+{}[];:<>,.?/";
+    var symbols = "!@#$";
 
     var password = "";
 
@@ -38,7 +38,7 @@ function generateRandomPassword() {
     );
     password += symbols.charAt(Math.floor(Math.random() * symbols.length));
 
-    var remainingLength = 4;
+    var remainingLength = 5;
     var charset = symbols + numbers + lowercaseLetters + uppercaseLetters;
     for (var i = 0; i < remainingLength; i++) {
         var randomIndex = Math.floor(Math.random() * charset.length);
@@ -79,30 +79,16 @@ function reset() {
     passwordInput.value = "";
 }
 
-function addLogin(did, lastname) {
-    var lastnamec = lastname.replace(/\s/g, "");
-    document.getElementById("titlemodal").innerHTML = "Add Login Credentials";
-    document.getElementsByName("did")[0].setAttribute("value", did);
-    document
-        .getElementsByName("userlastname")[0]
-        .setAttribute("value", lastname);
+function addLogin(did, email) {
+    document.getElementById("titlemodal").innerHTML =
+        "Create Login Credentials";
 
-    var currentDate = new Date();
-    var philippinesTime = new Date(
-        currentDate.toLocaleString("en-US", { timeZone: "Asia/Manila" })
-    );
+    document.getElementsByName("did")[0].value = did;
 
-    var month = (philippinesTime.getMonth() + 1).toString().padStart(2, "0");
-    var day = philippinesTime.getDate().toString().padStart(2, "0");
-    var year = philippinesTime.getFullYear();
-    var hours = philippinesTime.getHours().toString().padStart(2, "0");
-    var minutes = philippinesTime.getMinutes().toString().padStart(2, "0");
-    var seconds = philippinesTime.getSeconds().toString().padStart(2, "0");
+    document.getElementsByName("emailc")[0].value = email;
 
-    var username = lastnamec + year + month + day + hours + minutes + seconds;
-    document.getElementsByName("username")[0].setAttribute("value", username);
     var password = "@" + generateRandomPassword();
-    document.getElementsByName("password")[0].setAttribute("value", password);
+    document.getElementsByName("password")[0].value = password;
 }
 
 function containsUppercase(str) {
@@ -160,23 +146,6 @@ $(function () {
 });
 
 // Initialize SlimSelect for dropdowns
-new SlimSelect({
-    select: "#select",
-});
-
-new SlimSelect({
-    select: "#select2",
-});
-
-new SlimSelect({
-    select: "#select3",
-});
-new SlimSelect({
-    select: "#hcpn",
-});
-new SlimSelect({
-    select: "#selectedhcf",
-});
 
 document.addEventListener("DOMContentLoaded", function () {
     const input = document.getElementById("searchInput");

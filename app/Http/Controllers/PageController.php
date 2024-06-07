@@ -21,6 +21,10 @@ class PageController extends Controller
     {
         return view('BudgetManagement/budget-management');
     }
+    public function Back()
+    {
+        return back();
+    }
 
 
 }
