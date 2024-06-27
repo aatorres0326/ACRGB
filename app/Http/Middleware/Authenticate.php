@@ -10,7 +10,7 @@ class Authenticate
     public function handle($request, Closure $next)
     {
         // Check if the user is authenticated based on session data
-        if (Session::has('userid')) {
+        if (Session::has('userid') && Session::has('token')) {
             return $next($request);
         }
 
@@ -18,4 +18,3 @@ class Authenticate
         return redirect('/login');
     }
 }
-

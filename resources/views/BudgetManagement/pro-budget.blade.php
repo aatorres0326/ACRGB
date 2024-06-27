@@ -26,29 +26,35 @@
                                 <tr class="exclude-row">
                                     <th class="text-center disableSort">Reference Number</th>
                                     <th class="text-center disableSort" id="max-width-column">Regional Office</th>
-                                    <th class="text-center disableSort">Allocated Budget</th>
+                                    <th class="text-center disableSort">Released Budget</th>
                                     <th class="text-center disableSort">Utilized Budget</th>
                                     <th class="text-center disableSort disableFilterBy">Remaining Budget</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($RegionalOffices as $pro)
+                                @if($RegionalOffices != null)
+                                    @foreach($RegionalOffices as $pro)
+                                        <tr>
+                                            <td>{{ $pro['transcode'] }}</td>
+                                            <td>{{ $pro['proname'] }}</td>
+                                            <td><span
+                                                    class="text-primary font-weight-bold">&#8369;{{ number_format((double) intval($pro['contractamount']), 2) }}
+                                            </td>
+                                            <td><span
+                                                    class="text-danger font-weight-bold">{{ number_format(abs((double) $pro['percentage']), 2) }}%</span>
+                                                &nbsp; EQUIVALENT TO &nbsp; <span
+                                                    class="text-danger font-weight-bold">&#8369;{{ number_format((double) intval($pro['utilize']), 2) }}</span>
+                                            </td>
+                                            <td><span
+                                                    class="text-success font-weight-bold">&#8369;{{ number_format((double) intval($pro['unutilize']), 2) }}
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                @else
                                     <tr>
-                                        <td>{{ $pro['transcode'] }}</td>
-                                        <td>{{ $pro['proname'] }}</td>
-                                        <td><span
-                                                class="text-primary font-weight-bold">&#8369;{{ number_format((double) intval($pro['contractamount']), 2) }}
-                                        </td>
-                                        <td><span
-                                                class="text-danger font-weight-bold">{{ number_format(abs((double) $pro['percentage']), 2) }}%</span>
-                                            &nbsp; EQUIVALENT TO &nbsp; <span
-                                                class="text-danger font-weight-bold">&#8369;{{ number_format((double) intval($pro['utilize']), 2) }}</span>
-                                        </td>
-                                        <td><span
-                                                class="text-success font-weight-bold">&#8369;{{ number_format((double) intval($pro['unutilize']), 2) }}
-                                        </td>
+                                        <td>NO DATA</td>
                                     </tr>
-                                @endforeach
+                                @endif
                             </tbody>
                         </table>
                     </div>
@@ -66,7 +72,7 @@
                     <div class="modal-body">
                         <div class="card shadow">
                             <div class="card-body">
-                                <form action="{{ route('AddContract') }}" method="POST">
+                                <form action="{{ route('AddPROBudget') }}" method="POST">
                                     @csrf
                                     <div class="form-row">
                                         <div class="form-group col-md">
@@ -77,15 +83,17 @@
                                     </div>
                                     <div class="form-row">
                                         <div class="form-group col">
-                                            <label for="hcpn">HCPN</label>
-                                            <select name="mb" id="selectedhcf" class="form-control" required>
+                                            <label for="hcpn">Regional Office</label>
+                                            <select name="pro" id="selectedhcf" class="form-control" required>
                                                 <option value="" data-base-amount="">SELECT REGIONAL OFFICE</option>
-                                                @foreach ($RegionalOffices as $pro)
-                                                    <option value="{{ $pro['procode']}}"
-                                                        data-base-amount="{{ $pro['conamount'] }}">
-                                                        {{ $pro['proname']}}
-                                                    </option>
-                                                @endforeach
+                                                @if($RegionalOffices != null)
+                                                    @foreach ($RegionalOffices as $pro)
+                                                        <option value="{{ $pro['procode']}}"
+                                                            data-base-amount="{{ $pro['conamount'] }}">
+                                                            {{ $pro['proname']}}
+                                                        </option>
+                                                    @endforeach
+                                                @endif
                                             </select>
                                         </div>
                                     </div>
@@ -93,22 +101,20 @@
                                         <div class="form-group col">
                                             <label for="hcpn">Contract Period</label>
                                             <select name="contractperiod" class="form-control" id="select2" required>
-                                                <option value="">Select Contract Period</option>
-                                                @foreach ($ContractDate as $condate)
-                                                    <option value="{{ $condate['condateid']}}">
-                                                        {{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }}
-                                                        -
-                                                        {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}
-                                                    </option>
-                                                @endforeach
+
+                                                @if($ContractDate != null)
+                                                    <option value="">Select Contract Period</option>
+                                                    @foreach ($ContractDate as $condate)
+                                                        <option value="{{ $condate['condateid']}}">
+                                                            {{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }}
+                                                            -
+                                                            {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}
+                                                        </option>
+                                                    @endforeach
+                                                @else
+                                                    <option value="">No Available Contract Period</option>
+                                                @endif
                                             </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md">
-                                            <label for="baseamount">Base Amount</label>
-                                            <input type="text" name="baseamount" id="baseamount" class="form-control"
-                                                oninput="formatNumber(this)" placeholder="0" double required readonly>
                                         </div>
                                     </div>
                                     <div class="form-row">
@@ -142,18 +148,5 @@
             let formattedValue = integerPart + decimalPart;
             input.value = formattedValue;
         }
-
-        document.getElementById('selectedhcf').addEventListener('change', function () {
-            var selectedOption = this.options[this.selectedIndex];
-            var baseAmount = selectedOption.getAttribute('data-base-amount');
-
-            if (!baseAmount || baseAmount.trim() === '' || baseAmount.trim().toUpperCase() === 'NO DATA FOUND') {
-                baseAmount = '0';
-            } else {
-                baseAmount = parseFloat(baseAmount).toFixed(2);
-                baseAmount = baseAmount.replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            }
-            document.getElementById('baseamount').value = baseAmount;
-        });
     </script>
     @endsection

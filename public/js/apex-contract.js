@@ -83,12 +83,3 @@ function ViewTranches(conid, hcfid, amount, transcode, percentage) {
         "&percentage=" +
         percentage;
 }
-
-function toggleDetails(transcode) {
-    var detailsRow = document.getElementById(transcode + "-details");
-    if (detailsRow.classList.contains("d-none")) {
-        detailsRow.classList.remove("d-none");
-    } else {
-        detailsRow.classList.add("d-none");
-    }
-}

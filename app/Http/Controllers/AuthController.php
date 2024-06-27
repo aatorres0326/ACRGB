@@ -58,88 +58,30 @@ class AuthController extends Controller
 
             if ($response['success']) {
 
+
                 $result = json_decode($response['result'], true);
 
+                $this->startUserSession($response);
 
-                $this->startUserSession($result);
+                if ($result['leveid'] === 'PRO') {
 
-
-                if ($result['status'] === '1') {
-                    return view('auth/changelogin', compact('result'));
-                } elseif ($result['leveid'] === 'PRO') {
-                    $SessionUserID = session()->get('userid');
-
-                    $GetHCPNwithPRO = env('API_GET_HCPN_USING_PRO_USERID');
-                    $ApiHCFUnderPro = Http::withoutVerifying()->get($GetHCPNwithPRO . '/' . $SessionUserID . "/PRO");
-                    $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                    $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
-
-                    return view('dashboard', compact('HCFUnderPro'));
+                    return redirect('dashboard');
                 } elseif ($result['leveid'] === 'MB') {
 
-                    $GetFacility = env('API_GET_ALL_FACILITIES');
-                    $apiResponse = Http::withoutVerifying()->get($GetFacility);
-                    $decodedResponse = $apiResponse->json();
-                    $facilities = json_decode($decodedResponse['result'], true);
-
-                    $GetHCPN = env('API_GET_HCPN');
-                    $apiMB = Http::withoutVerifying()->get($GetHCPN);
-                    $decodedMB = $apiMB->json();
-                    $ManagingBoard = json_decode($decodedMB['result'], true);
-
-
-                    return view('Facilities/facilities', compact('facilities', 'ManagingBoard'));
+                    return redirect('dashboard');
                 } elseif ($result['leveid'] === 'ADMIN') {
 
-                    $GetUser = env('API_GET_USER');
-                    $apiUser = Http::withoutVerifying()->get($GetUser . '/ACTIVE');
-                    $decodedapiUser = $apiUser->json();
-                    $userlogin = json_decode($decodedapiUser['result'], true);
-                    $userlogin = collect($userlogin);
-
-                    $GetUserInfo = env('API_GET_USER_INFO');
-                    $apiUserInfo = Http::withoutVerifying()->get($GetUserInfo . '/ACTIVE');
-                    $decodedUserInfo = $apiUserInfo->json();
-                    $userInfoList = json_decode($decodedUserInfo['result'], true);
-                    $userInfoList = collect($userInfoList);
-                    $userInfoList = $userInfoList->sortByDesc('datecreated');
-
-                    $GetUserLevel = env('API_GET_USER_LEVEL');
-                    $apiUserLevel = Http::withoutVerifying()->get($GetUserLevel . '/ACTIVE');
-                    $decodedapiLevel = $apiUserLevel->json();
-                    $userLevel = json_decode($decodedapiLevel['result'], true);
-                    $userLevel = collect($userLevel);
-
-                    return view('dashboard', compact('userInfoList', 'userlogin', 'userLevel'));
+                    return redirect('dashboard');
                 } elseif ($result['leveid'] === 'PHIC') {
-                    // API FOR PRO
-                    $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
-                    $apiPro = Http::withoutVerifying()->get($GetRegionalOffice);
+                    return redirect('dashboard');
 
-
-                    if ($apiPro->successful()) {
-                        $decodedPro = $apiPro->json();
-
-                        if (isset($decodedPro['result'])) {
-                            $RegionalOffices = json_decode($decodedPro['result'], true);
-
-                            return view('dashboard', compact('RegionalOffices'));
-                        } else {
-
-                            return response()->json(['error' => 'Unexpected response format from API'], 500);
-                        }
-                    } else {
-
-                        return response()->json(['error' => 'Failed to fetch data from API'], $apiPro->status());
-                    }
                 } else {
-                    $GetHCPN = env('API_GET_HCPN');
-                    $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
-                    $decodedMB = $apiMB->json();
-                    $ManagingBoard = json_decode($decodedMB['result'], true);
 
                     return redirect('dashboard');
                 }
+
+
+
             } else {
                 return redirect()->back()->with('error', $response['message']);
             }
@@ -148,9 +90,11 @@ class AuthController extends Controller
         }
     }
 
-    private function startUserSession($userData)
+    private function startUserSession($response)
     {
+        $userData = json_decode($response['result'], true);
         $userDetails = json_decode($userData['did'], true);
+        $message = $response['message'];
 
         session([
             'userid' => $userData['userid'],
@@ -161,6 +105,7 @@ class AuthController extends Controller
             'lastname' => $userDetails['lastname'],
             'did' => $userDetails['did'],
             'status' => $userData['status'],
+            'token' => $message,
         ]);
 
     }

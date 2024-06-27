@@ -190,6 +190,8 @@ class UsersManageController extends Controller
     }
 
 
+
+
     public function GetAccess(Request $request)
     {
 
@@ -229,7 +231,29 @@ class UsersManageController extends Controller
             return back();
         }
     }
+    public function UploadUsers()
+    {
+        return view('UserManagement/upload-users');
+    }
+    public function UPLOADUSERSJSON(Request $request)
+    {
+        $tabledata = $request->input('uploadusersjson');
+        $decodedTableData = json_decode($tabledata, true);
 
+        $UpdateUserDetails = env('API_UPLOAD_USERS');
+        $response = Http::post($UpdateUserDetails, $decodedTableData);
+
+        if ($response->successful()) {
+            return back()->with([
+                'decodedTableData' => $decodedTableData,
+                'apimessage' => $response['result']
+            ]);
+        }
+
+        return response()->json(['message' => 'Failed to process data'], 500);
+    }
 }
+
+
 
 

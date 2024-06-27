@@ -10,17 +10,13 @@ use Illuminate\Http\Request;
 
 class AreaController extends Controller
 {
-    public function AreaManagement()
-    {
-        return view('area-management');
-    }
-
 
     // REGIONAL OFFICE CONTROLLER
     public function GetRegionalOffice()
     {
+        $token = session()->get('token');
         $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
-        $apiPro = Http::withoutVerifying()->get($GetRegionalOffice);
+        $apiPro = Http::withHeaders(['token' => $token])->get($GetRegionalOffice . '/ACTIVE');
         $decodedPro = $apiPro->json();
         $RegionalOffices = json_decode($decodedPro['result'], true);
 
@@ -39,13 +35,21 @@ class AreaController extends Controller
         $ApiHCFUnderPro = Http::withoutVerifying()->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
         $decodedHCFUnderPro = $ApiHCFUnderPro->json();
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
+        $HCFUnderPro = collect($HCFUnderPro);
 
         $GetHCPN = env('API_GET_HCPN');
         $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
+        $ManagingBoard = collect($ManagingBoard);
 
-        return view('AreaManagement/managing-board', compact('HCFUnderPro', 'ManagingBoard'));
+        $GetRoleIndex = env('API_GET_ROLE_INDEX');
+        $RoleIndexResponse = Http::withoutVerifying()->get($GetRoleIndex . '/0');
+        $decodedRoleIndexResponse = $RoleIndexResponse->json();
+        $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
+        $RoleIndex = collect($RoleIndex);
+
+        return view('AreaManagement/managing-board', compact('HCFUnderPro', 'ManagingBoard', 'RoleIndex'));
     }
     public function INSERTManagingBoard(Request $request)
     {
@@ -103,6 +107,7 @@ class AreaController extends Controller
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
+
         return view('AreaManagement/mb-access-assignment', compact('RoleIndex', 'Facilities', 'SelectedMbID', 'SelectedMbName', 'ManagingBoard'));
     }
     public function INSERTROLEINDEXMB(Request $request)
@@ -147,7 +152,7 @@ class AreaController extends Controller
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
         $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
-        $apiPro = Http::withoutVerifying()->get($GetRegionalOffice);
+        $apiPro = Http::withoutVerifying()->get($GetRegionalOffice . '/ACTIVE');
         $decodedPro = $apiPro->json();
         $RegionalOffices = json_decode($decodedPro['result'], true);
 
@@ -190,5 +195,3 @@ class AreaController extends Controller
 
 
 }
-
-

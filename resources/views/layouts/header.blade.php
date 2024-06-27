@@ -1,25 +1,25 @@
 <div class="container-fluid">
     <div class="card shadow mb-2" style="margin-top: -12px">
-        <div class="card-body">
+        <div class="card-header">
             @if (request()->is('login'))
                 <span class="text-uppercase font-weight-bold text-secondary" style="font-size:14px;">
-                    {{ (request()->is('login')) ? '  User Information Management' : '' }}
+                    {{ (request()->is('login')) ? 'Dashboard' : '' }}
                 </span>
             @else
                 <span class="text-uppercase font-weight-bold text-secondary" style="font-size:14px;">
                     <a href="{{ url()->previous() }}"><i class="fa fa-fw fa-arrow-left mr-3"></i></a>&nbsp;
                     {{ (request()->is('hcpncontract')) ? '  Budget Utilization / HCPN Contracts' : '' }}
-                    {{ (request()->is('users')) ? '  User Management' : '' }}
-                    {{ (request()->is('userlogins')) ? '  User Login Management' : '' }}
-                    {{ (request()->is('userinfo')) ? '  User Information Management' : '' }}
-
+                    {{ (request()->is('UploadUsers')) ? '  User Management / Upload Users' : '' }}
+                    {{ (request()->is('userlogins')) ? '  User Management / Login Details' : '' }}
+                    {{ (request()->is('userinfo')) ? '  User Management / User Information' : '' }}
+                    {{ (request()->is('Contracts/NewContract')) ? '  Contracts / New HCPN Contract' : '' }}
                     {{ (request()->is('useraccess')) ? '  User Login Management / Access Assignments' : '' }}
                     {{ (request()->is('pro')) ? '  Regional Offices' : '' }}
                     {{ (request()->is('ActivityLogs')) ? '  Activity Logs' : '' }}
                     {{ (request()->is('proaccess')) ? '  Regional Offices / Access Management' : '' }}
                     {{ (request()->is('managingboard')) ? '  Health Care Provider Networks' : '' }}
                     {{ (request()->is('mbaccess')) ? '  Health Care Provider Networks / Access Management' : '' }}
-                    {{ (request()->is('facilities')) ? '  Facilities / Non Apex' : '' }}
+                    {{ (request()->is('facilities')) ? '  Facilities / HCPN' : '' }}
                     {{ (request()->is('apexfacilities')) ? '  Facilities / Apex' : '' }}
                     {{ (request()->is('budgetutilization/probudget')) ? '  Budget Utilization / Pro Budget Management' : '' }}
                     {{ (request()->is('Reports/GeneralLedger')) ? '  Reports / General Ledger ' : '' }}

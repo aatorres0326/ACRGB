@@ -67,9 +67,11 @@
                 style="overflow-y:auto; max-height: 520px; min-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;"
                 id="content">
                 <div style="position:absolute; top:13px; right:320px">
-                    <button class="btn-outline-primary btn-sm" data-toggle="modal" data-target="#add-user" style="text-decoration:
-                        none; cursor:pointer;"><i class="fas fa-plus fa-sm"></i> New User
-                    </button>&nbsp;&nbsp;
+                    <a class="btn-outline-success btn btn-sm" href="/UploadUsers"><i class="fas fa-upload fa-sm"></i> Upload Users
+                    </a>
+                    <button class="btn-outline-primary btn btn-sm" data-toggle="modal" data-target="#add-user" style="text-decoration:
+                                            none; cursor:pointer;"><i class="fas fa-plus fa-sm"></i> New User
+                    </button>&nbsp;
                     <input type="text" id="searchInput">
                 </div>
                 <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%" cellspacing="0">
@@ -81,10 +83,11 @@
                         <tr>
                             <th>Name</th>
                             <th class="text-center">Login Credential</th>
+                            <th class="text-center">Role</th>
                             <th class="text-center">Email</th>
                             <th class="text-center">Contact Number</th>
-                            <th class="text-center">Creation Date</th>
-                            <th class="text-center d-none">Created By</th>
+                          
+                            
                             <th class="disableSort disableFilterBy text-center">Action</th>
 
                         </tr>
@@ -97,17 +100,21 @@
 
                                                     @php
     $login = "No Login Credentials";
+    $level = "Not Assigned Yet";
     foreach ($userlogin as $userlog) {
         if ($userlog['did'] === $user['did']) {
             $login = $userlog['username'];
+            $level = $userlog['leveid'];
             break;
         }
     }
                                                     @endphp
                                                     @if (Str::contains($login, 'No Login Credentials'))
                                                         <td class="text-center" style="color: #e9967a">{{ $login }}</td>
+                                                        <td class="text-center" style="color: #e9967a">{{ $level }}</td>
                                                     @else
                                                         <td class="text-center">{{ $login }}</td>
+                                                        <td class="text-center">{{ $level }}</td>
                                                     @endif
                                                     <td class="text-center">{{ $user['email'] }}</td>
                                                     <td class="text-center">{{ $user['contact'] }}</td>
@@ -115,7 +122,7 @@
 
 
 
-                                                    <td class="text-center">{{ $user['datecreated'] }}</td>
+                                                    
                                                     <td class="text-center d-none">{{ $user['createdby'] }}</td>
 
 

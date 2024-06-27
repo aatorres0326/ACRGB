@@ -96,7 +96,28 @@ class FacilityController extends Controller
         }
 
     }
+    public function ApexAffiliates(Request $request)
+    {
 
+        $SelectedHCFCode = $request->query('hcfcode', '');
+        $SelectedHCFName = $request->query('hcfname', '');
+
+        $GetRoleIndex = env('API_GET_ROLE_INDEX');
+        $RoleIndexResponse = Http::withoutVerifying()->get($GetRoleIndex . '/0');
+        $decodedRoleIndexResponse = $RoleIndexResponse->json();
+        $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
+        $RoleIndex = collect($RoleIndex);
+
+
+
+        $GetHCPN = env('API_GET_HCPN');
+        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+        $decodedMB = $apiMB->json();
+        $ManagingBoard = json_decode($decodedMB['result'], true);
+
+
+        return view('Facilities/apex-affiliates', compact('RoleIndex', 'SelectedHCFCode', 'SelectedHCFName', 'ManagingBoard'));
+    }
 
 
 }

@@ -39,7 +39,7 @@
                             <select type="text" class="form-control" id="select3">
                                 <option value="">SELECT APEX FACILITY</option>
                                 <option value="">ALL</option>
-                                @if ($Facilities == null)
+                                @if ($Facilities == null || $APEXFacilities == null)
                                     <option></option>
                                 @else
                                             @if (session()->get('leveid') === 'PHIC')

@@ -176,3 +176,79 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("searchInput2");
+    const table = document.getElementById("tablemanager2");
+    const rows = table.getElementsByTagName("tr");
+    let noMatchRow = null;
+
+    input.addEventListener("input", function () {
+        const filter = input.value.toUpperCase();
+        let visibleRowCount = 0;
+        for (let i = 1; i < rows.length; i++) {
+            if (rows[i].classList.contains("exclude-row")) {
+                continue;
+            }
+            const cells = rows[i].getElementsByTagName("td");
+            let shouldHide = true;
+            for (let j = 0; j < cells.length; j++) {
+                const cellText = cells[j].textContent.toUpperCase();
+                if (cellText.includes(filter)) {
+                    shouldHide = false;
+                    break;
+                }
+            }
+            rows[i].style.display = shouldHide ? "none" : "";
+            if (!shouldHide) {
+                visibleRowCount++;
+            }
+        }
+    });
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+    const input = document.getElementById("searchInput2");
+    const table = document.getElementById("tablemanager2");
+    const rows = table.getElementsByTagName("tr");
+    let noMatchRow = null;
+
+    input.addEventListener("input", function () {
+        const filter = input.value.toUpperCase();
+        let visibleRowCount = 0;
+        for (let i = 1; i < rows.length; i++) {
+            if (rows[i].classList.contains("exclude-row")) {
+                continue;
+            }
+            const cells = rows[i].getElementsByTagName("td");
+            let shouldHide = true;
+            for (let j = 0; j < cells.length; j++) {
+                const cellText = cells[j].textContent.toUpperCase();
+                if (cellText.includes(filter)) {
+                    shouldHide = false;
+                    break;
+                }
+            }
+            rows[i].style.display = shouldHide ? "none" : "";
+            if (!shouldHide) {
+                visibleRowCount++;
+            }
+        }
+    });
+});
+
+function toggleDetails(transcode) {
+    var detailsRow = document.getElementById(transcode + "-details");
+
+    detailsRow.classList.toggle("d-none");
+
+    var button = document.getElementById(transcode);
+    document.addEventListener("click", function (event) {
+        if (
+            !button.contains(event.target) &&
+            !detailsRow.contains(event.target)
+        ) {
+            detailsRow.classList.add("d-none");
+        }
+    });
+}

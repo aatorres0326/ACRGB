@@ -12,7 +12,10 @@
         <div class="card-body">
             <div class="table-responsive-sm"
                 style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
+                <div style="position:absolute; top:13px; right:320px">
 
+                    <input type="text" id="searchInput">
+                </div>
                 <table class="table table-sm table-hover table-bordered table-light" id="tablemanager" width="100%"
                     cellspacing="0">
                     <div class="row" style="margin-bottom: 7px;">
@@ -21,7 +24,7 @@
                     </div>
                     <thead>
                         <tr>
-                            <th class="text-center">User ID</th>
+
                             <th class="text-center">Username</th>
                             <th class="text-center">Password</th>
                             <th class="text-center">Role</th>
@@ -35,15 +38,15 @@
                     <tbody>
                         @foreach($userList as $user)
                             <tr>
-                                <td class="text-center">{{ $user['userid'] }}</td>
+
                                 <td class="text-center">{{ $user['username'] }}</td>
                                 <td class="text-center">{{ $user['userpassword'] }}</td>
                                 <td class="text-center">{{ $user['leveid'] }}</td>
                                 <td class="text-center">{{ $user['createdby'] }}</td>
                                 <td class="text-center">{{ $user['datecreated'] }}</td>
                                 <td class="text-center">
-                                    @if($user['status'] == 1)
-                                        <span>For Change</span>
+                                    @if($user['status'] == 3)
+                                        <span>Inactive</span>
                                     @elseif($user['status'] == 2)
                                         <span>Active</span>
                                     @endif
@@ -52,17 +55,17 @@
                                 <td class="text-center">
                                     <a class="btn btn-sm btn-link text-darker-primary {{ $user['leveid'] === 'HCF' ? 'disabled' : '' }}{{ $user['leveid'] === 'PHIC' ? 'disabled' : '' }} {{ $user['leveid'] === 'ADMIN' ? 'disabled' : '' }}"
                                         onclick="DisplayUserDetails(
-                                                                                                    '<?=$user['userid']?>',
-                                                                                                    '<?=$user['username']?>',
-                                                                                                    '<?=$user['leveid']?>'
-                                                                                )"><i class="fas fa-fw fa-eye"
+                                                                                                                '<?=$user['userid']?>',
+                                                                                                                '<?=$user['username']?>',
+                                                                                                                '<?=$user['leveid']?>'
+                                                                                            )"><i class="fas fa-fw fa-eye"
                                             data-toggle="tooltip" title="View"></i></a>
                                     <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
                                         data-target="#editLogin" onclick="EditUserLogin(
-                                                                                                    '<?=$user['userid']?>',
-                                                                                                    '<?=$user['username']?>',
-                                                                                                    '<?=$user['status']?>'
-                                                                                )"><i class="fas fa-fw fa-edit"
+                                                                                                                '<?=$user['userid']?>',
+                                                                                                                '<?=$user['username']?>',
+                                                                                                                '<?=$user['status']?>'
+                                                                                            )"><i class="fas fa-fw fa-edit"
                                             data-toggle="tooltip" title="Edit"></i></a>
                                 </td>
 

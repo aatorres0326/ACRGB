@@ -68,7 +68,7 @@ section {
 body {
     margin: 0;
     font-family: "Verdana", sans-serif;
-    font-size: 1rem;
+    font-size: 14px;
     font-weight: 400;
     line-height: 1.5;
     color: #858796;
@@ -1727,7 +1727,7 @@ pre code {
     width: 100%;
     height: calc(1.5em + 0.75rem + 2px);
     padding: 0.375rem 0.75rem;
-    font-size: 1rem;
+    font-size: 13px;
     font-weight: 400;
     line-height: 1.5;
     color: #6e707e;
@@ -5927,13 +5927,13 @@ button.bg-secondary:hover {
     background-color: #6b6d7d !important;
 }
 .bg-success {
-    background-color: #1cc88a !important;
+    background-color: #03814b !important;
 }
 a.bg-success:focus,
 a.bg-success:hover,
 button.bg-success:focus,
 button.bg-success:hover {
-    background-color: #169b6b !important;
+    background-color: #03814b !important;
 }
 .bg-info {
     background-color: #36b9cc !important;

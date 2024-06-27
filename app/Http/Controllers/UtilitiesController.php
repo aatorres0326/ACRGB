@@ -5,30 +5,12 @@ namespace App\Http\Controllers;
 use DateTime;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 
 
 class UtilitiesController extends Controller
 {
-    public function DATESETTINGS()
-    {
-        // GET HCPN FOR SIDEBAR
-        $GetHCPN = env('API_GET_HCPN');
-        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
-        $decodedMB = $apiMB->json();
-        $ManagingBoard = json_decode($decodedMB['result'], true);
-
-        // GET DATE SETTINGS
-        $GetDateSettings = env('API_GET_DATE_SETTINGS');
-        $api = Http::withoutVerifying()->get($GetDateSettings . '/YEARCOMPUTE');
-        $decodedapi = $api->json();
-        $DateSettings = json_decode($decodedapi['result'], true);
-        $apiSkipYear = Http::withoutVerifying()->get($GetDateSettings . '/SKIPYEAR');
-        $decodedapiSkipYear = $apiSkipYear->json();
-        $SkipYear = json_decode($decodedapiSkipYear['result'], true);
-        return view('Utilities/date-settings', compact('ManagingBoard', 'DateSettings', 'SkipYear'));
-    }
-
     public function CONTRACTPERIOD()
     {
         $ConDate = env('API_GET_CONTRACT_DATE');
@@ -70,6 +52,16 @@ class UtilitiesController extends Controller
         $ActivityLogs = json_decode($decodedapi['result'], true);
         return view('Utilities/activity-logs', compact('ActivityLogs'));
     }
+
+    public function ENDCONTRACTPERIOD(request $request)
+    {
+        $condateid = $request->input('ec_condateid');
+        $ApiEndConDate = env('API_END_CONTRACT_DATE');
+        $EndConDate = Http::withoutVerifying()->get($ApiEndConDate . '/' . $condateid);
+        $decodedapi = $EndConDate->json();
+        $EndContractDate = json_decode($decodedapi['result'], true);
+        return back();
+    }
+
+
 }
-
-
