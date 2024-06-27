@@ -13,21 +13,14 @@ class UsersManageController extends Controller
 
     public function GetUsers()
     {
-        // Assuming $apiResponse contains the JSON response from your API
-
-
+        $token = session()->get('token');
         $GetHCPN = env('API_GET_HCPN');
         $GetUser = env('API_GET_USER');
-        $apiResponse = Http::withoutVerifying()->get($GetUser . '/ACTIVE');
+        $apiResponse = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE');
         $GetUserLevel = env('API_GET_USER_LEVEL');
-        $apiUserLevel = Http::withoutVerifying()->get($GetUserLevel . '/ACTIVE');
-
-
-        // Extract the JSON response body
+        $apiUserLevel = Http::withHeaders(['token' => $token])->get($GetUserLevel . '/ACTIVE');
         $decodedResponse = $apiResponse->json();
         $decodedapiUserLevel = $apiUserLevel->json();
-
-        // Extract the result array
         $userList = json_decode($decodedResponse['result'], true);
         $userLevel = json_decode($decodedapiUserLevel['result'], true);
 
@@ -38,14 +31,15 @@ class UsersManageController extends Controller
 
     public function GetUsersInfo()
     {
+        $token = session()->get('token');
         $GetUser = env('API_GET_USER');
         $GetUserInfo = env('API_GET_USER_INFO');
         $GetUserLevel = env('API_GET_USER_LEVEL');
         $GetHCPN = env('API_GET_HCPN');
-        $apiUserInfo = Http::withoutVerifying()->get($GetUserInfo . '/ACTIVE');
+        $apiUserInfo = Http::withHeaders(['token' => $token])->get($GetUserInfo . '/ACTIVE');
 
-        $apiUser = Http::withoutVerifying()->get($GetUser . '/ACTIVE');
-        $apiLevel = Http::withoutVerifying()->get($GetUserLevel . '/ACTIVE');
+        $apiUser = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE');
+        $apiLevel = Http::withHeaders(['token' => $token])->get($GetUserLevel . '/ACTIVE');
         $decodedUserInfo = $apiUserInfo->json();
 
         $decodedapiUser = $apiUser->json();
@@ -69,14 +63,15 @@ class UsersManageController extends Controller
 
     public function GetProfileInfo()
     {
+        $token = session()->get('token');
         $GetUser = env('API_GET_USER');
         $GetUserInfo = env('API_GET_USER_INFO');
         $GetUserLevel = env('API_GET_USER_LEVEL');
         $GetHCPN = env('API_GET_HCPN');
-        $apiUserInfo = Http::withoutVerifying()->get($GetUserInfo . '/ACTIVE');
+        $apiUserInfo = Http::withHeaders(['token' => $token])->get($GetUserInfo . '/ACTIVE');
 
-        $apiUser = Http::withoutVerifying()->get($GetUser . '/ACTIVE');
-        $apiLevel = Http::withoutVerifying()->get($GetUserLevel . '/ACTIVE');
+        $apiUser = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE');
+        $apiLevel = Http::withHeaders(['token' => $token])->get($GetUserLevel . '/ACTIVE');
         $decodedUserInfo = $apiUserInfo->json();
 
         $decodedapiUser = $apiUser->json();
@@ -101,10 +96,11 @@ class UsersManageController extends Controller
 
     public function addUserInfo(Request $request)
     {
+        $token = session()->get('token');
         $SessionUserID = session()->get('userid');
         $now = new DateTime();
         $InsertUserDetails = env('API_INSERT_USER_DETAILS');
-        $response = Http::post($InsertUserDetails, [
+        $response = Http::withHeaders(['token' => $token])->post($InsertUserDetails, [
             'firstname' => $request->input('firstname'),
             'middlename' => $request->input('middlename'),
             'lastname' => $request->input('lastname'),
@@ -127,11 +123,11 @@ class UsersManageController extends Controller
 
     public function addUserLogin(Request $request)
     {
-
+        $token = session()->get('token');
         $now = new DateTime();
         $SessionUserID = session()->get('userid');
         $InsertUser = env('API_INSERT_USER');
-        $response = Http::post($InsertUser, [
+        $response = Http::withHeaders(['token' => $token])->post($InsertUser, [
             'did' => $request->input('did'),
             'username' => $request->input('emailc'),
             'userpassword' => $request->input('password'),
@@ -150,8 +146,9 @@ class UsersManageController extends Controller
 
     public function editUserLogin(Request $request)
     {
+        $token = session()->get('token');
         $UpdateUserCredentials = env('API_UPDATE_USER_CREDENTIALS');
-        $response = Http::put($UpdateUserCredentials, [
+        $response = Http::withHeaders(['token' => $token])->put($UpdateUserCredentials, [
             'userid' => $request->input('userid'),
             'username' => $request->input('editusername'),
             'userpassword' => $request->input('editpassword'),
@@ -166,11 +163,11 @@ class UsersManageController extends Controller
     }
     public function UPDATEUSERINFO(Request $request)
     {
-
+        $token = session()->get('token');
         $now = new DateTime();
         $SessionUserID = session()->get('userid');
         $UpdateUserDetails = env('API_UPDATE_USER_DETAILS');
-        $response = Http::put($UpdateUserDetails, [
+        $response = Http::withHeaders(['token' => $token])->put($UpdateUserDetails, [
             'did' => $request->input('edid'),
             'firstname' => $request->input('editfirstname'),
             'middlename' => $request->input('editmiddlename'),
@@ -194,18 +191,18 @@ class UsersManageController extends Controller
 
     public function GetAccess(Request $request)
     {
-
+        $token = session()->get('token');
         $GetRoleIndex = env('API_GET_ROLE_INDEX');
         $GetHCPN = env('API_GET_HCPN');
 
         $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
-        $apiPro = Http::withoutVerifying()->get($GetRegionalOffice);
+        $apiPro = Http::withHeaders(['token' => $token])->get($GetRegionalOffice);
         $decodedPro = $apiPro->json();
         $RegionalOffices = json_decode($decodedPro['result'], true);
-        $RoleIndexResponse = Http::withoutVerifying()->get($GetRoleIndex . '/0');
+        $RoleIndexResponse = Http::withHeaders(['token' => $token])->get($GetRoleIndex . '/0');
         $decodedRoleIndexResponse = $RoleIndexResponse->json();
         $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
-        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
         $RoleIndex = collect($RoleIndex);
@@ -216,9 +213,10 @@ class UsersManageController extends Controller
     }
     public function INSERTROLEINDEX(Request $request)
     {
+        $token = session()->get('token');
         $InsertRoleIndex = env('API_INSERT_ROLE_INDEX');
         $now = new DateTime();
-        $AddProResponse = Http::post($InsertRoleIndex, [
+        $AddProResponse = Http::withHeaders(['token' => $token])->post($InsertRoleIndex, [
             'userid' => $request->input('userid'),
             'accessid' => $request->input('accessid'),
             'createdby' => $request->input('createdby'),
@@ -237,11 +235,12 @@ class UsersManageController extends Controller
     }
     public function UPLOADUSERSJSON(Request $request)
     {
+        $token = session()->get('token');
         $tabledata = $request->input('uploadusersjson');
         $decodedTableData = json_decode($tabledata, true);
 
         $UpdateUserDetails = env('API_UPLOAD_USERS');
-        $response = Http::post($UpdateUserDetails, $decodedTableData);
+        $response = Http::withHeaders(['token' => $token])->post($UpdateUserDetails, $decodedTableData);
 
         if ($response->successful()) {
             return back()->with([
@@ -253,7 +252,3 @@ class UsersManageController extends Controller
         return response()->json(['message' => 'Failed to process data'], 500);
     }
 }
-
-
-
-

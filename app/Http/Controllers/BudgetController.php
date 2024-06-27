@@ -53,7 +53,7 @@ class BudgetController extends Controller
         if ($GetConDate->status() == 404) {
 
 
-            dd("error 404");
+            return redirect('NotFound');
         } else {
 
             $decodedapi = $GetConDate->json();
@@ -381,13 +381,7 @@ class BudgetController extends Controller
         $decodedPro = $apiPro->json();
         $RegionalOffices = json_decode($decodedPro['result'], true);
 
-
-        $ConDate = env('API_GET_CONTRACT_DATE');
-        $GetConDate = Http::withHeaders(['token' => $token])->get($ConDate . '/ACTIVE');
-        $decodedapi = $GetConDate->json();
-        $ContractDate = json_decode($decodedapi['result'], true);
-
-        return view('BudgetManagement/pro-budget', compact('RegionalOffices', 'ContractDate'));
+        return view('BudgetManagement/pro-budget', compact('RegionalOffices'));
     }
 
     public function NewContract(Request $request)
@@ -410,16 +404,18 @@ class BudgetController extends Controller
         $Facilities = json_decode($decodedHCFUnderPro['result'], true);
 
         $ConNumber = $request->query('controlNumber', '');
-        $DateFrom = $request->query('DateFrom', '');
+        $DateFrom = $request->query('DateFrom');
 
-        $DateTo = $request->query('DateTo', '');
+        $DateTo = $request->query('DateTo');
 
         $transcode = $request->query('TransCode', '');
         $SelectedHCFHCPN = $request->query('HCFHCPN');
         $SelectedConDate = $request->query('ConDate');
+        $ownCondateid = $request->query('condateid');
 
 
-        if ($ConNumber != null && $DateFrom != null && $DateTo != null) {
+
+        if ($ConNumber != null) {
             $GetBudget = env('API_GET_SUMMARY');
             $apiBudget = Http::withHeaders(['token' => $token])->get($GetBudget . '/HCPN/' . $ConNumber . '/' . $DateFrom . '/' . $DateTo . '/CONTRACT/OLD');
             $decodedBudget = $apiBudget->json();

@@ -26,42 +26,66 @@
         </div>
         @endif
         @if (session()->get('leveid') === 'HCPN')
-        <div class="row">
-
+        <div class="card-deck font-weight-bold">
             @php
-
             $selected = json_decode($HCPNContract['hcfid'], true);
             @endphp
-            <div class="col col-md-4">
-                <div class="card shadow mb-2 border border-success" style="min-height: 110px;">
-                    <div class="card-body text-center">
-                        <h6 class="font-weight-bold text-primary">{{$selected['mbname']}}</h6>
-                        <span>1ST QUARTER :&nbsp;</span>{{ number_format((double) $HCPNContract['amount'], 2) }}
-                    </div>
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header bg-success">
+                    <h6 class="font-weight-bold text-white text-center">{{$selected['mbname']}}</h6>
+                </div>
+                <div class="card-body text-center">
+
+                    <p> <span>CONTRACT AMOUNT :&nbsp;</span><span
+                            class="text-primary">{{ number_format((double) $HCPNContract['amount'], 2) }}</span></p>
+                    @php
+                    $OwnContractDate = json_decode($HCPNContract['contractdate'], true);
+                    @endphp
+
+                    <p> <span>DATE COVERED :&nbsp;</span><span
+                            class="text-primary">{{ DateTime::createFromFormat('m-d-Y', $OwnContractDate['datefrom'])->format('M j, Y') }}
+                            to
+                            {{ DateTime::createFromFormat('m-d-Y', $OwnContractDate['dateto'])->format('M j, Y') }}</span>
+                    </p>
                 </div>
             </div>
-            <div class="col col-md-4">
-                <div class="card shadow mb-2 border border-success" style="min-height: 110px;">
-                    <div class="card-body text-center">
-                        <h6 class="font-weight-bold text-primary">RELEASED TRANCHES</h6>
-                        <span>AMOUNT
-                            :&nbsp;</span>{{ number_format((double) $HCPNContract['totaltrancheamount'], 2) }}<br>
-                        <span>AMOUNT
-                            :&nbsp;</span>{{ number_format((double) $HCPNContract['percentage'], 2) }}%
-                    </div>
+
+
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header bg-success">
+                    <h6 class="font-weight-bold text-white text-center">RELEASED TRANCHES</h6>
+                </div>
+                <div class="card-body text-center">
+
+                    <p><span>AMOUNT
+                            :&nbsp;</span><span
+                            class="text-primary">{{ number_format((double) $HCPNContract['totaltrancheamount'], 2) }}</span>
+                    </p>
+                    <p><span>PERCENTAGE
+                            :&nbsp;</span><span
+                            class="text-primary">{{ number_format((double) $HCPNContract['percentage'], 2) }}%</span>
+                    </p>
                 </div>
             </div>
-            <div class="col col-md-4">
-                <div class="card shadow mb-2 border border-success" style="min-height: 110px;">
-                    <div class="card-body text-center">
-                        <h6 class="font-weight-bold text-primary">UTILIZATION</h6>
-                        <span>AMOUNT
-                            :&nbsp;</span>{{ number_format((double) $HCPNContract['totalclaimsamount'], 2) }}<br>
-                        <span>PERCENTAGE
-                            :&nbsp;</span>{{ number_format((double) $HCPNContract['totalclaimspercentage'], 2) }}%
-                    </div>
+
+
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header bg-success">
+                    <h6 class="font-weight-bold text-white text-center">UTILIZATION</h6>
+                </div>
+                <div class="card-body text-center">
+
+                    <p> <span>AMOUNT
+                            :&nbsp;</span><span
+                            class="text-primary">{{ number_format((double) $HCPNContract['totalclaimsamount'], 2) }}</span>
+                    </p>
+                    <p> <span>PERCENTAGE
+                            :&nbsp;</span><span
+                            class="text-primary">{{ number_format((double) $HCPNContract['totalclaimspercentage'], 2) }}%</span>
+                    </p>
                 </div>
             </div>
+
 
         </div>
 
@@ -69,18 +93,22 @@
 
 
         <!-- CONTRACT TABLE -->
-        <div class="card shadow mb-2">
+        <div class="card shadow mb-2 border border-secondary">
             <div class="card-body">
-                <div class="table-responsive-sm"
-                    style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                    <div style="position:absolute; top:13px; right:320px">
-                        @if (session()->get('leveid') == 'HCPN')
-                        <a class="btn btn-outline-primary btn-sm" href="/Contracts/NewContract">
-                            <i class="fas fa-plus fa-sm text-info-40"></i> New Contract
-                        </a>&nbsp;
-                        @endif
-                        <input type="text" id="searchInput">
-                    </div>
+                <div class="d-flex flex-row-reverse">
+                    <input type="text" id="searchInput">&nbsp;
+                    @if (session()->get('leveid') == 'HCPN')
+                    <button class="btn btn-outline-primary btn-sm"
+                        onclick="NewContract('<?= htmlspecialchars(json_encode($OwnContractDate), ENT_QUOTES, 'UTF-8') ?>' )">
+                        <i class="fas fa-plus fa-sm text-info-40"></i> New Contract
+                    </button>
+                    &nbsp;
+                    @endif
+
+                </div>
+                <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px; margin-bottom: 10px;"
+                    id="content">
+
                     <div class="card-body border rounded mt-2">
                         <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
                             cellspacing="0">
@@ -483,6 +511,20 @@
             percentage +
             "&claimsamount=" +
             claimsamount;
+    }
+
+    function NewContract(contractdate) {
+        var condate = JSON.parse(contractdate);
+        var condateid = condate.condateid;
+        var datefrom = condate.datefrom;
+        var dateto = condate.dateto;
+
+        window.location.href =
+            "/Contracts/NewContract?condateid=" +
+            condateid +
+            "&DateFrom=" +
+            datefrom +
+            "&DateTo=" + dateto;
     }
     </script>
 

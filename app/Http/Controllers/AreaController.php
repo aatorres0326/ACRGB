@@ -29,22 +29,23 @@ class AreaController extends Controller
 
     public function GetManagingBoard()
     {
+        $token = session()->get('token');
         $SessionUserID = session()->get('userid');
 
         $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-        $ApiHCFUnderPro = Http::withoutVerifying()->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
         $decodedHCFUnderPro = $ApiHCFUnderPro->json();
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
         $HCFUnderPro = collect($HCFUnderPro);
 
         $GetHCPN = env('API_GET_HCPN');
-        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
         $ManagingBoard = collect($ManagingBoard);
 
         $GetRoleIndex = env('API_GET_ROLE_INDEX');
-        $RoleIndexResponse = Http::withoutVerifying()->get($GetRoleIndex . '/0');
+        $RoleIndexResponse = Http::withHeaders(['token' => $token])->get($GetRoleIndex . '/0');
         $decodedRoleIndexResponse = $RoleIndexResponse->json();
         $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
         $RoleIndex = collect($RoleIndex);
@@ -53,7 +54,7 @@ class AreaController extends Controller
     }
     public function INSERTManagingBoard(Request $request)
     {
-
+        $token = session()->get('token');
         $SessionUserID = session()->get('userid');
         $enddate = $request->input('licensedateto');
         $datef = date_create($enddate);
@@ -64,7 +65,7 @@ class AreaController extends Controller
         $now = new DateTime();
 
         $InsertHCPN = env('API_INSERT_HCPN');
-        $AddProResponse = Http::post($InsertHCPN, [
+        $AddProResponse = Http::withHeaders(['token' => $token])->post($InsertHCPN, [
             'mbname' => $request->input('mbname'),
             'datecreated' => $now->format('m-d-Y'),
             'createdby' => $SessionUserID,
@@ -86,24 +87,24 @@ class AreaController extends Controller
 
     public function GetMbAccess(Request $request)
     {
-
+        $token = session()->get('token');
         $SelectedMbID = $request->query('mbid', '');
         $SelectedMbName = $request->query('mbname', '');
 
         $GetRoleIndex = env('API_GET_ROLE_INDEX');
-        $RoleIndexResponse = Http::withoutVerifying()->get($GetRoleIndex . '/0');
+        $RoleIndexResponse = Http::withHeaders(['token' => $token])->get($GetRoleIndex . '/0');
         $decodedRoleIndexResponse = $RoleIndexResponse->json();
         $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
         $RoleIndex = collect($RoleIndex);
 
         $GetAllFacilities = env('API_GET_ALL_FACILITIES');
-        $facilityapiResponse = Http::withoutVerifying()->get($GetAllFacilities . "/ALL/0");
+        $facilityapiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacilities . "/ALL/0");
         $decodedFacilityResponse = $facilityapiResponse->json();
         $Facilities = json_decode($decodedFacilityResponse['result'], true);
         $Facilities = collect($Facilities);
 
         $GetHCPN = env('API_GET_HCPN');
-        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
@@ -112,9 +113,10 @@ class AreaController extends Controller
     }
     public function INSERTROLEINDEXMB(Request $request)
     {
+        $token = session()->get('token');
         $now = new DateTime();
         $InsertRoleIndex = env('API_INSERT_ROLE_INDEX');
-        $AddProResponse = Http::post($InsertRoleIndex, [
+        $AddProResponse = Http::withHeaders(['token' => $token])->post($InsertRoleIndex, [
             'userid' => $request->input('mbid'),
             'accessid' => $request->input('accessid'),
             'createdby' => $request->input('createdby'),
@@ -130,29 +132,30 @@ class AreaController extends Controller
 
     public function GetProAccess(Request $request)
     {
+        $token = session()->get('token');
         $SelectedProCode = $request->query('proid', '');
         $SessionUserID = session()->get('userid');
         $SelectedProID = $request->query('proid', '');
         $SelectedProName = $request->query('proname', '');
 
         $GetRoleIndex = env('API_GET_ROLE_INDEX');
-        $RoleIndexResponse = Http::withoutVerifying()->get($GetRoleIndex . '/0');
+        $RoleIndexResponse = Http::withHeaders(['token' => $token])->get($GetRoleIndex . '/0');
         $decodedRoleIndexResponse = $RoleIndexResponse->json();
         $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
         $RoleIndex = collect($RoleIndex);
 
         $GetHCPN = env('API_GET_HCPN');
-        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
         $decodedMB = $apiMB->json();
         $ManagingBoard = json_decode($decodedMB['result'], true);
 
         $GetHCPNwithPro = env('API_GET_HCPN_USING_PRO_USERID');
-        $ApiHCFUnderPro = Http::withoutVerifying()->get($GetHCPNwithPro . '/' . $SelectedProCode . '/PHIC');
+        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithPro . '/' . $SelectedProCode . '/PHIC');
         $decodedHCFUnderPro = $ApiHCFUnderPro->json();
         $HCFUnderPro = json_decode($decodedHCFUnderPro['result'], true);
 
         $GetRegionalOffice = env('API_GET_REGIONAL_OFFICE');
-        $apiPro = Http::withoutVerifying()->get($GetRegionalOffice . '/ACTIVE');
+        $apiPro = Http::withHeaders(['token' => $token])->get($GetRegionalOffice . '/ACTIVE');
         $decodedPro = $apiPro->json();
         $RegionalOffices = json_decode($decodedPro['result'], true);
 
@@ -161,9 +164,10 @@ class AreaController extends Controller
 
     public function INSERTROLEINDEXPRO(Request $request)
     {
+        $token = session()->get('token');
         $now = new DateTime();
         $InsertRoleIndex = env('API_INSERT_ROLE_INDEX');
-        $AddProResponse = Http::post($InsertRoleIndex, [
+        $AddProResponse = Http::withHeaders(['token' => $token])->post($InsertRoleIndex, [
             'userid' => $request->input('proid'),
             'accessid' => $request->input('accessid'),
             'createdby' => $request->input('createdby'),
@@ -179,9 +183,10 @@ class AreaController extends Controller
 
     public function REMOVEROLEINDEXPRO(Request $request)
     {
+        $token = session()->get('token');
         $now = new DateTime();
         $RemoveRoleIndex = env('API_REMOVE_ROLE_INDEX');
-        $RemoveProResponse = Http::put($RemoveRoleIndex, [
+        $RemoveProResponse = Http::withHeaders(['token' => $token])->put($RemoveRoleIndex, [
             'userid' => $request->input('proid'),
             'accessid' => $request->input('accessid'),
         ]);

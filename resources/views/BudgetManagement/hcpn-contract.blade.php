@@ -5,7 +5,7 @@
     <div class="container-fluid">
 
 
-
+        @if (session()->get('leveid') == 'PRO')
         @php
         $last = end($PROContract);
         $selected = json_decode($last['hcfid'], true);
@@ -56,6 +56,7 @@
 
 
         </div>
+        @endif
 
         <div class="card shadow mb-4">
             <div class="card-body">

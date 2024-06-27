@@ -8,12 +8,7 @@
                 <div class="table-responsive-sm"
                     style="overflow-y:auto; min-height: 440px; max-height: 440px; margin-top:25px; margin-bottom: 10px;"
                     id="content">
-                    <div style="position:absolute; top:13px; right:320px ">
-                        <a class="btn btn-sm btn-outline-primary mr-3" data-toggle="modal" data-target="#add-contract">
-                            <i class="fas fa-plus fa-sm text-info-40"></i> Release Funds
-                        </a>
-                        <input type="text" id="searchInput">
-                    </div>
+
                     <div class="card-body border rounded mt-2">
                         <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
                             cellspacing="0">
@@ -29,31 +24,37 @@
                                     <th class="text-center disableSort">Released Budget</th>
                                     <th class="text-center disableSort">Utilized Budget</th>
                                     <th class="text-center disableSort disableFilterBy">Remaining Budget</th>
+                                    <th class="text-center disableSort disableFilterBy">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @if($RegionalOffices != null)
-                                    @foreach($RegionalOffices as $pro)
-                                        <tr>
-                                            <td>{{ $pro['transcode'] }}</td>
-                                            <td>{{ $pro['proname'] }}</td>
-                                            <td><span
-                                                    class="text-primary font-weight-bold">&#8369;{{ number_format((double) intval($pro['contractamount']), 2) }}
-                                            </td>
-                                            <td><span
-                                                    class="text-danger font-weight-bold">{{ number_format(abs((double) $pro['percentage']), 2) }}%</span>
-                                                &nbsp; EQUIVALENT TO &nbsp; <span
-                                                    class="text-danger font-weight-bold">&#8369;{{ number_format((double) intval($pro['utilize']), 2) }}</span>
-                                            </td>
-                                            <td><span
-                                                    class="text-success font-weight-bold">&#8369;{{ number_format((double) intval($pro['unutilize']), 2) }}
-                                            </td>
-                                        </tr>
-                                    @endforeach
+                                @foreach($RegionalOffices as $pro)
+                                <tr>
+                                    <td>{{ $pro['transcode'] }}</td>
+                                    <td>{{ $pro['proname'] }}</td>
+                                    <td><span
+                                            class="text-primary font-weight-bold">&#8369;{{ number_format((double) intval($pro['contractamount']), 2) }}
+                                    </td>
+                                    <td><span
+                                            class="text-danger font-weight-bold">{{ number_format(abs((double) $pro['percentage']), 2) }}%</span>
+                                        &nbsp; EQUIVALENT TO &nbsp; <span
+                                            class="text-danger font-weight-bold">&#8369;{{ number_format((double) intval($pro['utilize']), 2) }}</span>
+                                    </td>
+                                    <td><span
+                                            class="text-success font-weight-bold">&#8369;{{ number_format((double) intval($pro['unutilize']), 2) }}
+                                    </td>
+                                    <td class="text-center" style="width:50px;">
+                                        <center><button class="btn-sm btn-outline-primary btn"
+                                                onclick="ViewBudget('<?=$pro['procode']?>','<?=$pro['proname']?>')">View</button>
+                                        </center>
+                                    </td>
+                                </tr>
+                                @endforeach
                                 @else
-                                    <tr>
-                                        <td>NO DATA</td>
-                                    </tr>
+                                <tr>
+                                    <td>NO DATA</td>
+                                </tr>
                                 @endif
                             </tbody>
                         </table>
@@ -62,91 +63,14 @@
             </div>
         </div>
 
-        <div class="modal" id="add-contract">
-            <div class="modal-dialog modal-dialog-centered modal-md">
-                <div class="modal-content">
-                    <div class="modal-header bg-light">
-                        <h6 class="modal-title">Release Budget</h6>
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="card shadow">
-                            <div class="card-body">
-                                <form action="{{ route('AddPROBudget') }}" method="POST">
-                                    @csrf
-                                    <div class="form-row">
-                                        <div class="form-group col-md">
-                                            <label for="transcode">Reference Number</label>
-                                            <input type="text" name="transcode" class="form-control"
-                                                placeholder="Reference #" double autocomplete="off" required>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col">
-                                            <label for="hcpn">Regional Office</label>
-                                            <select name="pro" id="selectedhcf" class="form-control" required>
-                                                <option value="" data-base-amount="">SELECT REGIONAL OFFICE</option>
-                                                @if($RegionalOffices != null)
-                                                    @foreach ($RegionalOffices as $pro)
-                                                        <option value="{{ $pro['procode']}}"
-                                                            data-base-amount="{{ $pro['conamount'] }}">
-                                                            {{ $pro['proname']}}
-                                                        </option>
-                                                    @endforeach
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col">
-                                            <label for="hcpn">Contract Period</label>
-                                            <select name="contractperiod" class="form-control" id="select2" required>
 
-                                                @if($ContractDate != null)
-                                                    <option value="">Select Contract Period</option>
-                                                    @foreach ($ContractDate as $condate)
-                                                        <option value="{{ $condate['condateid']}}">
-                                                            {{ DateTime::createFromFormat('m-d-Y', $condate['datefrom'])->format('M j, Y') }}
-                                                            -
-                                                            {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}
-                                                        </option>
-                                                    @endforeach
-                                                @else
-                                                    <option value="">No Available Contract Period</option>
-                                                @endif
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-row">
-                                        <div class="form-group col-md">
-                                            <label for="amount">Amount To Be Released</label>
-                                            <input type="text" name="amount" class="form-control"
-                                                oninput="formatNumber(this)" placeholder="Enter amount" double required
-                                                autocomplete="off">
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="submit" class="btn btn-primary">Add</button> <button type="button"
-                                            class="btn btn-danger" data-dismiss="modal">Cancel</button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 
-
     <script>
-        function formatNumber(input) {
-            let value = input.value.replace(/[^0-9.]/g, '');
-            let parts = value.split('.');
-            let integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
-            let decimalPart = parts[1] ? '.' + parts[1].slice(0, 2) : '';
-            let formattedValue = integerPart + decimalPart;
-            input.value = formattedValue;
-        }
+    function ViewBudget(proid, proname) {
+
+        window.location.href = "/releaseprobudget?proid=" + proid + "&proname=" + proname;
+    }
     </script>
+
     @endsection

@@ -37,11 +37,6 @@ class AuthController extends Controller
         }
     }
 
-    public function ChangeLogin()
-    {
-        return view('auth/changelogin');
-    }
-
     public function loginAction(Request $request)
     {
         $loginData = [

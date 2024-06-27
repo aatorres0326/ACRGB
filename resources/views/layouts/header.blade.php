@@ -1,5 +1,5 @@
 <div class="container-fluid">
-    <div class="card shadow mb-2" style="margin-top: -12px">
+    <div class="card shadow mb-2 border border-secondary" style="margin-top: -12px">
         <div class="card-header">
             @if (request()->is('login'))
                 <span class="text-uppercase font-weight-bold text-secondary" style="font-size:14px;">

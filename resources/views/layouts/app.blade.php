@@ -21,7 +21,7 @@ use Carbon\Carbon;
     <style>
     #searchInput,
     #searchInput2 {
-        position: absolute;
+
         padding: 5px;
         width: 300px;
         box-sizing: border-box;
@@ -169,7 +169,7 @@ use Carbon\Carbon;
 
                 @include('layouts.navbar')
 
-                <div class="container-fluid" style="margin-left: 17%; max-width: 82.5%; min-width: 82.5%;">
+                <div class="container-fluid">
                     @include('layouts.header')
                     @yield('contents')
                     @include('layouts.footer')

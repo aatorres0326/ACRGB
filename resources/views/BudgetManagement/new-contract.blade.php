@@ -28,13 +28,9 @@
                                 <input type="text" name="transcode" id="transcode" class="form-control"
                                     placeholder="Reference #" required>
                                 @else
-
-
                                 <input type="text" name="transcode" value="{{$transcode}}" class="form-control" readonly
                                     required>
                                 @endif
-
-
                             </div>
                             <div class="form-group col-md-4">
                                 @if (session()->get('leveid') === 'PRO')
@@ -73,6 +69,11 @@
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="hcpn">Contract Period</label>
+                                @if (session()->get('leveid') === 'HCPN')
+                                <input class="form-control"
+                                    value="{{ DateTime::createFromFormat('m-d-Y', $DateFrom)->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $DateTo)->format('M j, Y') }}"
+                                    id="select2" required readonly>
+                                @else
                                 @if ($SelectedConDate == null)
                                 <select name="contractperiod" class="form-control" id="select2" required>
                                     <option value="">Select Contract Period</option>
@@ -85,6 +86,7 @@
                                         {{ DateTime::createFromFormat('m-d-Y', $condate['dateto'])->format('M j, Y') }}
                                     </option>
                                     @endforeach
+
                                 </select>
                                 @else
 
@@ -94,7 +96,7 @@
                                     value="{{ DateTime::createFromFormat('m-d-Y', $DateFrom)->format('M j, Y') }} &nbsp;to&nbsp;{{DateTime::createFromFormat('m-d-Y', $DateTo)->format('M j, Y')}}"
                                     readonly>
                                 @endif
-
+                                @endif
 
                             </div>
                         </div>
@@ -136,8 +138,14 @@
 
 
                             <div class="form-group col-md-2" style="margin-top: 30px;">
+                                @if (session()->get('leveid') === 'PRO')
                                 <a type="button" class="btn btn-sm btn-outline-warning" onclick="clearForm()"><i
                                         class="fas fa-trash fa-sm"></i>&nbsp;Clear</a>
+                                @else
+                                <a type="button" class="btn btn-sm btn-outline-warning"
+                                    onclick="clearForm('<?= $DateFrom ?>', '<?= $DateTo ?>')"><i
+                                        class="fas fa-trash fa-sm"></i>&nbsp;Clear</a>
+                                @endif
                             </div>
 
 
@@ -184,16 +192,29 @@
 
                             @if ($ConNumber == null)
                             <div class="form-group col-md-2" style="margin-top: 30px;">
+                                @if (session()->get('leveid') === 'PRO')
                                 <a href="#" class="btn btn-outline-primary btn-sm" title="Generate Computation"
                                     onclick="setControlNumberAndRedirect()">
                                     <i class="fas fa-plus fa-sm text-info-40"></i>&nbsp;Compute
                                 </a>
+                                @else
+                                <a href="#" class="btn btn-outline-primary btn-sm" title="Generate Computation"
+                                    onclick="setControlNumberAndRedirect('<?= $DateFrom ?>', '<?= $DateTo ?>')">
+                                    <i class="fas fa-plus fa-sm text-info-40"></i>&nbsp;Compute
+                                </a>
+                                @endif
                             </div>
                             @else
 
                             <div class="form-group col-md-2" style="margin-top: 30px;">
+                                @if (session()->get('leveid') === 'PRO')
                                 <a type="button" class="btn btn-sm btn-outline-warning" onclick="clearForm()"><i
                                         class="fas fa-trash fa-sm"></i>&nbsp;Clear</a>
+                                @else
+                                <a type="button" class="btn btn-sm btn-outline-warning"
+                                    onclick="clearForm('<?= $DateFrom ?>', '<?= $DateTo ?>')"><i
+                                        class="fas fa-trash fa-sm"></i>&nbsp;Clear</a>
+                                @endif
                             </div>
                             @endif
 
@@ -231,14 +252,50 @@
         </div>
     </div>
 </div>
+@if (session()->get('leveid') === 'HCPN')
+<script>
+function setControlNumberAndRedirect(DateFrom, DateTo) {
+
+    var transcode = document.getElementById("transcode").value;
+    var condate = document.getElementById("select2").value;
+    var hcfhcpn = document.getElementById("hcfhcpn").value;
+
+    if (!transcode || !condate || !hcfhcpn) {
+        alert("Reference Number, Contract Period, and Network/Facility is required before generating computation.");
+        return;
+    }
+    var selectedContract = $('#select2 option:selected');
+
+    var TransCode = document.getElementById("transcode").value;
+    var HcfHcpn = document.getElementById("selectedValueInput").value;
+    var controlNumber = $('#hcfhcpn').val();
+
+    var ConDate = document.getElementById("select2").value;
+
+
+
+    var url = "/Contracts/NewContract?" +
+        "controlNumber=" + encodeURIComponent(controlNumber) +
+        "&DateFrom=" + encodeURIComponent(DateFrom) +
+        "&DateTo=" + encodeURIComponent(DateTo) +
+        "&TransCode=" + encodeURIComponent(TransCode) +
+        "&HCFHCPN=" + encodeURIComponent(HcfHcpn) +
+        "&ConDate=" + encodeURIComponent(ConDate);
+
+    window.location.href = url;
+
+}
+
+function clearForm(DateFrom, DateTo) {
+    var url = "/Contracts/NewContract?" + "DateFrom=" + encodeURIComponent(DateFrom) +
+        "&DateTo=" + encodeURIComponent(DateTo);
+
+    window.location.href = url;
+}
+</script>
+@else
 
 <script>
-document.getElementById("hcfhcpn").addEventListener("change", function() {
-    var select = document.getElementById("hcfhcpn");
-    var selectedOption = select.options[select.selectedIndex];
-    document.getElementById("selectedValueInput").value = selectedOption.getAttribute('data-HCFHCPN');
-});
-
 function setControlNumberAndRedirect() {
 
     var transcode = document.getElementById("transcode").value;
@@ -272,13 +329,18 @@ function setControlNumberAndRedirect() {
 
 }
 
-
-
-
 function clearForm() {
     var url = "/Contracts/NewContract";
 
     window.location.href = url;
 }
+</script>
+@endif
+<script>
+document.getElementById("hcfhcpn").addEventListener("change", function() {
+    var select = document.getElementById("hcfhcpn");
+    var selectedOption = select.options[select.selectedIndex];
+    document.getElementById("selectedValueInput").value = selectedOption.getAttribute('data-HCFHCPN');
+});
 </script>
 @endsection
