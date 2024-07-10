@@ -59,16 +59,18 @@ function EditContractStatus(conid, hcf, contract) {
     document.getElementsByName("contract")[0].setAttribute("value", contract);
 }
 
-function ViewTranches(conid, hcfid, amount, transcode, percentage) {
+function ViewTranches(
+    conid,
+    hcfid,
+    amount,
+    transcode,
+    percentage,
+    claimsamount
+) {
     var hcfObject = JSON.parse(hcfid);
     var hcfname = hcfObject.hcfname;
     var hcfcode = hcfObject.hcfcode;
-    localStorage.setItem("getConID", conid);
-    localStorage.setItem("getHCFName", hcfname);
-    localStorage.setItem("getHCFCode", hcfcode);
-    localStorage.setItem("getAmount", amount);
-    localStorage.setItem("getTransCode", transcode);
-    localStorage.setItem("getPercentage", percentage);
+
     window.location.href =
         "/apexassets?conid=" +
         conid +
@@ -81,5 +83,7 @@ function ViewTranches(conid, hcfid, amount, transcode, percentage) {
         "&hcfcode=" +
         hcfcode +
         "&percentage=" +
-        percentage;
+        percentage +
+        "&claimsamount=" +
+        claimsamount;
 }

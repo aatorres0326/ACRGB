@@ -64,7 +64,7 @@
 
                                     <div class="col col-md-4">
                                         <select class="form-control hcpn-contract" id="contract" required>
-                                            <option value="">SELECT CONTRACT</option>
+                                            <option value="">SELECT CONTRACT PERIOD</option>
                                         </select>
                                     </div>
                                     <input type="text" name="hcfhcpn" id="selectedHCF-HCPN" class="d-none" required>
@@ -109,7 +109,7 @@
                                     <div class="col col-md-4">
 
                                         <select class="form-control hcpn-contract" id="contract" required>
-                                            <option value="">SELECT CONTRACT</option>
+                                            <option value="">SELECT CONTRACT PERIOD</option>
                                         </select>
 
                                     </div>
@@ -168,31 +168,45 @@
                                 @if($Ledger == null)
                                     <td>NO DATA FOUND</td>
                                 @else
-                                    <tr>
-                                        @foreach ($Ledger as $ledger)
+                                                                @php
 
-                                                <td class="text-center">{{ $ledger['datetime']}}</td>
-                                                <td class="text-center">{{ $ledger['particular'] }}</td>
-                                                @if ($ledger['totalclaims'] == null)
-                                                    <td class="text-center"><span class="text-secondary font-weight-bold"
-                                                            style="font-size: 11px;">N/A</span></td>
-                                                @else
-                                                    <td class="text-center">{{ $ledger['totalclaims'] }}</td>
-                                                @endif
-                                                <td class="text-center">{{ $ledger['voucher'] }}</td>
-                                                <td class="text-center">{{ $ledger['account'] }}</td>
-                                                <td class="text-center font-weight-bold">&#8369;
-                                                    {{ number_format((double) $ledger['debit'], 2)}}
-                                                </td>
-                                                <td class="text-center font-weight-bold">&#8369;
-                                                    {{ number_format((double) $ledger['credit'], 2)}}
-                                                </td>
+                                                                    usort($Ledger, function ($a, $b) {
+                                                                        $dateA = DateTime::createFromFormat('m-d-Y', $a['datetime']);
+                                                                        $dateB = DateTime::createFromFormat('m-d-Y', $b['datetime']);
+                                                                        return $dateA <=> $dateB;
+                                                                    });
 
-                                                <td class="text-center font-weight-bold">&#8369;
-                                                    {{ number_format((double) $ledger['balance'], 2)}}
-                                                </td>
-                                            </tr>
-                                        @endforeach
+
+                                                                    $runningBalance = 0;
+                                                                @endphp
+
+                                                                @foreach ($Ledger as $ledger)
+                                                                                            @php
+
+                                                                                                $runningBalance += (double) $ledger['credit'] - (double) $ledger['debit'];
+                                                                                            @endphp
+                                                                                        <tr>
+                                                                                            <td class="text-center">{{ $ledger['datetime'] }}</td>
+                                                                                            <td class="text-center">{{ $ledger['particular'] }}</td>
+                                                                                            @if ($ledger['totalclaims'] == null)
+                                                                                                <td class="text-center"><span class="text-secondary font-weight-bold"
+                                                                                                        style="font-size: 11px;">N/A</span></td>
+                                                                                            @else
+                                                                                                <td class="text-center">{{ $ledger['totalclaims'] }}</td>
+                                                                                            @endif
+                                                                                            <td class="text-center">{{ $ledger['voucher'] }}</td>
+                                                                                            <td class="text-center">{{ $ledger['account'] }}</td>
+                                                                                            <td class="text-center font-weight-bold">
+                                                                                                &#8369;{{ number_format((double) $ledger['debit'], 2) }}</td>
+                                                                                            <td class="text-center font-weight-bold">
+                                                                                                &#8369;{{ number_format((double) $ledger['credit'], 2) }}</td>
+                                                                                            <td class="text-center font-weight-bold">&#8369;{{ number_format($runningBalance, 2) }}
+                                                                                            </td>
+                                                                                        </tr>
+                                                                @endforeach
+
+
+
                                 @endif
                             </tr>
                         </tbody>
@@ -248,29 +262,29 @@
             });
             navigator.msSaveOrOpenBlob(blob, filename);
         } else {
-            // Create a link to the file
+
             downloadLink.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csvContent);
 
-            // Setting the file name
+
             downloadLink.download = filename;
 
-            // Triggering the function
+
             downloadLink.click();
         }
 
-        // Clean up
         document.body.removeChild(downloadLink);
     }
 </script>
 <script>
     document.addEventListener('DOMContentLoaded', function () {
         var hcpnSelect = document.getElementById("select2");
-        var contractSelect = document.querySelector('.hcpn-contract');
+        var hcfSelect = document.getElementById("select3");
 
-        var contracts = @json($HCPNContract);
+        var contractSelect = document.querySelector('.hcpn-contract');
+        var contracts = @json($Contract);
 
         function convertDateToText(dateString) {
-            let [month, day, year] = dateString.split('-');
+            let [year, month, day] = dateString.split('-');
             let date = new Date(`${year}-${month}-${day}`);
             return date.toLocaleDateString('en-US', {
                 month: 'short',
@@ -280,9 +294,33 @@
         }
 
         function updateContractOptions() {
-            var selectedHCPN = hcpnSelect.value;
+
+
+            var selectedHCF = hcfSelect.value;
+
             contractSelect.innerHTML = '<option value="">SELECT CONTRACT PERIOD</option>';
             contracts.forEach(function (contract) {
+
+                var mb = JSON.parse(contract.hcfid);
+                var condate = JSON.parse(contract.contractdate);
+                if (mb.hcfcode === selectedHCF) {
+                    var option = document.createElement('option');
+                    option.value = contract.conid;
+                    option.textContent =
+                        `${convertDateToText(condate.datefrom)} to ${convertDateToText(condate.dateto)}`;
+                    contractSelect.appendChild(option);
+
+                }
+            });
+        }
+
+        function updateContractOptions2() {
+
+            var selectedHCPN = hcpnSelect.value;
+
+            contractSelect.innerHTML = '<option value="">SELECT CONTRACT PERIOD</option>';
+            contracts.forEach(function (contract) {
+
                 var mb = JSON.parse(contract.hcfid);
                 var condate = JSON.parse(contract.contractdate);
                 if (mb.controlnumber === selectedHCPN) {
@@ -291,11 +329,19 @@
                     option.textContent =
                         `${convertDateToText(condate.datefrom)} to ${convertDateToText(condate.dateto)}`;
                     contractSelect.appendChild(option);
+
                 }
             });
+
+
         }
 
-        hcpnSelect.addEventListener('change', updateContractOptions);
+
+
+        hcpnSelect.addEventListener('change', updateContractOptions2);
+        hcfSelect.addEventListener('change', updateContractOptions);
+
+
     });
 </script>
 
@@ -367,10 +413,13 @@
         var hcfHCPN = document
             .getElementById("selectedHCF-HCPN")
             .value.trim();
+        var selectType = document
+            .getElementById("selectType")
+            .value.trim();
         localStorage.setItem("controlNumber", controlNumber);
         localStorage.setItem("conID", conID);
-        window.location.href = "/Reports/SubsidiaryLedger?controlNumber=" + controlNumber + "&conID=" + conID +
-            "&hcfHCPN=" + hcfHCPN;
+        window.location.href = "/Reports/GeneralLedger?controlNumber=" + controlNumber + "&conID=" + conID +
+            "&hcfHCPN=" + hcfHCPN + "&selectType=" + selectType;
     }
 </script>
 

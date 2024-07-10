@@ -54,21 +54,25 @@ class AuthController extends Controller
             if ($response['success']) {
 
 
+
+
                 $result = json_decode($response['result'], true);
 
                 $this->startUserSession($response);
 
+
+
                 if ($result['leveid'] === 'PRO') {
 
-                    return redirect('dashboard');
+                    return redirect('hcpncontract');
                 } elseif ($result['leveid'] === 'MB') {
 
-                    return redirect('dashboard');
+                    return redirect('facilitycontracts');
                 } elseif ($result['leveid'] === 'ADMIN') {
 
                     return redirect('dashboard');
                 } elseif ($result['leveid'] === 'PHIC') {
-                    return redirect('dashboard');
+                    return redirect('budgetutilization/probudget');
 
                 } else {
 
@@ -76,6 +80,7 @@ class AuthController extends Controller
                 }
 
 
+                
 
             } else {
                 return redirect()->back()->with('error', $response['message']);

@@ -6,49 +6,51 @@
 
 
         @if (session()->get('leveid') == 'PRO')
+        @if ($PROContract != null)
         @php
         $last = end($PROContract);
         $selected = json_decode($last['hcfid'], true);
         @endphp
-        <div class="card-deck font-weight-bold">
+        @endif
+        <div class="card-deck font-weight-bold" style="font-size: 13px;">
 
-            <div class="card shadow mb-2 border">
-                <div class="card-header">
-                    <h6 class="font-weight-bold text-primary text-center">{{$selected['proname']}}</h6>
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header bg-light p-1 text-center" style="font-size: 14px;">
+                    <span class="font-weight-bold text-white">{{$selected['proname']}}</span>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body text-center p-1">
 
-                    <p><span class="">1ST QUARTER :&nbsp;</span><span
+                    <p><span class="">Pro Budget :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $last['amount'], 2) }}</span></p>
                 </div>
             </div>
 
 
-            <div class="card shadow mb-2 border" style="min-height: 110px;">
-                <div class="card-header text-center">
-                    <h6 class="font-weight-bold text-primary">RELEASED TRANCHES</h6>
+            <div class="card shadow mb-2 border border border-secondary" style="min-height: 110px;">
+                <div class="card-header text-center bg-light p-1" style="font-size: 14px;">
+                    <span class="font-weight-bold text-white">Released Tranches</span>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body text-center p-1">
 
-                    <p><span>AMOUNT
+                    <p><span>Total Amount
                             :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $last['totaltrancheamount'], 2) }}</span></p>
-                    <p> <span>PERCENTAGE
+                    <p> <span>Percentage
                             :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $last['percentage'], 2) }}%</span></p>
                 </div>
             </div>
 
 
-            <div class="card shadow mb-2 border" style="min-height: 110px;">
-                <div class="card-header text-center">
-                    <h6 class="font-weight-bold text-primary">UTILIZATION</h6>
+            <div class="card shadow mb-2 border border border-secondary" style="min-height: 110px;">
+                <div class="card-header text-center bg-light p-1" style="font-size: 14px;">
+                    <span class="font-weight-bold text-white">Utilization</span>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body text-center p-1">
 
-                    <p><span>AMOUNT :&nbsp;</span><span
+                    <p><span>Claims Amount :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $last['totalclaimsamount'], 2) }}</span></p>
-                    <p><span>PERCENTAGE :&nbsp;</span><span
+                    <p><span>Percentage :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $last['totalclaimspercentage'], 2) }}%</span>
                     </p>
                 </div>
@@ -58,19 +60,20 @@
         </div>
         @endif
 
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4 border border-secondary">
             <div class="card-body">
 
-                <div class="table-responsive-sm"
-                    style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                    <div style="position:absolute; top:13px; right:320px">
+                <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px;  margin-bottom: 10px;"
+                    id="content">
+                    <div class="d-flex flex-row-reverse">
+                        <input type="text" id="searchInput">&nbsp;
                         @if (session()->get('leveid') == 'PRO')
                         <a class="btn btn-outline-primary btn-sm" title="Add New Contract"
                             href="/Contracts/NewContract">
                             <i class="fas fa-plus fa-sm text-info-40"></i> New HCPN Contract
                         </a>&nbsp;
                         @endif
-                        <input type="text" id="searchInput">
+
                     </div>
 
                     <div class="card-body border rounded mt-2">
@@ -141,8 +144,8 @@
                                                 @elseif ($contract['traches'] == 2)
                                                 <td class="text-center">2ND</td>
                                                 @if ($contract['totalclaimspercentage'] < 0) <td class="text-center">
-                                                    <span class="text-danger font-weight-bold">{{ number_format(abs((double) 
-                        $contract['totalclaimspercentage']), 2) }}%</span>
+                                                    <span
+                                                        class="text-danger font-weight-bold">{{ number_format(abs((double) $contract['totalclaimspercentage']), 2) }}%</span>
                                                     OVER
                                                     </td>
                                                     @elseif ($contract['totalclaimspercentage'] < 60) <td
@@ -203,9 +206,11 @@
                                                                             {{ $contract['comittedClaimsVol'] }}</td>
                                                                         <td class="text-center">
                                                                             <button
-                                                                                class="btn btn-outline-primary btn-sm"
+                                                                                class="btn btn-outline-primary btn  font-weight-bold"
+                                                                                style="font-size: 12px"
                                                                                 id="{{ $contract['transcode'] }}"
-                                                                                onclick="toggleDetails('{{ $contract['transcode'] }}')">View</button>
+                                                                                onclick="toggleDetails('{{ $contract['transcode'] }}')"><i
+                                                                                    class="fas fa-fw fa-eye"></i></button>
                                                                         </td>
                                 </tr>
                                 <tr id="{{ $contract['transcode'] }}-details" class="d-none exclude-row">
@@ -303,7 +308,7 @@
                 <div class="modal-body">
                     <div class="card shadow">
                         <div class="card-body">
-                            <form action="{{ route('EditHCPNContract') }}" method=" POST">
+                            <form action="{{ route('EditHCPNContract') }}" method="POST">
                                 @method('PUT')
                                 @csrf
                                 <div class="form-row">

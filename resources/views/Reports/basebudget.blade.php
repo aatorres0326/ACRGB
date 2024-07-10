@@ -90,6 +90,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+                                        @if ($Facilities != null)
                                         @foreach($Facilities as $facility)
                                         @if($facility['type'] != "AH")
 
@@ -110,6 +111,7 @@
                                         @endif
 
                                         @endforeach
+                                        @endif
                                     </tbody>
                                 </table>
                                 <textarea name="includedfacilities" id="hcfcode" style="display: none;"></textarea>
@@ -143,66 +145,66 @@
 
         &nbsp;
 
-        <div class="row" style="margin-top: -26px;">
+        <div class="card-deck" style="margin-top: -26px;">
             @if($Budget != null)
+            <div class="card shadow mt-2 mb-2 bg-light">
+                <div class="card-body">
 
-            <div class="col col-md-6">
-                <div class="card shadow mt-2 mb-2 bg-success" style="height: 100px;">
-                    <div class="card-body">
+                    @php
+                    $last = end($Budget);
+                    $selected = json_decode($last['hospital'], true);
 
-                        @php
-                        $last = end($Budget);
-                        $selected = json_decode($last['hospital'], true);
-                        @endphp
-                        <div class="col">
-                            @if (isset($selected['hcfname']))
-                            <h5 class="text-white font-weight-bold">{{ $selected['hcfname'] }}</h5>
-                            @else
-                            <h5 class="text-white font-weight-bold">{{ $selected['mbname'] }}</h5>
-                            @endif
-                        </div>
-                        <div class="col">
-                            <span class="text-white font-weight-bold">DATE COVERED :&nbsp;</span><span
-                                class="text-white font-weight-bold">
-                                {{ $last['yearfrom'] }} to {{ $last['yearto']}}</span>
-                        </div>
+                    @endphp
+                    <div class="col">
+                        @if (isset($selected['mbname']))
+
+                        <h5 class="text-white font-weight-bold">{{ $selected['mbname'] }}</h5>
+                        @endif
+                    </div>
+                    <div class="col">
+                        <span class="text-white font-weight-bold">DATE COVERED :&nbsp;</span><span
+                            class="text-white font-weight-bold">
+                            {{ $last['yearfrom'] }} to {{ $last['yearto']}}</span>
                     </div>
                 </div>
             </div>
-            <div class="col col-md-6">
-                <div class="card shadow mt-2 mb-2 bg-success" style="height: 100px;">
-                    <div class="card-body">
-                        <div class="col">
-                            <span class="text-white font-weight-bold">CLAIMS AMOUNT :&nbsp; </span><span
-                                class="text-white font-weight-bold">
-                                {{ number_format((double) $last['totalamount'], 2) }}</span>
-                        </div>
 
-                        <div class="col">
-                            <span class="text-white font-weight-bold">TOTAL CLAIMS :&nbsp;</span><span
-                                class="text-white font-weight-bold">{{ $last['totalclaims'] }}</span>
-                        </div>
+            @if (isset($selected['mbname']))
+
+            <div class="card shadow mt-2 mb-2 bg-light" style="height: 100px;">
+                <div class="card-body">
+                    <div class="col">
+                        <span class="text-white font-weight-bold">CLAIMS AMOUNT :&nbsp; </span><span
+                            class="text-white font-weight-bold">
+                            {{ number_format((double) $last['totalamount'], 2) }}</span>
+                    </div>
+
+                    <div class="col">
+                        <span class="text-white font-weight-bold">TOTAL CLAIMS :&nbsp;</span><span
+                            class="text-white font-weight-bold">{{ $last['totalclaims'] }}</span>
+                    </div>
 
 
-                        <div class="col">
-                            <span class="text-white font-weight-bold"> SUPPLEMENTARY BUDGET :&nbsp;</span><span
-                                class="text-white font-weight-bold">
-                                {{ number_format((double) $last['sb'], 2) }}</span>
-                        </div>
+                    <div class="col">
+                        <span class="text-white font-weight-bold"> SUPPLEMENTARY BUDGET :&nbsp;</span><span
+                            class="text-white font-weight-bold">
+                            {{ number_format((double) $last['sb'], 2) }}</span>
                     </div>
                 </div>
             </div>
+
+            @endif
 
 
 
             @else
-            <div class="col col-md-12">
-                <div class="card shadow mt-1 mb-2">
-                    <div class="card-body">
-                        <span>NO SELECTED HCF/HCPN</span>
-                    </div>
+
+            <div class="card shadow mt-1 mb-2">
+                <div class="card-body">
+                    <span>NO SELECTED HCF/HCPN</span>
                 </div>
             </div>
+
             @endif
         </div>
 

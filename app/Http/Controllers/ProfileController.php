@@ -13,6 +13,14 @@ class ProfileController extends Controller
     public function UpdateProfileLogin(Request $request)
     {
         $token = session()->get('token');
+           //================================== TOKEN
+$TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+//=========================================== END TOKEN
+
         $response = Http::withHeaders(['token' => $token])->put('http://localhost:7001/ACRGB/ACRGBUPDATE/UPDATEUSERCREDENTIALS', [
             'userid' => $request->input('userid'),
             'username' => $request->input('editusername'),
@@ -28,7 +36,15 @@ class ProfileController extends Controller
 
     }
 
+//========================TOKEN
+  } else {
 
+                redirect('login');
+            }
+
+        }
+
+//===================END TOKEN
 
 
 

@@ -1,7 +1,4 @@
 function DisplayMbDetails(mbid, mbname) {
-    localStorage.setItem("getMbId", mbid);
-    localStorage.setItem("getMbname", mbname);
-
     window.location.href = "/mbaccess?mbid=" + mbid + "&mbname=" + mbname;
 }
 
@@ -63,3 +60,53 @@ mbCheckboxes.forEach(function (checkbox) {
         }
     });
 });
+
+function setMinDateTo() {
+    const dateFrom = document.getElementById("datePicker5").value;
+    const dateTo = document.getElementById("datePicker6");
+    dateTo.min = dateFrom;
+}
+
+function formatDate(dateStr) {
+    const date = new Date(dateStr);
+    const options = { month: "short", day: "numeric", year: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+}
+
+function EditHCPN(
+    mbid,
+    controlnumber,
+    mbname,
+    address,
+    bankaccount,
+    bankname,
+    licensedatefrom,
+    licensedateto
+) {
+    document.getElementById("hcpn-id").value = mbid;
+    document.getElementById("edit-controlnumber").value = controlnumber;
+    document.getElementById("edit-hcpn").value = mbname;
+    document.getElementById("edit-address").value = address;
+    document.getElementById("edit-bank-account").value = bankaccount;
+    document.getElementById("edit-bank-name").value = bankname;
+    document.getElementsByName("edit-license-date-from")[0].placeholder =
+        formatDate(licensedatefrom);
+    document.getElementsByName("edit-license-date-to")[0].placeholder =
+        formatDate(licensedateto);
+}
+function RemoveHCPN(controlnumber, mbname) {
+    document.getElementById("remove-controlnumber").value = controlnumber;
+    document.getElementById("remove-hcpn").value = mbname;
+}
+function formatDate(dateStr) {
+    const [month, day, year] = dateStr.split("-");
+    const date = new Date(`${year}-${month}-${day}`);
+    const options = { month: "short", day: "numeric", year: "numeric" };
+    return date.toLocaleDateString("en-US", options);
+}
+
+function setMinDateTo() {
+    const dateFrom = document.getElementById("datePicker5").value;
+    const dateTo = document.getElementById("datePicker6");
+    dateTo.min = dateFrom;
+}

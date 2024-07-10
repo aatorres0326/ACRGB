@@ -50,7 +50,12 @@ class AreaController extends Controller
         $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
         $RoleIndex = collect($RoleIndex);
 
-        return view('AreaManagement/managing-board', compact('HCFUnderPro', 'ManagingBoard', 'RoleIndex'));
+        $GetContract = env('API_GET_CONTRACT');
+        $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE/0/PHICHCPN');
+        $decodedapiContract = $apiContract->json();
+        $Contracts = json_decode($decodedapiContract['result'], true);
+
+        return view('AreaManagement/managing-board', compact('HCFUnderPro', 'ManagingBoard', 'RoleIndex', 'Contracts'));
     }
     public function INSERTManagingBoard(Request $request)
     {
@@ -78,11 +83,12 @@ class AreaController extends Controller
         ]);
 
         if ($AddProResponse->successful()) {
-
-            return back();
+            return back()->with('success', 'Managing board added successfully!');
+        } else {
+            return back()->with('error', 'Failed to add managing board.');
         }
-
     }
+
 
 
     public function GetMbAccess(Request $request)
@@ -197,6 +203,80 @@ class AreaController extends Controller
         }
     }
 
+    public function REMOVEROLEINDEXHCPN(Request $request)
+    {
+        $token = session()->get('token');
+        $userid = session()->get('userid');
+        $hcpn = $request->input('remove-hcpn');
+        $GetRoleIndex = env('API_GET_ROLE_INDEX');
+        $RoleIndexResponse = Http::withHeaders(['token' => $token])->get($GetRoleIndex . '/0');
+        $decodedRoleIndexResponse = $RoleIndexResponse->json();
+
+        $RoleIndex = json_decode($decodedRoleIndexResponse['result'], true);
+        $roleIndexData = null;
+
+        foreach ($RoleIndex as $role) {
+            if ($role['userid'] == $userid) {
+                $roleIndexData = $role;
+                break;
+            }
+        }
+
+        if ($roleIndexData) {
+            $procode = $roleIndexData['accessid'];
+        } else {
+            return back()->withErrors(['error' => 'Role index data not found for user.']);
+        }
+
+        $RemoveRoleIndex = env('API_REMOVE_ROLE_INDEX');
+        $RemoveProResponse = Http::withHeaders(['token' => $token])->put($RemoveRoleIndex, [
+            'userid' => $procode,
+            'accessid' => $request->input('remove-controlnumber'),
+        ]);
+
+        if ($RemoveProResponse->successful()) {
+            return back()->with('success', 'Access to ' . $hcpn . ' were removed successfully.');
+        } else {
+            return back()->withErrors(['error' => 'Failed to remove Network.']);
+        }
+    }
+
+
+    public function UpdateHCPN(Request $request)
+    {
+        $token = session()->get('token');
+        $Userid = session()->get('userid');
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+                $now = new DateTime();
+
+                $UpdateHCPN = env('API_UPDATE_HCPN');
+                $response = Http::withHeaders(['token' => $token])->put($UpdateHCPN, [
+                    'mbid' => $request->input('hcpn-id'),
+                    'mbname' => $request->input('edit-hcpn'),
+                    'datecreated' => $now->format('m-d-Y'),
+                    'createdby' => $Userid,
+                    'controlnumber' => $request->input('edit-controlnumber'),
+                    'address' => $request->input('edit-address'),
+                    'bankaccount' => $request->input('edit-bank-account'),
+                    'bankname' => $request->input('edit-bank-name'),
+                ]);
+
+                if ($response->successful()) {
+                    return back()->with('alert', 'Update Successful');
+                }
+            } else {
+
+                redirect('login');
+            }
+
+
+        }
+
+    }
 
 
 }

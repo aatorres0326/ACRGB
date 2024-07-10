@@ -7,17 +7,16 @@ $now->format('Y-m-d');
 ?>
 <div class="container-fluid">
 
-    <div class="card shadow mb-4">
+    <div class="card shadow mb-4 border border-secondary">
         <div class="card-body">
-            <div class="table-responsive-sm" style="overflow-y:auto; margin-top:25px; margin-bottom: 10px;"
-                id="content">
-                <div style="position:absolute; top:13px; right:320px">
+            <div class="table-responsive-sm" style="overflow-y:auto; margin-bottom: 10px;" id="content">
+                <div class="d-flex flex-row-reverse">
 
                     <input type="text" id="searchInput">
                 </div>
                 <div class="card-body border rounded mt-2">
-                    <table class="table table-sm table-hover table-bordered" id="tablemanager" width="100%"
-                        cellspacing="0">
+                    <table class="table table-sm table-hover table-bordered table-striped" id="tablemanager"
+                        width="100%" cellspacing="0">
 
                         <caption>List of Facilities</caption>
                         @if ($HCFUnderPro == null)
@@ -29,7 +28,7 @@ $now->format('Y-m-d');
                                 <th
                                     class="text-center disableSort {{ session()->get('leveid') === 'PRO' ? 'd-none' : '' }}{{ session()->get('leveid') === 'MB' ? 'd-none' : '' }}">
                                     Regional Office</th>
-                                <th class="text-center disableSort">Accreditation</th>
+                                <th class="text-center disableSort">PMCC_NO</th>
 
                                 <th class="disableSort disableFilterBy text-center">Action</th>
                             </tr>
@@ -47,7 +46,7 @@ $now->format('Y-m-d');
                                 <th class="disableSort">Facility</th>
                                 <th class="text-center disableSort">Address</th>
 
-                                <th class="text-center disableSort">Accreditation</th>
+                                <th class="text-center disableSort">PMCC_NO</th>
 
                                 <th class="disableSort disableFilterBy text-center">Action</th>
                             </tr>
@@ -59,17 +58,11 @@ $now->format('Y-m-d');
                             <tr>
                                 <td>{{ $facility['hcfname'] }}</td>
                                 <td class="text-center">{{ $facility['hcfaddress'] }}</td>
-
-
-
                                 <td class="text-center">{{ $facility['hcfcode'] }}</td>
-
-
-
                                 <td class="text-center">
                                     <button class="btn btn-sm btn-outline-primary" title="View Affiliates"
                                         onclick="ViewAFilliates('<?= $facility['hcfcode'] ?>','<?= $facility['hcfname'] ?>')">
-                                        &nbsp;View
+                                        <i class="fas fa-fw fa-eye"></i>
                                     </button>
                                 </td>
                             </tr>
@@ -132,9 +125,11 @@ $now->format('Y-m-d');
                                 <label for="appelate">APEX Affiliates</label>
                                 <select name="appellate" class="form-control" id="select">
                                     <option value="" disabled selected>SELECT AN HCPN</option>
+                                    @if ($ManagingBoard != null)
                                     @foreach ($ManagingBoard as $mb)
                                     <option value="{{ $mb['controlnumber'] }}">{{ $mb['mbname'] }}</option>
                                     @endforeach
+                                    @endif
                                 </select>
                             </div>
                         </div>

@@ -68,7 +68,12 @@
 
                             </div>
                             <div class="form-group col-md-4">
-                                <label for="hcpn">Contract Period</label>
+                                <label for="hcpn">Contract Period</label><a
+                                    style="font-size: 12px; text-decoration:none; margin-top: -10px; "
+                                    class="btn-outline-primary btn-sm btn p-1 ml-2 font-weight-bold" data-toggle="modal"
+                                    data-target="#add-period"><i class="fas fa-plus fa-sm text-info-40"></i> Add
+                                    Period
+                                </a>
                                 @if (session()->get('leveid') === 'HCPN')
                                 <input class="form-control"
                                     value="{{ DateTime::createFromFormat('m-d-Y', $DateFrom)->format('M j, Y') }} to {{ DateTime::createFromFormat('m-d-Y', $DateTo)->format('M j, Y') }}"
@@ -252,6 +257,50 @@
         </div>
     </div>
 </div>
+<div class="modal" id="add-period">
+    <div class="modal-dialog modal-dialog-centered modal-md">
+        <div class="modal-content">
+            <div class="modal-header bg-light">
+                <h6 class="modal-title">Add Contract Period</h6>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <form action="{{ route('INSERTCONTRACTPERIOD') }}" method="POST">
+                            @csrf
+                            <div class="form-row">
+                                <div class="form-group col-md-6">
+                                    <label for="datefrom">Date From</label>
+                                    <input type="date" name="datefrom" id="datefrom" class="form-control" required
+                                        onchange="setMinDateTo()">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="dateto">Date To</label>
+                                    <input type="date" name="dateto" id="dateto" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-sm btn-outline-primary">Add</button> <button
+                                    type="button" class="btn btn-sm btn-outline-danger"
+                                    data-dismiss="modal">Cancel</button>
+                            </div>
+                            <script>
+                            function setMinDateTo() {
+
+                                const dateFrom = document.getElementById('datefrom').value;
+                                const dateTo = document.getElementById('dateto');
+                                dateTo.min = dateFrom;
+
+                            }
+                            </script>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 @if (session()->get('leveid') === 'HCPN')
 <script>
 function setControlNumberAndRedirect(DateFrom, DateTo) {
@@ -337,7 +386,7 @@ function clearForm() {
 </script>
 @endif
 <script>
-document.getElementById("hcfhcpn").addEventListener("change", function() {
+document.getElementById("hcfhcpn").addEventListener("change", func tion() {
     var select = document.getElementById("hcfhcpn");
     var selectedOption = select.options[select.selectedIndex];
     document.getElementById("selectedValueInput").value = selectedOption.getAttribute('data-HCFHCPN');

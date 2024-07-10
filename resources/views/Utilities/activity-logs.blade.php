@@ -11,8 +11,9 @@
     <div class="card shadow mb-4">
         <div class="card-body">
             <div class="table-responsive-sm"
-                style="overflow-y:auto; max-height: 520px; min-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;" id="content">
-                <div style="position:absolute; top:13px; right:320px">
+                style="overflow-y:auto; max-height: 520px; min-height: 520px; margin-bottom: 10px; font-size; 10px;"
+                id="content">
+                <div class="d-flex flex-row-reverse">
 
                     <input type="text" id="searchInput">
                 </div>
@@ -36,7 +37,7 @@
                     <tbody>
                         @foreach($ActivityLogs as $logs)
                                                 @php
-    $type = explode(' ', trim($logs['actdetails']))[0];
+                                                    $type = explode(' ', trim($logs['actdetails']))[0];
                                                 @endphp
                                                 <tr>
                                                     <td class="text-center">{{ $logs['actdate'] }}</td>

@@ -20,21 +20,20 @@
 
             <div class="card shadow mb-4">
                 <div class="card-body">
-                    <div style="position:absolute; top:10px; right:320px">
-                        <a class="btn btn-outline-primary btn-sm {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}"
-                            data-toggle="modal" data-target="#add-access" style="text-decoration:
-                        none;"><i class="fas fa-plus fa-sm"></i> Add Access
-                        </a> <a
-                            class="btn btn-outline-danger btn-sm {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}"
-                            data-toggle="modal" data-target="#remove-access" style="text-decoration:
-                        none;"><i class="fas fa-trash fa-sm "></i> Remove Access
-                        </a>
+                    <div class="d-flex flex-row-reverse">
                         <input type="text" id="searchInput">&nbsp;
+                        @if (session()->get('leveid') === 'PRO')
+                        <a class="btn btn-outline-primary btn-sm" data-toggle="modal" data-target="#add-access" style="text-decoration:
+                                    none;"><i class="fas fa-plus fa-sm"></i> Add Access
+                        </a>&nbsp; <a class="btn btn-outline-danger btn-sm" data-toggle="modal"
+                            data-target="#remove-access" style="text-decoration:
+                                    none;"><i class="fas fa-trash fa-sm "></i> Remove Access
+                        </a>
+                        @endif
                     </div>
-                    <div class="table-responsive-sm"
-                        style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;"
-                        id="content">
-                        <table class="table table-sm table-hover table-bordered table-light" id="tablemanager"
+                    <div class="table-responsive-sm mt-2"
+                        style="overflow-y:auto; max-height: 520px; margin-bottom: 10px; font-size; 10px;" id="content">
+                        <table class="table table-sm table-hover table-bordered table-striped" id="tablemanager"
                             width="100%" cellspacing="0">
 
 

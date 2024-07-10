@@ -4,45 +4,46 @@
 <div id="content">
     <div class="container-fluid">
         <div class="card-deck">
-            <div class="card shadow mb-2">
-                <div class="card-header">
-                    <h6 class="text-primary text-center font-weight-bold">
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header p-1 bg-light text-center">
+                    <span class="h6 text-white font-weight-bold">
                         <strong>{{ $SelectedHCF }}</strong>
-                    </h6>
+                    </span>
                 </div>
 
-                <div class="card-body text-center font-weight-bold">
+                <div class="card-body p-1 text-center font-weight-bold" style="font-size: 13px;">
 
-                    <p class="card-text">CONTRACT AMOUNT :&nbsp;<span
+                    <p class="card-text">Contract Amount :&nbsp;<span
                             class="text-primary">{{ number_format((double) $SelectedAmount, 2) }}</span></p>
 
                 </div>
             </div>
 
-            <div class="card shadow mb-2">
-                <div class="card-header">
-                    <h6 class="text-primary text-center font-weight-bold">
-                        RELEASED TRANCHE
-                    </h6>
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header p-1 bg-light text-center">
+                    <span class="h6 text-white font-weight-bold">
+                        Released Tranche
+                    </span>
                 </div>
-                <div class="card-body font-weight-bold text-center">
+                <div class="card-body p-1 font-weight-bold text-center" style="font-size: 13px;">
                     <strong>
-                        <p class="card-text">1ST TRANCHE : &nbsp;<span id="totalreleased" class="text-primary"></span>
+                        <p class="card-text">Total Amount : &nbsp;<span id="totalreleased" class="text-primary"></span>
                         </p>
                     </strong>
                 </div>
             </div>
-            <div class="card shadow mb-2">
-                <div class="card-header">
-                    <h6 class="text-primary text-center font-weight-bold">
-                        UTILIZATION
-                    </h6>
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header p-1 bg-light  text-center">
+                    <span class="h6 text-white font-weight-bold">
+                        Utilization
+                    </span>
                 </div>
-                <div class="card-body text-center font-weight-bold">
+                <div class="card-body p-1 text-center font-weight-bold" style="font-size: 13px;">
                     <strong>
-                        <p class="card-text">AMOUNT : &nbsp;<span class="text-primary">{{ $ClaimsAmount }}</span></p>
-                        <p class="card-text">PERCENTAGE : &nbsp;<span
-                                class="text-primary">{{  number_format((double) $SelectedPercent, 1)}}%</span></p>
+                        <p class="card-text">Claims Amount : &nbsp;<span class="text-primary">{{ $ClaimsAmount }}</span>
+                        </p>
+                        <p class="card-text">Percentage : &nbsp;<span
+                                class="text-primary">{{  number_format((double) $SelectedPercent, 2)}}%</span></p>
 
 
                     </strong>
@@ -53,109 +54,109 @@
 
 
         </div>
-
-        <div class="row">
-            <div class="col-md-12 col-12">
-                <div class="table-responsive-sm" style="height: 375px;">
-                    <div class="card shadow mb-2">
-                        <div class="card-body">
-
-                            @if (session()->get('leveid') == 'HCPN')
-                            <div class="card-body" style="margin-top: -25px;">
-                                @if ($Assets != null)
-
-                                @php
-                                $releaseTranch = false;
-                                foreach ($Assets as $assets) {
-                                $conid = json_decode($assets['conid'], true);
-                                $tranch = json_decode($assets['tranchid'], true);
-                                if (str_contains($tranch['tranchtype'], '3RD')) {
-                                $releaseTranch = true;
-                                break;
-                                }
-                                }
-                                @endphp
-
-                                @if ($releaseTranch)
-
-                                <a class="btn btn-sm btn-outline-primary disabled" data-toggle="modal"
-                                    data-target="#release-tranch" style="float:right;">Release Tranche</a>
-                                @else
-
-                                <button class="btn-sm btn-outline-primary" data-toggle="modal"
-                                    data-target="#release-tranch" style="float:right;">Release Tranche</button>
-                                @endif
-
-                                @else
-
-                                <button class="btn-sm btn-outline-primary" data-toggle="modal"
-                                    data-target="#release-tranch" style="float:right;">Release Tranche</button>
-                                @endif
+        <div class="card shadow mb-2 border border-secondary">
+            <div class="card-body">
 
 
 
+                <div class="table-responsive-sm">
 
-                            </div>
+                    @if (session()->get('leveid') == 'HCPN')
+                    <div class="d-flex flex-row-reverse mb-2">
+                        @if ($Assets != null)
 
+                        @php
+                        $releaseTranch = false;
+                        foreach ($Assets as $assets) {
+                        $conid = json_decode($assets['conid'], true);
+                        $tranch = json_decode($assets['tranchid'], true);
+                        if (str_contains($tranch['tranchtype'], '3RD')) {
+                        $releaseTranch = true;
+                        break;
+                        }
+                        }
+                        @endphp
+
+                        @if ($releaseTranch)
+
+                        <a class="btn btn-sm btn-outline-primary disabled" data-toggle="modal"
+                            data-target="#release-tranch">Release Tranche</a>
+                        @else
+
+                        <button class="btn-sm btn-outline-primary" data-toggle="modal"
+                            data-target="#release-tranch">Release Tranche</button>
+                        @endif
+
+                        @else
+
+                        <button class="btn-sm btn-outline-primary" data-toggle="modal"
+                            data-target="#release-tranch">Release Tranche</button>
+                        @endif
+
+
+
+
+                    </div>
+
+                    @endif
+
+                    <table class="table table-sm table-hover table-bordered" id="assetsTable" width="100%"
+                        cellspacing="0">
+
+                        <thead>
+                            <tr>
+
+                                <th class="text-center disableSort">Reference Number</th>
+                                <th class="text-center disableSort">Tranche</th>
+                                <th class="text-center disableSort">Receipt Number</th>
+
+                                <th class="text-center disableSort">Released Amount</th>
+                                <th class="text-center disableSort">Date Released</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+
+
+                            @if ($Assets && count($Assets) > 0)
+
+                            @foreach ($Assets as $assets)
+                            @php
+                            $conid = json_decode($assets['conid'], true);
+                            $tranch = json_decode($assets['tranchid'], true);
+                            @endphp
+
+                            <tr>
+
+                                <td class="text-center">{{ $conid['transcode']}}</td>
+                                <td class="text-center">{{ $tranch['tranchtype']}}</td>
+                                <td class="text-center">{{ $assets['receipt']}}</td>
+
+
+
+                                <td class="text-center">
+                                    {{ number_format((double) $assets['amount'], 2)}}
+                                </td>
+                                <td class="text-center">
+                                    {{ DateTime::createFromFormat('m-d-Y', $assets['datereleased'])->format('F j, Y') }}
+                                </td>
+
+                            </tr>
+
+                            @endforeach
+
+                            @else
+
+                            <tr>
+                                <td colspan="8">No data found</td>
+                            </tr>
                             @endif
 
-                            <table class="table table-sm table-hover table-bordered id=" assetsTable" width="100%"
-                                cellspacing="0">
 
-                                <thead>
-                                    <tr>
-
-                                        <th class="text-center disableSort">Reference Number</th>
-                                        <th class="text-center disableSort">Tranche</th>
-                                        <th class="text-center disableSort">Receipt Number</th>
-
-                                        <th class="text-center disableSort">Released Amount</th>
-                                        <th class="text-center disableSort">Date Released</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-
-
-                                    @if ($Assets && count($Assets) > 0)
-
-                                    @foreach ($Assets as $assets)
-                                    @php
-                                    $conid = json_decode($assets['conid'], true);
-                                    $tranch = json_decode($assets['tranchid'], true);
-                                    @endphp
-
-                                    <tr>
-
-                                        <td class="text-center">{{ $conid['transcode']}}</td>
-                                        <td class="text-center">{{ $tranch['tranchtype']}}</td>
-                                        <td class="text-center">{{ $assets['receipt']}}</td>
-
-
-
-                                        <td class="text-center">
-                                            {{ number_format((double) $assets['amount'], 2)}}
-                                        </td>
-                                        <td class="text-center">
-                                            {{ DateTime::createFromFormat('m-d-Y', $assets['datereleased'])->format('F j, Y') }}
-                                        </td>
-
-                                    </tr>
-
-                                    @endforeach
-
-                                    @else
-
-                                    <tr>
-                                        <td colspan="8">No data found</td>
-                                    </tr>
-                                    @endif
-
-
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
+
+
             </div>
         </div>
 

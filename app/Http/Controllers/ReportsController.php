@@ -15,643 +15,676 @@ class ReportsController extends Controller
     public function SubsidiaryLedger(request $request)
     {
         $token = session()->get('token');
-        $HCFHCPN = $request->query('hcfHCPN', '');
-        $SelectedConID = $request->query('conID', '');
-        $ConNumber = $request->query('controlNumber', '');
-        $SessionUserID = session()->get('userid');
-        if ($HCFHCPN == null) {
+        //================================== TOKEN
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
 
-            $SelectedHCFHCPN = "0";
-        } else {
+                //=========================================== END TOKEN
 
-            $SelectedHCFHCPN = $HCFHCPN;
-        }
+                $HCFHCPN = $request->query('hcfHCPN', '');
+                $SelectedConID = $request->query('conID', '');
+                $ConNumber = $request->query('controlNumber', '');
+                $SessionUserID = session()->get('userid');
+                $selectType = $request->query('selectType', '');
 
-        if ($ConNumber != null && $SelectedConID != null) {
+                $GetContract = env('API_GET_ALL_CONTRACT');
+                $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE');
+                $decodedapiContract = $apiContract->json();
+                $Contract = json_decode($decodedapiContract['result'], true);
+                if ($HCFHCPN == null) {
 
-            $GetLedger = env('API_GET_LEDGER_PER_CONTRACT');
-            $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/HCPN/ACTIVE');
-            $decodedResponse = $gethcpncontract->json();
-            $Ledger = json_decode($decodedResponse['result'], true);
+                    $SelectedHCFHCPN = "0";
+                } else {
 
-            if (session()->get('leveid') == "PHIC") {
+                    $SelectedHCFHCPN = $HCFHCPN;
+                }
 
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
+                if ($ConNumber != null && $SelectedConID != null) {
 
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
 
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
+                    $GetLedger = env('API_GET_LEDGER_PER_CONTRACT');
+                    if ($selectType == "HCPN") {
+                        $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/HCPN/ACTIVE');
+                    } else if ($selectType == "APEX") {
+                        $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/FACILITY/ACTIVE');
+                    }
+                    $decodedResponse = $gethcpncontract->json();
+                    $Ledger = json_decode($decodedResponse['result'], true);
 
-                return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Ledger', 'SelectedHCFHCPN'));
+                    if (session()->get('leveid') == "PHIC") {
 
-            } elseif (session()->get('leveid') == "PRO") {
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
 
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $HCPN = json_decode($decodedHCFUnderPro['result'], true);
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
 
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
 
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
 
-                return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Ledger', 'SelectedHCFHCPN'));
+                        return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Ledger', 'SelectedHCFHCPN'));
 
+                    } elseif (session()->get('leveid') == "PRO") {
+
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $HCPN = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+
+                        return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Ledger', 'SelectedHCFHCPN'));
+
+                    } else {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+
+
+                        return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'Contract'));
+
+                    }
+
+
+                } else {
+
+                    $SessionUserID = session()->get('userid');
+                    $Ledger = null;
+
+                    if (session()->get('leveid') == "PHIC") {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+
+
+
+                        return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Ledger', 'Contract', 'SelectedHCFHCPN'));
+
+                    } elseif (session()->get('leveid') == "PRO") {
+
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
+                        $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
+
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . '/ALL/0');
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+
+
+                        return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Ledger', 'SelectedHCFHCPN'));
+
+                    } else {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+
+
+                        return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'Contract'));
+
+                    }
+                }
+
+                //========================TOKEN
             } else {
 
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE/' . $SessionUserID . '/HCPN');
-                $decodedapiContract = $apiContract->json();
-                $HCPNContract = json_decode($decodedapiContract['result'], true);
-
-                return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'HCPNContract'));
-
+                redirect('login');
             }
-
-
-        } else {
-
-            $SessionUserID = session()->get('userid');
-            $Ledger = null;
-
-            if (session()->get('leveid') == "PHIC") {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
-
-                return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Ledger', 'HCPNContract', 'SelectedHCFHCPN'));
-
-            } elseif (session()->get('leveid') == "PRO") {
-
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
-                $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
-
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . '/ALL/0');
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
-
-                return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Ledger', 'SelectedHCFHCPN'));
-
-            } else {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/ACTIVE/' . $SessionUserID . '/HCPN');
-                $decodedapiContract = $apiContract->json();
-                $HCPNContract = json_decode($decodedapiContract['result'], true);
-
-                return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'HCPNContract'));
-
-            }
-
 
         }
+
+
+        //===================END TOKEN
     }
 
 
     public function VIEWBUDGET(request $request)
     {
+
         $token = session()->get('token');
-        $ConNumber = $request->query('controlNumber', '');
-        $Facilities = $request->query('Facilities', '');
-        $HCFCodes = trim($Facilities);
-        $datefrom = $request->query('DateFrom', '');
-        $datef = date_create($datefrom);
-        $datefromformat = date_format($datef, "m-d-Y");
-        $dateto = $request->query('DateTo', '');
-        $datet = date_create($dateto);
-        $datetoformat = date_format($datet, "m-d-Y");
+        //================================== TOKEN
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+                //=========================================== END TOKEN
+                $ConNumber = $request->query('controlNumber', '');
+                $Facilities = $request->query('Facilities', '');
+                $HCFCodes = trim($Facilities);
+                $datefrom = $request->query('DateFrom', '');
+                $datef = date_create($datefrom);
+                $datefromformat = date_format($datef, "m-d-Y");
+                $dateto = $request->query('DateTo', '');
+                $datet = date_create($dateto);
+                $datetoformat = date_format($datet, "m-d-Y");
+
+                if ($ConNumber != null && $datefrom != null && $dateto != null) {
+                    $GetBudget = env('API_GET_SUMMARY');
+                    if ($HCFCodes === "") {
+                        $apiBudget = Http::withHeaders(['token' => $token])->get($GetBudget . '/FACILITY/' . $ConNumber . '/' . $datefromformat . '/' . $datetoformat . '/SUMMARY/OLD');
+                        $decodedBudget = $apiBudget->json();
+
+                    } else {
+                        $apiBudget = Http::withHeaders(['token' => $token])->get($GetBudget . '/HCPN/' . $ConNumber . '/' . $datefromformat . '/' . $datetoformat . '/SUMMARY/' . $HCFCodes);
+                        $decodedBudget = $apiBudget->json();
+
+                    }
+
+                    if ($decodedBudget != null) {
+                        $Budget = json_decode($decodedBudget['result'], true);
+                    } else {
+                        $Budget = null;
+                    }
+
+                    $SessionUserID = session()->get('userid');
+
+                    if (session()->get('leveid') == "PHIC") {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+
+                        return view('Reports/basebudget', compact('Budget', 'HCPN', 'Facilities', 'HCFCodes'));
+
+                    } elseif (session()->get('leveid') == "PRO") {
+
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $HCPN = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+                        return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget', 'APEXFacilities', 'HCFCodes'));
+
+                    } else {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+                        return view('Reports/basebudget', compact('Budget', 'HCPN', 'Facilities'));
+
+                    }
 
 
+                } else {
 
-        if ($ConNumber != null && $datefrom != null && $dateto != null) {
-            $GetBudget = env('API_GET_SUMMARY');
-            if ($HCFCodes === "") {
-                $apiBudget = Http::withHeaders(['token' => $token])->get($GetBudget . '/FACILITY/' . $ConNumber . '/' . $datefromformat . '/' . $datetoformat . '/SUMMARY/OLD');
-                $decodedBudget = $apiBudget->json();
+                    $SessionUserID = session()->get('userid');
+                    $Budget = null;
 
+                    if (session()->get('leveid') == "PHIC") {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+
+                        return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget'));
+
+                    } elseif (session()->get('leveid') == "PRO") {
+
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
+                        $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
+
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+                        return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget', 'APEXFacilities'));
+
+                    } else {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+
+                        return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget'));
+
+                    }
+
+
+                }
+
+
+                //========================TOKEN
             } else {
-                $apiBudget = Http::withHeaders(['token' => $token])->get($GetBudget . '/HCPN/' . $ConNumber . '/' . $datefromformat . '/' . $datetoformat . '/SUMMARY/' . $HCFCodes);
-                $decodedBudget = $apiBudget->json();
 
+                redirect('login');
             }
-
-            if ($decodedBudget != null) {
-                $Budget = json_decode($decodedBudget['result'], true);
-            } else {
-                $Budget = null;
-            }
-
-            $SessionUserID = session()->get('userid');
-
-            if (session()->get('leveid') == "PHIC") {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-
-                return view('Reports/basebudget', compact('Budget', 'HCPN', 'Facilities', 'HCFCodes'));
-
-            } elseif (session()->get('leveid') == "PRO") {
-
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $HCPN = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-                return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget', 'APEXFacilities', 'HCFCodes'));
-
-            } else {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-                return view('Reports/basebudget', compact('Budget', 'HCPN', 'Facilities'));
-
-            }
-
-
-        } else {
-
-            $SessionUserID = session()->get('userid');
-            $Budget = null;
-
-            if (session()->get('leveid') == "PHIC") {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-
-                return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget'));
-
-            } elseif (session()->get('leveid') == "PRO") {
-
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
-                $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
-
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-                return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget', 'APEXFacilities'));
-
-            } else {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-
-                return view('Reports/basebudget', compact('HCPN', 'Facilities', 'Budget'));
-
-            }
-
 
         }
+
+        //===================END TOKEN
+
+
+
     }
 
     public function GeneralLedger(request $request)
     {
         $token = session()->get('token');
-        $HCFHCPN = $request->query('hcfHCPN', '');
-        $SelectedConID = $request->query('conID', '');
-        $ConNumber = $request->query('controlNumber', '');
-        $SessionUserID = session()->get('userid');
-        if ($HCFHCPN == null) {
+        //================================== TOKEN
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+                //=========================================== END TOKEN
+                $HCFHCPN = $request->query('hcfHCPN', '');
+                $SelectedConID = $request->query('conID', '');
+                $ConNumber = $request->query('controlNumber', '');
+                $SessionUserID = session()->get('userid');
+                $selectType = $request->query('selectType', '');
 
-            $SelectedHCFHCPN = "0";
-        } else {
+                $GetContract = env('API_GET_ALL_CONTRACT');
+                $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE');
+                $decodedapiContract = $apiContract->json();
+                $Contract = json_decode($decodedapiContract['result'], true);
 
-            $SelectedHCFHCPN = $HCFHCPN;
-        }
+                if ($HCFHCPN == null) {
 
-        if ($ConNumber != null && $SelectedConID != null) {
+                    $SelectedHCFHCPN = "0";
+                } else {
 
-            $GetLedger = env('API_GET_LEDGER_PER_CONTRACT');
-            $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/HCPN/INACTIVE');
-            $decodedResponse = $gethcpncontract->json();
-            $Ledger = json_decode($decodedResponse['result'], true);
+                    $SelectedHCFHCPN = $HCFHCPN;
+                }
 
-            if (session()->get('leveid') == "PHIC") {
+                if ($ConNumber != null && $SelectedConID != null) {
 
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
+                    $GetLedger = env('API_GET_LEDGER_PER_CONTRACT');
+                    if ($selectType == "HCPN") {
+                        $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/HCPN/INACTIVE');
+                    } else if ($selectType == "APEX") {
+                        $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/FACILITY/INACTIVE');
+                    }
+                    $decodedResponse = $gethcpncontract->json();
+                    $Ledger = json_decode($decodedResponse['result'], true);
 
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
+                    if (session()->get('leveid') == "PHIC") {
 
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
 
-                return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Ledger', 'SelectedHCFHCPN'));
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
 
-            } elseif (session()->get('leveid') == "PRO") {
+                        return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Ledger', 'SelectedHCFHCPN'));
 
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $HCPN = json_decode($decodedHCFUnderPro['result'], true);
+                    } elseif (session()->get('leveid') == "PRO") {
 
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $HCPN = json_decode($decodedHCFUnderPro['result'], true);
 
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
 
-                return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Ledger', 'SelectedHCFHCPN'));
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
 
+
+                        return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Ledger', 'SelectedHCFHCPN'));
+
+                    } else {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                        return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'Contract'));
+
+                    }
+
+
+                } else {
+
+                    $SessionUserID = session()->get('userid');
+                    $Ledger = null;
+
+                    if (session()->get('leveid') == "PHIC") {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+
+                        return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Ledger', 'Contract', 'SelectedHCFHCPN'));
+
+                    } elseif (session()->get('leveid') == "PRO") {
+
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
+                        $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
+
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . '/ALL/0');
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+
+
+                        return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Ledger', 'SelectedHCFHCPN'));
+
+                    } else {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+
+
+                        return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'Contract'));
+
+                    }
+
+
+                }
+
+                //========================TOKEN
             } else {
 
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/' . $SessionUserID . '/HCPN');
-                $decodedapiContract = $apiContract->json();
-                $HCPNContract = json_decode($decodedapiContract['result'], true);
-
-                return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'HCPNContract'));
-
+                redirect('login');
             }
-
-
-        } else {
-
-            $SessionUserID = session()->get('userid');
-            $Ledger = null;
-
-            if (session()->get('leveid') == "PHIC") {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
-
-                return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'Ledger', 'HCPNContract', 'SelectedHCFHCPN'));
-
-            } elseif (session()->get('leveid') == "PRO") {
-
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
-                $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
-
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . '/ALL/0');
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
-
-                return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Ledger', 'SelectedHCFHCPN'));
-
-            } else {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/' . $SessionUserID . '/HCPN');
-                $decodedapiContract = $apiContract->json();
-                $HCPNContract = json_decode($decodedapiContract['result'], true);
-
-                return view('Reports/general-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'HCPNContract'));
-
-            }
-
 
         }
+
+        //===================END TOKEN
+
+
+
+
     }
     public function Booking(request $request)
     {
         $token = session()->get('token');
-        $transCode = $request->query('transCode', '');
-        $HCFHCPN = $request->query('hcfHCPN', '');
-        $SelectedConID = $request->query('conID', '');
-        $ConNumber = $request->query('controlNumber', '');
-        $SessionUserID = session()->get('userid');
-        $SessionUserID = session()->get('userid');
-        if ($HCFHCPN == null) {
+        //================================== TOKEN
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+                //=========================================== END TOKEN
+                $transCode = $request->query('transCode', '');
+                $HCFHCPN = $request->query('hcfHCPN', '');
+                $SelectedConID = $request->query('conID', '');
+                $ConNumber = $request->query('controlNumber', '');
+                $SessionUserID = session()->get('userid');
+                $SessionUserID = session()->get('userid');
 
-            $SelectedHCFHCPN = "0";
-        } else {
+                $GetContract = env('API_GET_ALL_CONTRACT');
+                $apiContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE');
+                $decodedapiContract = $apiContract->json();
+                $Contract = json_decode($decodedapiContract['result'], true);
+                if ($HCFHCPN == null) {
+                    $SelectedHCFHCPN = "0";
+                } else {
 
-            $SelectedHCFHCPN = $HCFHCPN;
-        }
-        if ($ConNumber != null && $SelectedConID != null) {
+                    $SelectedHCFHCPN = $HCFHCPN;
+                }
+                if ($ConNumber != null && $SelectedConID != null) {
 
-            $GetClaims = env('API_GET_CLAIMS');
-            $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetClaims . '/' . $ConNumber . '/' . $SelectedConID .
-                '/HCPN');
-            $decodedResponse = $gethcpncontract->json();
-            $Claims = json_decode($decodedResponse['result'], true);
+                    $GetClaims = env('API_GET_CLAIMS');
+                    $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetClaims . '/' . $ConNumber . '/' . $SelectedConID .
+                        '/HCPN');
+                    $decodedResponse = $gethcpncontract->json();
+                    $Claims = json_decode($decodedResponse['result'], true);
 
 
-            if (session()->get('leveid') == "PHIC") {
+                    if (session()->get('leveid') == "PHIC") {
 
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
 
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
 
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
+                        return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
 
-                return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
+                    } elseif (session()->get('leveid') == "PRO") {
 
-            } elseif (session()->get('leveid') == "PRO") {
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCFUnderPro = $ApiHCFUnderPro->json();
+                        $HCPN = json_decode($decodedHCFUnderPro['result'], true);
 
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCFUnderPro = $ApiHCFUnderPro->json();
-                $HCPN = json_decode($decodedHCFUnderPro['result'], true);
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
 
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
 
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
+                        return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
 
-                return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
+                    }
 
+
+                } else {
+
+                    $SessionUserID = session()->get('userid');
+                    $Claims = null;
+                    $SelectedConID = "0";
+                    $ConNumber = "0";
+                    $transCode = "0";
+
+                    if (session()->get('leveid') == "PHIC") {
+
+                        $GetHCPN = env('API_GET_HCPN');
+                        $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
+                        $decodedMB = $apiMB->json();
+                        $HCPN = json_decode($decodedMB['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
+                        $decodedResponse = $apiResponse->json();
+                        $Facilities = json_decode($decodedResponse['result'], true);
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+                        return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'Claims', 'Contract', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
+
+                    } elseif (session()->get('leveid') == "PRO") {
+
+                        $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
+                        $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
+                        $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
+                        $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
+
+                        $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
+                        $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
+                        $decodedHCFUnderPro = $apiHCFUnderPro->json();
+                        $Facilities = json_decode($decodedHCFUnderPro['result'], true);
+
+                        $GetAllFacility = env('API_GET_ALL_FACILITIES');
+                        $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . '/ALL/0');
+                        $decodedResponse = $apiResponse->json();
+                        $APEXFacilities = json_decode($decodedResponse['result'], true);
+
+
+                        return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'Contract', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
+
+                    }
+                }
+                //========================TOKEN
             } else {
 
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-
-                return view('Reports/booking', compact('HCPN', 'Facilities', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
-
+                redirect('login');
             }
-
-
-        } else {
-
-            $SessionUserID = session()->get('userid');
-            $Claims = null;
-            $SelectedConID = "0";
-            $ConNumber = "0";
-            $transCode = "0";
-
-            if (session()->get('leveid') == "PHIC") {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
-
-                return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'Claims', 'HCPNContract', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
-
-            } elseif (session()->get('leveid') == "PRO") {
-
-                $GetHCPNwithProUser = env('API_GET_HCPN_USING_PRO_USERID');
-                $ApiHCPNUnderPro = Http::withHeaders(['token' => $token])->get($GetHCPNwithProUser . '/' . $SessionUserID . "/PRO");
-                $decodedHCPNUnderPro = $ApiHCPNUnderPro->json();
-                $HCPN = json_decode($decodedHCPNUnderPro['result'], true);
-
-                $GetFacilitywithPro = env('API_GET_FACILITY_WITH_PRO');
-                $apiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetFacilitywithPro . '/' . $SessionUserID);
-                $decodedHCFUnderPro = $apiHCFUnderPro->json();
-                $Facilities = json_decode($decodedHCFUnderPro['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . '/ALL/0');
-                $decodedResponse = $apiResponse->json();
-                $APEXFacilities = json_decode($decodedResponse['result'], true);
-
-                $GetContract = env('API_GET_CONTRACT');
-                $apiHCPNContract = Http::withHeaders(['token' => $token])->get($GetContract . '/INACTIVE/0/PHICHCPN');
-                $decodedapiHCPNContract = $apiHCPNContract->json();
-                $HCPNContract = json_decode($decodedapiHCPNContract['result'], true);
-
-                return view('Reports/booking', compact('HCPN', 'Facilities', 'APEXFacilities', 'HCPNContract', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
-
-            } else {
-
-                $GetHCPN = env('API_GET_HCPN');
-                $apiMB = Http::withHeaders(['token' => $token])->get($GetHCPN . "/ACTIVE");
-                $decodedMB = $apiMB->json();
-                $HCPN = json_decode($decodedMB['result'], true);
-
-                $GetAllFacility = env('API_GET_ALL_FACILITIES');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/ALL/0");
-                $decodedResponse = $apiResponse->json();
-                $Facilities = json_decode($decodedResponse['result'], true);
-
-                return view('Reports/booking', compact('HCPN', 'Facilities', 'Claims', 'SelectedHCFHCPN', 'ConNumber', 'SelectedConID', 'transCode'));
-
-            }
-
 
         }
+
+        //===================END TOKEN
+
+
+
     }
 
     public function BookData(Request $request)
     {
-
         $token = session()->get('token');
-        $now = new DateTime();
-        $sessionuserid = session()->get('userid');
-        $InsertAssets = env('API_BOOK_DATA');
-        $response = Http::withHeaders(['token' => $token])->post($InsertAssets, [
-            'booknum' => $request->input('booknum'),
-            'conid' => $request->input('conid'),
-            'hcpncode' => $request->input('code'),
-            'tags' => 'HCPN',
-            'createdby' => $sessionuserid,
-            'datecreated' => $now->format('m-d-Y'),
-        ]);
+        //================================== TOKEN
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+                //=========================================== END TOKEN
+                $now = new DateTime();
+                $sessionuserid = session()->get('userid');
+                $InsertAssets = env('API_BOOK_DATA');
+                $response = Http::withHeaders(['token' => $token])->post($InsertAssets, [
+                    'booknum' => $request->input('booknum'),
+                    'conid' => $request->input('conid'),
+                    'hcpncode' => $request->input('code'),
+                    'tags' => 'HCPN',
+                    'createdby' => $sessionuserid,
+                    'datecreated' => $now->format('m-d-Y'),
+                ]);
 
-        if ($response->successful()) {
-            return back();
+                if ($response->successful()) {
+                    return back();
+                }
+
+                //========================TOKEN
+            } else {
+
+                redirect('login');
+            }
+
         }
+        //===================END TOKEN
+
+
     }
 
 

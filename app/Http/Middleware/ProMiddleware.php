@@ -11,13 +11,10 @@ class ProMiddleware
     {
         $levelId = session('leveid');
 
-        if ($levelId !== 'PRO' && $levelId !== 'PHIC') {
+        if ($levelId !== 'PRO' && $levelId !== 'PHIC' && $levelId !== 'ADMIN') {
             return response()->view('errors.unauthorized', [], 403);
         }
 
         return $next($request);
     }
 }
-
-
-

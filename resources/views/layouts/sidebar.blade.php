@@ -47,7 +47,7 @@
             <li class="nav-item  {{ (request()->is('apexfacilities')) ? 'active' : '' }}">
                 <a class="nav-link" href="/apexfacilities">
 
-                    <i class="fas fa-fw fa-hospital"></i><span>Apex Facilities</span></a>
+                    <i class="fas fa-fw fa-hospital"></i><span> Apex Facilities</span></a>
             </li>
             <li class="nav-item" id="accordion">
                 <a class="nav-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
@@ -61,19 +61,22 @@
                     <div class="bg-white py-2 collapse-inner rounded">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="collapse-item {{ (request()->is('budgetutilization/probudget')) ? 'active' : '' }}"
+                                <a style="font-size: 11px;"
+                                    class="collapse-item {{ (request()->is('budgetutilization/probudget')) ? 'active' : '' }}"
                                     href="/budgetutilization/probudget">
-                                    <span>PRO Budget</span></a>
+                                    <i class="fas fa-fw fa-handshake"></i><span> PRO Budget</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="collapse-item {{ (request()->is('hcpncontract')) ? 'active' : '' }} {{ (request()->is('hcpnassets')) ? 'active' : '' }} {{ (request()->is('facilitycontracts')) ? 'active' : '' }} {{ (request()->is('facilityassets')) ? 'active' : '' }}"
+                                <a style="font-size: 11px;"
+                                    class="collapse-item {{ (request()->is('hcpncontract')) ? 'active' : '' }} {{ (request()->is('hcpnassets')) ? 'active' : '' }} {{ (request()->is('facilitycontracts')) ? 'active' : '' }} {{ (request()->is('facilityassets')) ? 'active' : '' }}"
                                     href="/hcpncontract">
-                                    <span>HCPN Contracts</span></a>
+                                    <i class="fas fa-fw fa-handshake"></i><span> HCPN Contracts</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="collapse-item {{ (request()->is('apexcontract')) ? 'active' : '' }} {{ (request()->is('apexassets')) ? 'active' : '' }}"
+                                <a style="font-size: 11px;"
+                                    class="collapse-item {{ (request()->is('apexcontract')) ? 'active' : '' }} {{ (request()->is('apexassets')) ? 'active' : '' }}"
                                     href="/apexcontract">
-                                    <span>APEX Facility Contracts</span></a>
+                                    <i class="fas fa-fw fa-handshake"></i><span> APEX Facility Contracts</span></a>
                             </li>
 
                         </ul>
@@ -106,18 +109,14 @@
                                     href="/Reports/GeneralLedger">
                                     <span>Reconciliation</span></a>
                             </li>
-                            <li class="nav-item">
-                                <a class="collapse-item {{ (request()->is('Reports/Booking')) ? 'active' : '' }}"
-                                    href="/Reports/Booking">
-                                    <span>Booking</span></a>
-                            </li>
-                            <li class="nav-item d-none">
-                                <a class="collapse-item {{ (request()->is('terminatedcontract')) ? 'active' : '' }}" href="#">
-                                    <span>Terminated Contracts</span></a>
-                            </li>
+
                         </ul>
                     </div>
                 </div>
+            </li>
+            <li class="nav-item  {{ (request()->is('ContractHistory')) ? 'active' : '' }}">
+                <a class="nav-link" href="/ContractHistory">
+                    <i class="fas fa-fw fa-calendar"></i><span> Contract History</span></a>
             </li>
         </ul>
 
@@ -136,19 +135,19 @@
         </style>
         <li class="nav-item {{ (request()->is('dashboard')) ? 'active' : '' }}">
             <a class="nav-link" href="/dashboard">
-                <span>Dashboard</span></a>
+                <i class="fas fa-fw fa-home"></i><span>Dashboard</span></a>
         </li>
         <li
             class="nav-item {{ (request()->is('managingboard')) ? 'active' : '' }} {{ (request()->is('mbaccess')) ? 'active' : '' }}">
             <a class="nav-link" href="/managingboard">
-                <span>HCPN</span></a>
+                <i class="fas fa-fw fa-users"></i><span>HCPN</span></a>
         </li>
 
 
         <li class="nav-item  {{ (request()->is('apexfacilities')) ? 'active' : '' }}">
             <a class="nav-link" href="/apexfacilities">
 
-                <i class="fas fa-fw fa-hospital"></i><span>Apex Facilities</span></a>
+                <i class="fas fa-fw fa-hospital"></i><span> Apex Facilities</span></a>
         </li>
         <li class="nav-item" id="accordion">
             <a class="nav-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true"
@@ -162,14 +161,16 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('hcpncontract')) ? 'active' : '' }} {{ (request()->is('hcpnassets')) ? 'active' : '' }} {{ (request()->is('facilitycontracts')) ? 'active' : '' }} {{ (request()->is('facilityassets')) ? 'active' : '' }}"
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('hcpncontract')) ? 'active' : '' }} {{ (request()->is('hcpnassets')) ? 'active' : '' }} {{ (request()->is('facilitycontracts')) ? 'active' : '' }} {{ (request()->is('facilityassets')) ? 'active' : '' }}"
                                 href="/hcpncontract">
-                                <span>HCPN Contracts</span></a>
+                                <i class="fas fa-fw fa-handshake"></i><span> HCPN Contracts</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('apexcontract')) ? 'active' : '' }} {{ (request()->is('apexassets')) ? 'active' : '' }}"
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('apexcontract')) ? 'active' : '' }} {{ (request()->is('apexassets')) ? 'active' : '' }}"
                                 href="/apexcontract">
-                                <span>APEX Facility Contracts</span></a>
+                                <i class="fas fa-fw fa-handshake"></i><span> APEX Facility Contracts</span></a>
                         </li>
 
                     </ul>
@@ -187,27 +188,32 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('VIEWBUDGET')) ? 'active' : '' }}" href="/VIEWBUDGET">
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('VIEWBUDGET')) ? 'active' : '' }}" href="/VIEWBUDGET">
 
-                                <span>GB Computation</span></a>
+                                <i class="fas fa-fw fa-calculator"></i><span> GB Computation</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('Reports/SubsidiaryLedger')) ? 'active' : '' }}"
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('Reports/SubsidiaryLedger')) ? 'active' : '' }}"
                                 href="/Reports/SubsidiaryLedger">
-                                <span>Ledger</span></a>
+                                <i class="fas fa-fw fa-print"></i><span> Ledger</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('Reports/GeneralLedger')) ? 'active' : '' }}"
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('Reports/GeneralLedger')) ? 'active' : '' }}"
                                 href="/Reports/GeneralLedger">
-                                <span>Reconciliation</span></a>
+                                <i class="fas fa-fw fa-map"></i><span> Reconciliation</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('Reports/Booking')) ? 'active' : '' }}"
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('Reports/Booking')) ? 'active' : '' }}"
                                 href="/Reports/Booking">
-                                <span>Booking</span></a>
+                                <i class="fas fa-fw fa-lock"></i><span> Booking</span></a>
                         </li>
                         <li class="nav-item d-none">
-                            <a class="collapse-item {{ (request()->is('terminatedcontract')) ? 'active' : '' }}" href="#">
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('terminatedcontract')) ? 'active' : '' }}" href="#">
                                 <span>Terminated Contracts</span></a>
                         </li>
                     </ul>
@@ -218,6 +224,11 @@
             <a class="nav-link" href="/CONTRACTPERIOD">
                 <i class="fas fa-fw fa-calendar-alt"></i>
                 <span>Contract Period</span></a>
+        </li>
+        <li class="nav-item {{ (request()->is('userinfo')) ? 'active' : '' }}">
+            <a class="nav-link " href="/userinfo">
+                <i class="fas fa-fw fa-users"></i>
+                <span>User Details</span></a>
         </li>
         </ul>
 
@@ -251,22 +262,26 @@
                 <div class="bg-white py-2 collapse-inner rounded">
                     <ul class="navbar-nav">
                         <li class="nav-item">
-                            <a class="collapse-item  {{ (request()->is('VIEWBUDGET')) ? 'active' : '' }}" href="/VIEWBUDGET">
+                            <a style="font-size: 11px;"
+                                class="collapse-item  {{ (request()->is('VIEWBUDGET')) ? 'active' : '' }}" href="/VIEWBUDGET">
                                 <span>GB Computation</span></a>
                         </li>
 
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('Reports/SubsidiaryLedger')) ? 'active' : '' }}"
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('Reports/SubsidiaryLedger')) ? 'active' : '' }}"
                                 href="/Reports/SubsidiaryLedger">
                                 <span>Ledger</span></a>
                         </li>
                         <li class="nav-item">
-                            <a class="collapse-item {{ (request()->is('Reports/GeneralLedger')) ? 'active' : '' }}"
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('Reports/GeneralLedger')) ? 'active' : '' }}"
                                 href="/Reports/GeneralLedger">
                                 <span>Reconciliation</span></a>
                         </li>
                         <li class="nav-item d-none">
-                            <a class="collapse-item {{ (request()->is('terminatedcontract')) ? 'active' : '' }}" href="#">
+                            <a style="font-size: 11px;"
+                                class="collapse-item {{ (request()->is('terminatedcontract')) ? 'active' : '' }}" href="#">
                                 <span>Terminated Contracts</span></a>
                         </li>
                     </ul>

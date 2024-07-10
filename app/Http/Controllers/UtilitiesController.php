@@ -13,55 +13,104 @@ class UtilitiesController extends Controller
 {
     public function CONTRACTPERIOD()
     {
-        $ConDate = env('API_GET_CONTRACT_DATE');
-        $GetConDate = Http::withoutVerifying()->get($ConDate . '/ACTIVE');
-        $decodedapi = $GetConDate->json();
-        $ContractDate = json_decode($decodedapi['result'], true);
-        return view('Utilities/contract-period', compact('ContractDate'));
+        $token = session()->get('token');
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+                $ConDate = env('API_GET_CONTRACT_DATE');
+                $GetConDate = http::withHeaders(['token' => $token])->get($ConDate . '/ACTIVE');
+                $decodedapi = $GetConDate->json();
+                $ContractDate = json_decode($decodedapi['result'], true);
+                return view('Utilities/contract-period', compact('ContractDate'));
+            } else {
+                redirect('login');
+            }
+        }
     }
 
 
     public function INSERTCONTRACTPERIOD(Request $request)
     {
-        $InsertConDate = env('API_INSERT_CONTRACT_PERIOD');
-        $now = new DateTime();
-        $sessionuserid = session()->get('userid');
-        $datefrom = $request->input('datefrom');
-        $datef = date_create($datefrom);
-        $datefromformat = date_format($datef, "m-d-Y");
-        $dateto = $request->input('dateto');
-        $datet = date_create($dateto);
-        $datetoformat = date_format($datet, "m-d-Y");
-        $response = Http::post($InsertConDate, [
-            'datefrom' => $datefromformat,
-            'dateto' => $datetoformat,
-            'createdby' => $sessionuserid,
-            'datecreated' => $now->format('m-d-Y'),
-        ]);
+        $token = session()->get('token');
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
 
-        if ($response->successful()) {
-            return back();
+                $InsertConDate = env('API_INSERT_CONTRACT_PERIOD');
+                $now = new DateTime();
+                $sessionuserid = session()->get('userid');
+                $datefrom = $request->input('datefrom');
+                $datef = date_create($datefrom);
+                $datefromformat = date_format($datef, "m-d-Y");
+                $dateto = $request->input('dateto');
+                $datet = date_create($dateto);
+                $datetoformat = date_format($datet, "m-d-Y");
+                $response = http::withHeaders(['token' => $token])->post($InsertConDate, [
+                    'datefrom' => $datefromformat,
+                    'dateto' => $datetoformat,
+                    'createdby' => $sessionuserid,
+                    'datecreated' => $now->format('m-d-Y'),
+                ]);
+
+                if ($response->successful()) {
+                    return back();
+                }
+            } else {
+
+                redirect('login');
+            }
+
+
         }
     }
 
     public function ActivityLogs()
     {
-        $ActLogs = env('API_GET_ACTIVITY_LOGS');
-        $GetActLogs = Http::withoutVerifying()->get($ActLogs);
-        $decodedapi = $GetActLogs->json();
-        $ActivityLogs = json_decode($decodedapi['result'], true);
-        return view('Utilities/activity-logs', compact('ActivityLogs'));
+        $token = session()->get('token');
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
+
+                $ActLogs = env('API_GET_ACTIVITY_LOGS');
+                $GetActLogs = http::withHeaders(['token' => $token])->get($ActLogs);
+                $decodedapi = $GetActLogs->json();
+                $ActivityLogs = json_decode($decodedapi['result'], true);
+                return view('Utilities/activity-logs', compact('ActivityLogs'));
+            } else {
+
+                redirect('login');
+            }
+        }
     }
 
     public function ENDCONTRACTPERIOD(request $request)
     {
-        $condateid = $request->input('ec_condateid');
-        $ApiEndConDate = env('API_END_CONTRACT_DATE');
-        $EndConDate = Http::withoutVerifying()->get($ApiEndConDate . '/' . $condateid);
-        $decodedapi = $EndConDate->json();
-        $EndContractDate = json_decode($decodedapi['result'], true);
-        return back();
-    }
+        $token = session()->get('token');
+        $TokenValidate = env('API_VALIDATE_TOKEN');
+        $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        if ($validate->status() < 400) {
+            $decodevalidate = $validate->json();
+            if ($validate['success'] == 'true') {
 
+                $condateid = $request->input('ec_condateid');
+                $ApiEndConDate = env('API_END_CONTRACT_DATE');
+                $EndConDate = http::withHeaders(['token' => $token])->get($ApiEndConDate . '/' . $condateid);
+                $decodedapi = $EndConDate->json();
+                $EndContractDate = json_decode($decodedapi['result'], true);
+                return back();
+            }
+        } else {
+
+            redirect('login');
+        }
+
+
+    }
 
 }

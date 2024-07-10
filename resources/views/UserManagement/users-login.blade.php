@@ -10,9 +10,9 @@
     <!-- USERS TABLE -->
     <div class="card shadow mb-4">
         <div class="card-body">
-            <div class="table-responsive-sm"
-                style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                <div style="position:absolute; top:13px; right:320px">
+            <div class="table-responsive-sm" style="overflow-y:auto; max-height: 520px;margin-bottom: 10px;"
+                id="content">
+                <div class="d-flex flex-row-reverse">
 
                     <input type="text" id="searchInput">
                 </div>
@@ -37,40 +37,40 @@
 
                     <tbody>
                         @foreach($userList as $user)
-                            <tr>
+                        <tr>
 
-                                <td class="text-center">{{ $user['username'] }}</td>
-                                <td class="text-center">{{ $user['userpassword'] }}</td>
-                                <td class="text-center">{{ $user['leveid'] }}</td>
-                                <td class="text-center">{{ $user['createdby'] }}</td>
-                                <td class="text-center">{{ $user['datecreated'] }}</td>
-                                <td class="text-center">
-                                    @if($user['status'] == 3)
-                                        <span>Inactive</span>
-                                    @elseif($user['status'] == 2)
-                                        <span>Active</span>
-                                    @endif
-                                </td>
+                            <td class="text-center">{{ $user['username'] }}</td>
+                            <td class="text-center">{{ $user['userpassword'] }}</td>
+                            <td class="text-center">{{ $user['leveid'] }}</td>
+                            <td class="text-center">{{ $user['createdby'] }}</td>
+                            <td class="text-center">{{ $user['datecreated'] }}</td>
+                            <td class="text-center">
+                                @if($user['status'] == 3)
+                                <span>Inactive</span>
+                                @elseif($user['status'] == 2)
+                                <span>Active</span>
+                                @endif
+                            </td>
 
-                                <td class="text-center">
-                                    <a class="btn btn-sm btn-link text-darker-primary {{ $user['leveid'] === 'HCF' ? 'disabled' : '' }}{{ $user['leveid'] === 'PHIC' ? 'disabled' : '' }} {{ $user['leveid'] === 'ADMIN' ? 'disabled' : '' }}"
-                                        onclick="DisplayUserDetails(
-                                                                                                                '<?=$user['userid']?>',
-                                                                                                                '<?=$user['username']?>',
-                                                                                                                '<?=$user['leveid']?>'
-                                                                                            )"><i class="fas fa-fw fa-eye"
-                                            data-toggle="tooltip" title="View"></i></a>
-                                    <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
-                                        data-target="#editLogin" onclick="EditUserLogin(
-                                                                                                                '<?=$user['userid']?>',
-                                                                                                                '<?=$user['username']?>',
-                                                                                                                '<?=$user['status']?>'
-                                                                                            )"><i class="fas fa-fw fa-edit"
-                                            data-toggle="tooltip" title="Edit"></i></a>
-                                </td>
+                            <td class="text-center">
+                                <a class="btn btn-sm btn-link text-darker-primary {{ $user['leveid'] === 'HCF' ? 'disabled' : '' }}{{ $user['leveid'] === 'PHIC' ? 'disabled' : '' }} {{ $user['leveid'] === 'ADMIN' ? 'disabled' : '' }}"
+                                    onclick="DisplayUserDetails(
+                                                                                                                        '<?=$user['userid']?>',
+                                                                                                                        '<?=$user['username']?>',
+                                                                                                                        '<?=$user['leveid']?>'
+                                                                                                    )"><i
+                                        class="fas fa-fw fa-eye" data-toggle="tooltip" title="View"></i></a>
+                                <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
+                                    data-target="#editLogin" onclick="EditUserLogin(
+                                                                                                                        '<?=$user['userid']?>',
+                                                                                                                        '<?=$user['username']?>',
+                                                                                                                        '<?=$user['status']?>'
+                                                                                                    )"><i
+                                        class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
+                            </td>
 
 
-                            </tr>
+                        </tr>
                         @endforeach
                     </tbody>
                 </table>
@@ -85,8 +85,8 @@
         <div class="modal-dialog modal-dialog-centered modal-md">
             <div class="modal-content">
 
-                <div class="modal-header">
-                    <h5 class="modal-title" id="titlemodal">Modify Login Credentials</h5>
+                <div class="modal-header bg-light">
+                    <h6 class="modal-title" id="titlemodal">Modify Login Credentials</h6>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close" onclick="reset()">
                         <span aria-hidden="true">&times;</span>
                     </button>

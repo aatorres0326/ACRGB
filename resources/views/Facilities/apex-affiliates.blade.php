@@ -4,76 +4,76 @@
 @section('contents')
 
 <div class="container-fluid">
-    <div class="card shadow mb-4">
-        <div class="card-body">
 
 
 
 
 
+    <div class="card" style="border:none; background-color: transparent;">
+        <div class="card-header border border-secondary bg-light p-1">
+            <h6 class="text-white ml-2 font-weight-bold">{{ $SelectedHCFName }}</h6>
 
-            <h6 class="text-primary ml-2 font-weight-bold">{{ $SelectedHCFName }}</h6>
+        </div>
 
 
 
-
-
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <div style="position:absolute; top:10px; right:320px">
-                        <a class="btn btn-outline-primary btn-sm {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}"
-                            data-toggle="modal" data-target="#add-access" style="text-decoration:
+        <div class="card shadow mb-4 border border-secondary">
+            <div class="card-body">
+                <div class="d-flex flex-row-reverse">
+                    <input type="text" id="searchInput">&nbsp;
+                    <a class="btn btn-outline-primary btn-sm {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}"
+                        data-toggle="modal" data-target="#add-access" style="text-decoration:
                         none;"><i class="fas fa-plus fa-sm"></i> Add Affiliates
-                        </a> <a
-                            class="btn btn-outline-danger btn-sm {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}"
-                            data-toggle="modal" data-target="#remove-access" style="text-decoration:
+                    </a> &nbsp;<a
+                        class="btn btn-outline-danger btn-sm {{ session()->get('leveid') === 'PHIC' ? 'd-none' : '' }}"
+                        data-toggle="modal" data-target="#remove-access" style="text-decoration:
                         none;"><i class="fas fa-trash fa-sm "></i> Remove Affiliates
-                        </a>
-                        <input type="text" id="searchInput">&nbsp;
-                    </div>
-                    <div class="table-responsive-sm"
-                        style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;"
-                        id="content">
-                        <table class="table table-sm table-hover table-bordered table-light" id="tablemanager"
-                            width="100%" cellspacing="0">
+                    </a>
+
+                </div>
+                <div class="table-responsive-sm"
+                    style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px; font-size; 10px;"
+                    id="content">
+                    <table class="table table-sm table-hover table-bordered table-light" id="tablemanager" width="100%"
+                        cellspacing="0">
 
 
-                            <thead>
-                                <tr>
-                                    <th class="text-center">HCPN</th>
-                                    <th class="text-center">Accreditation</th>
-                                    <th class="text-center">Address</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($ManagingBoard as $mb)
-                                @php
-                                $roleIndexData = $RoleIndex->where('accessid', $mb['controlnumber'])->where(
-                                'userid',
-                                $SelectedHCFCode
-                                )->first();
-                                @endphp
-                                @if($roleIndexData)
-                                <tr>
-                                    <td class="text-center">{{ $mb['mbname'] }}</td>
+                        <thead>
+                            <tr>
+                                <th class="text-center">HCPN</th>
+                                <th class="text-center">Address</th>
+                                <th class="text-center">Registration Number</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($ManagingBoard as $mb)
+                            @php
+                            $roleIndexData = $RoleIndex->where('accessid', $mb['controlnumber'])->where(
+                            'userid',
+                            $SelectedHCFCode
+                            )->first();
+                            @endphp
+                            @if($roleIndexData)
+                            <tr>
+                                <td>{{ $mb['mbname'] }}</td>
 
-                                    <td class="text-center">{{ $mb['address'] }}</td>
-                                    <td class="text-center">{{ $mb['controlnumber'] }}</td>
+                                <td class="text-center">{{ $mb['address'] }}</td>
+                                <td class="text-center">{{ $mb['controlnumber'] }}</td>
 
-                                </tr>
-                                @endif
-                                @endforeach
-                            </tbody>
+                            </tr>
+                            @endif
+                            @endforeach
+                        </tbody>
 
 
-                        </table>
-                    </div>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
 </div>
-</div>
+
+
 
 
 

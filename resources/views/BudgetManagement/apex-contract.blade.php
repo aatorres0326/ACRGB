@@ -8,18 +8,19 @@
     <div class="container-fluid">
 
         <!-- CONTRACT TABLE -->
-        <div class="card shadow mb-4">
+        <div class="card shadow mb-4 border border-secondary">
             <div class="card-body">
-                <div class="table-responsive-sm"
-                    style="overflow-y:auto; max-height: 520px; margin-top:25px; margin-bottom: 10px;" id="content">
-                    <div style="position:absolute; top:13px; right:320px">
+                <div class="table-responsive-sm" style="overflow-y:auto; max-height: 420px; margin-bottom: 10px;"
+                    id="content">
+                    <div class="d-flex flex-row-reverse">
+                        <input type="text" id="searchInput">&nbsp;
                         @if (session()->get('leveid') == 'PRO')
                         <a class="btn btn-outline-primary btn-sm" title="Add New Contract"
                             href="/Contracts/NewAPEXContract">
                             <i class="fas fa-plus fa-sm text-info-40"></i> New Contract
-                        </a>&nbsp;
+                        </a>
                         @endif
-                        <input type="text" id="searchInput">
+
                     </div>
                     <div class="card-body border rounded mt-2">
                         <table class="table table-sm table-hover table-bordered display" id="tablemanager" width="100%"
@@ -129,8 +130,10 @@
                                                                         <td class="text-center">
                                                                             {{$contract['totalclaims']}}</td>
                                                                         @php
-                                                                        $createdby = json_decode($contract['createdby'],
-                                                                        true);
+                                                                        $createdby = json_decode(
+                                                                        $contract['createdby'],
+                                                                        true
+                                                                        );
                                                                         @endphp
                                                                         <td class="text-center">
                                                                             <button
@@ -175,7 +178,7 @@
                                                 </div>
                                                 <div class="col-sm-3 text-right">
                                                     <button class="btn btn-sm btn-outline-info" title="View Tranches"
-                                                        onclick="ViewTranches('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($hcf), ENT_QUOTES,'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>', '<?= $contract['percentage'] ?>' )">Tranches</button>
+                                                        onclick="ViewTranches('<?= $contract['conid'] ?>','<?= htmlspecialchars(json_encode($hcf), ENT_QUOTES,'UTF-8') ?>','<?= $contract['amount'] ?>', '<?= $contract['transcode'] ?>','<?= $contract['totalclaimspercentage'] ?>', '<?= $contract['totalclaimsamount'] ?>' )">Tranches</button>
                                                     @if (session()->get('leveid') == 'PRO')
                                                     <a class="btn btn-sm btn-outline-danger" data-toggle="modal"
                                                         title="Terminate Contract" data-target="#editcontractstatus"

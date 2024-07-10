@@ -3,154 +3,165 @@
 
 <div id="content">
     <div class="container-fluid">
-        <div class="card shadow mb-4">
-            <div class="card-body">
-                <center>
+        <div class="card-deck">
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header p-1 bg-light">
+                    <h6 class="text-white text-center font-weight-bold">
+                        <strong>{{ $SelectedHCPN }}</strong>
+                    </h6>
+                </div>
+
+                <div class="card-body p-1 text-center font-weight-bold">
+
+                    <p class="card-text">Contract Amount :&nbsp;<span
+                            class="text-primary">{{ number_format((double) $SelectedAmount, 2) }}</span></p>
+
+                </div>
+            </div>
+
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header p-1 bg-light">
+                    <h6 class="text-white text-center font-weight-bold">
+                        Released Tranche
+                    </h6>
+                </div>
+                <div class="card-body p-1 font-weight-bold text-center">
                     <strong>
-
-                        <h4 class="text-primary">
-
-                            <strong>{{ $SelectedHCPN }}</strong>
-
-                        </h4>
-                        <br>
+                        <p class="card-text">Total Amount : &nbsp;<span id="totalreleased" class="text-primary"></span>
+                        </p>
                     </strong>
-                </center>
-                <div class="row text-center align-items-end">
-
-                    <div class="col-md-10">
-                        <div class="row">
-                            <div class="col-md-4 mb-2">
-                                <strong>
-                                    <p class="card-text">CONTRACT AMOUNT : &nbsp;<span id="contractamount"
-                                            class="text-primary">{{ number_format((double) $SelectedAmount, 2) }}</span>
-                                    </p>
-                                </strong>
-                            </div>
-                            <div class="col-md-4 mb-2">
-                                <strong>
-                                    <p class="card-text">RELEASED AMOUNT : &nbsp;<span id="totalreleased"
-                                            class="text-primary"></span></p>
-                                </strong>
-                            </div>
-                            <div class="col-md-4 mb-2">
-
-                                <strong>
-                                    <p class="card-text">UTILIZED : &nbsp;<span
-                                            class="text-primary">{{ number_format((double) $SelectedClaimsAmount, 2) }}</span>
-                                        -
-                                        {{  number_format((double) $SelectedPercent, 2)}}%
-                                    </p>
-                                </strong>
-                            </div>
-                        </div>
-                    </div>
-                    @if (session()->get('leveid') == 'PRO')
-                    <div class="col-md-2 mb-2">
-                        <div class="mt-auto">
-
-                            @if ($Assets != null)
-
-                            @php
-                            $releaseTranch = false;
-                            foreach ($Assets as $assets) {
-                            $conid = json_decode($assets['conid'], true);
-                            $tranch = json_decode($assets['tranchid'], true);
-                            if (str_contains($tranch['tranchtype'], '3RD')) {
-                            $releaseTranch = true;
-                            break;
-                            }
-                            }
-                            @endphp
-
-                            @if ($releaseTranch)
-
-                            <a class="btn btn-sm btn-outline-primary disabled" data-toggle="modal"
-                                data-target="#release-tranch" style="float:right;">Release Tranche</a>
-                            @else
-
-                            <button class="btn-sm btn-outline-primary" data-toggle="modal" data-target="#release-tranch"
-                                style="float:right;">Release Tranche</button>
-                            @endif
-
-                            @else
-
-                            <button class="btn-sm btn-outline-primary" data-toggle="modal" data-target="#release-tranch"
-                                style="float:right;">Release Tranche</button>
-                            @endif
-                        </div>
-                    </div>
-                    @endif
                 </div>
-
-                <div class="row d-flex">
-                    <div class="col-md-12 col-12">
-                        <div class="table-responsive-sm" style="height: 375px;">
-                            <div class="card shadow mb-2">
-                                <div class="card-body">
-
-                                    <table class="table table-sm table-hover table-bordered" id="assetsTable"
-                                        width="100%" cellspacing="0">
-                                        <div class="row" style="margin-bottom: 5px;">
-                                            <div class="col"></div>
-
-                                        </div>
-                                        <thead>
-                                            <tr>
-
-                                                <th class="text-center disableSort">Reference Number</th>
-                                                <th class="text-center disableSort">Tranche</th>
-                                                <th class="text-center disableSort">Receipt Number</th>
-
-                                                <th class="text-center disableSort">Released Amount</th>
-                                                <th class="text-center disableSort">Date Released</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
+            </div>
+            <div class="card shadow mb-2 border border-secondary">
+                <div class="card-header p-1 bg-light">
+                    <h6 class="text-white text-center font-weight-bold">
+                        Utilization
+                    </h6>
+                </div>
+                <div class="card-body p-1 text-center font-weight-bold">
+                    <strong>
+                        <p class="card-text">Claims Amount : &nbsp;<span
+                                class="text-primary">{{ number_format((double) $SelectedClaimsAmount, 2) }}</span>
+                        </p>
+                        <p class="card-text">Percentage : &nbsp;<span
+                                class="text-primary">{{  number_format((double) $SelectedPercent, 2)}}%</span></p>
 
 
-                                            @if ($Assets && count($Assets) > 0)
-
-                                            @foreach ($Assets as $assets)
-                                            @php
-                                            $conid = json_decode($assets['conid'], true);
-                                            $tranch = json_decode($assets['tranchid'], true);
-                                            @endphp
-
-                                            <tr>
-
-                                                <td class="text-center">{{ $conid['transcode']}}</td>
-                                                <td class="text-center">{{ $tranch['tranchtype']}}</td>
-                                                <td class="text-center">{{ $assets['receipt']}}</td>
+                    </strong>
+                </div>
+            </div>
 
 
 
-                                                <td class="text-center">
-                                                    {{ number_format((double) $assets['amount'], 2)}}
-                                                </td>
-                                                <td class="text-center">
-                                                    {{ DateTime::createFromFormat('m-d-Y', $assets['datereleased'])->format('F j, Y') }}
-                                                </td>
 
-                                            </tr>
+        </div>
 
-                                            @endforeach
+        <div class="row d-flex">
+            <div class="col-md-12 col-12">
+                <div class="table-responsive-sm" style="height: 375px;">
+                    <div class="card shadow mb-2">
 
-                                            @else
-
-                                            <tr>
-                                                <td colspan="8">No data found</td>
-                                            </tr>
-                                            @endif
+                        <div class="card-body">
+                            @if (session()->get('leveid') == 'PRO')
+                            <div class="d-flex flex-row-reverse">
 
 
-                                        </tbody>
-                                    </table>
+                                @if ($Assets != null)
+
+                                @php
+                                $releaseTranch = false;
+                                foreach ($Assets as $assets) {
+                                $conid = json_decode($assets['conid'], true);
+                                $tranch = json_decode($assets['tranchid'], true);
+                                if (str_contains($tranch['tranchtype'], '3RD')) {
+                                $releaseTranch = true;
+                                break;
+                                }
+                                }
+                                @endphp
+
+                                @if ($releaseTranch)
+
+                                <a class="btn btn-sm btn-outline-primary disabled" data-toggle="modal"
+                                    data-target="#release-tranch" style="float:right;">Release Tranche</a>
+                                @else
+
+                                <button class="btn-sm btn-outline-primary btn" data-toggle="modal"
+                                    data-target="#release-tranch" style="float:right;">Release
+                                    Tranche</button>
+                                @endif
+
+                                @else
+
+                                <button class="btn-sm btn-outline-primary" data-toggle="modal"
+                                    data-target="#release-tranch" style="float:right;">Release
+                                    Tranche</button>
+                                @endif
+
+                            </div>
+                            @endif
+
+                            <table class="table table-sm table-hover table-bordered" id="assetsTable" width="100%"
+                                cellspacing="0">
+                                <div class="row" style="margin-bottom: 5px;">
+                                    <div class="col"></div>
+
                                 </div>
-                            </div>
+                                <thead>
+                                    <tr>
+
+                                        <th class="text-center disableSort">Reference Number</th>
+                                        <th class="text-center disableSort">Tranche</th>
+                                        <th class="text-center disableSort">Receipt Number</th>
+
+                                        <th class="text-center disableSort">Released Amount</th>
+                                        <th class="text-center disableSort">Date Released</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+
+
+                                    @if ($Assets && count($Assets) > 0)
+
+                                    @foreach ($Assets as $assets)
+                                    @php
+                                    $conid = json_decode($assets['conid'], true);
+                                    $tranch = json_decode($assets['tranchid'], true);
+                                    @endphp
+
+                                    <tr>
+
+                                        <td class="text-center">{{ $conid['transcode']}}</td>
+                                        <td class="text-center">{{ $tranch['tranchtype']}}</td>
+                                        <td class="text-center">{{ $assets['receipt']}}</td>
+
+
+
+                                        <td class="text-center">
+                                            {{ number_format((double) $assets['amount'], 2)}}
+                                        </td>
+                                        <td class="text-center">
+                                            {{ DateTime::createFromFormat('m-d-Y', $assets['datereleased'])->format('F j, Y') }}
+                                        </td>
+
+                                    </tr>
+
+                                    @endforeach
+
+                                    @else
+
+                                    <tr>
+                                        <td colspan="8">No data found</td>
+                                    </tr>
+                                    @endif
+
+
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
+
 
                 <!-- ADD ASSETS MODAL -->
                 <div class="modal" id="release-tranch">

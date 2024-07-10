@@ -14,13 +14,13 @@
             <div class="card shadow mb-4">
                 <div class="card-body">
 
-                    <div class="table-responsive-sm"
-                        style="overflow-y:auto; margin-top:25px; margin-bottom: 10px; font-size: 14px;" id="content">
-                        <div style="position:absolute; top:13px; right:320px">
+                    <div class="table-responsive-sm" style="overflow-y:auto; margin-bottom: 10px; font-size: 14px;"
+                        id="content">
+                        <div class="d-flex flex-row-reverse">
 
                             <input type="text" id="searchInput">
                         </div>
-                        <table class="table table-sm table-hover table-bordered table-light mt-2" id="tablemanager"
+                        <table class="table table-sm table-hover table-bordered table-striped mt-2" id="tablemanager"
                             width="100%" cellspacing="0">
                             <!-- <div style="position:absolute; top:13px; right:20px;"
                                 class="{{ session()->get('leveid') === 'ADMIN' ? 'd-none' : '' }}">
@@ -38,7 +38,8 @@
                                 <tr>
                                     <th class="d-none"></th>
                                     <th>Health Care Provider Networks</th>
-                                    <th class="text-center">Accreditation</th>
+                                    <th class="text-center">Address</th>
+                                    <th class="text-center">Registration Number</th>
                                     <th
                                         class="text-center {{ session()->get('leveid') === 'ADMIN' ? 'd-none' : ''}} {{ session()->get('leveid') === 'PHIC' ? 'd-none' : ''}}">
                                         Action</th>
@@ -53,6 +54,7 @@
                                     @foreach($HCFUnderPro as $mb)
                                         <tr>
                                             <td>{{ $mb['mbname'] }}</td>
+                                            <td class="text-center">{{ $mb['address'] }}</td>
                                             <td class="text-center">{{ $mb['controlnumber'] }}</td>
                                         </tr>
                                     @endforeach

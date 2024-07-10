@@ -6,19 +6,20 @@
 <div id="content">
     <div class="container-fluid">
         @if (session()->get('leveid') === 'PRO')
-        <div class="card shadow mb-2">
-            <div class="card-body" style="padding:3px">
-                <div class="row">
-                    <div class="col-md-4 mt-1 text-center text-primary">
-                        <h4><strong>{{ $MBName }}</strong></h4>
+        <div class="card shadow mb-2 border border-secondary">
+            <div class="card-header bg-light text-white" style="padding:3px">
+                <div class="row  align-middle">
+
+                    <div class="col-md-4 mt-1 text-center">
+                        <span class="h5 font-weight-bold">{{ $MBName }}</span>
                     </div>
-                    <div class="col-md-4 mt-2 text-center">
-                        <h6>Reference Number : {{ $TransCode }}</h6>
+                    <div class="col-md-4 mt-1 text-center" style="font-size: 13px;">
+                        <span class="font-weight-bold">Reference Number : {{ $TransCode }}</span>
                     </div>
-                    <div class="col-md-4 mt-2 text-center">
-                        <h6>Contract Amount :<strong>&#8369;</strong>
+                    <div class="col-md-4 mt-1" style="font-size: 13px;">
+                        <span class="font-weight-bold">Contract Amount :&#8369;
                             &nbsp;{{ number_format((double) $ContractAmount, 2) }}
-                        </h6>
+                        </span>
                     </div>
 
                 </div>
@@ -31,18 +32,18 @@
             $selected = json_decode($HCPNContract['hcfid'], true);
             @endphp
             <div class="card shadow mb-2 border border-secondary">
-                <div class="card-header bg-success">
+                <div class="card-header bg-light p-1">
                     <h6 class="font-weight-bold text-white text-center">{{$selected['mbname']}}</h6>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body p-1 text-center">
 
-                    <p> <span>CONTRACT AMOUNT :&nbsp;</span><span
+                    <p> <span>Contract Amount :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $HCPNContract['amount'], 2) }}</span></p>
                     @php
                     $OwnContractDate = json_decode($HCPNContract['contractdate'], true);
                     @endphp
 
-                    <p> <span>DATE COVERED :&nbsp;</span><span
+                    <p> <span>Date Covered :&nbsp;</span><span
                             class="text-primary">{{ DateTime::createFromFormat('m-d-Y', $OwnContractDate['datefrom'])->format('M j, Y') }}
                             to
                             {{ DateTime::createFromFormat('m-d-Y', $OwnContractDate['dateto'])->format('M j, Y') }}</span>
@@ -52,16 +53,16 @@
 
 
             <div class="card shadow mb-2 border border-secondary">
-                <div class="card-header bg-success">
-                    <h6 class="font-weight-bold text-white text-center">RELEASED TRANCHES</h6>
+                <div class="card-header bg-light p-1">
+                    <h6 class="font-weight-bold text-white text-center">Released Tranches</h6>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body p-1 text-center">
 
-                    <p><span>AMOUNT
+                    <p><span>Total Amount
                             :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $HCPNContract['totaltrancheamount'], 2) }}</span>
                     </p>
-                    <p><span>PERCENTAGE
+                    <p><span>Percentage
                             :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $HCPNContract['percentage'], 2) }}%</span>
                     </p>
@@ -70,16 +71,16 @@
 
 
             <div class="card shadow mb-2 border border-secondary">
-                <div class="card-header bg-success">
-                    <h6 class="font-weight-bold text-white text-center">UTILIZATION</h6>
+                <div class="card-header bg-light p-1">
+                    <h6 class="font-weight-bold text-white text-center">Utilization</h6>
                 </div>
-                <div class="card-body text-center">
+                <div class="card-body p-1 text-center">
 
-                    <p> <span>AMOUNT
+                    <p> <span>Claims Amount
                             :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $HCPNContract['totalclaimsamount'], 2) }}</span>
                     </p>
-                    <p> <span>PERCENTAGE
+                    <p> <span>Percentage
                             :&nbsp;</span><span
                             class="text-primary">{{ number_format((double) $HCPNContract['totalclaimspercentage'], 2) }}%</span>
                     </p>
