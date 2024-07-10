@@ -38,16 +38,8 @@ Route::middleware(['auth'])->group(function () {
 
 
 Route::middleware('Admin')->group(function () {
-    Route::get('UploadUsers', [UsersManageController::class, 'UploadUsers'])->name('UploadUsers');
-    Route::get('userlogins', [UsersManageController::class, 'GetUsers'])->name('userlogins');
-    Route::get('useraccess', [UsersManageController::class, 'GetAccess'])->name('userAccess');
 
-
-    Route::post('/add-user-login', [UsersManageController::class, 'addUserLogin'])->name('addUserLogin');
-    Route::put('/edit-user-login', [UsersManageController::class, 'editUserLogin'])->name('editUserLogin');
-    Route::put('UPDATEUSERINFO', [UsersManageController::class, 'UPDATEUSERINFO'])->name('UPDATEUSERINFO');
     Route::put('/update-profile-login', [ProfileController::class, 'UpdateProfileLogin'])->name('UpdateProfileLogin');
-    Route::get('useraccess', [UsersManageController::class, 'GetAccess'])->name('userAccess');
     Route::post('INSERTROLEINDEX', [UsersManageController::class, 'INSERTROLEINDEX'])->name('INSERTROLEINDEX');
     Route::get('ActivityLogs', [UtilitiesController::class, 'ActivityLogs'])->name('ActivityLogs');
     Route::post('UPLOADUSERSJSON', [UsersManageController::class, 'UPLOADUSERSJSON'])->name('UPLOADUSERSJSON');
@@ -92,6 +84,12 @@ Route::middleware('Pro')->group(function () {
     Route::get('apexfacilities', [FacilityController::class, 'GetAPEXFacilities']);
     Route::get('userinfo', [UsersManageController::class, 'GetUsersInfo'])->name('userinfo');
     Route::post('/add-user-info', [UsersManageController::class, 'addUserInfo'])->name('addUserInfo');
+    Route::get('UploadUsers', [UsersManageController::class, 'UploadUsers'])->name('UploadUsers');
+    Route::get('userlogins', [UsersManageController::class, 'GetUsers'])->name('userlogins');
+    Route::get('useraccess', [UsersManageController::class, 'GetAccess'])->name('userAccess');
+    Route::post('/add-user-login', [UsersManageController::class, 'addUserLogin'])->name('addUserLogin');
+    Route::put('/edit-user-login', [UsersManageController::class, 'editUserLogin'])->name('editUserLogin');
+    Route::put('UPDATEUSERINFO', [UsersManageController::class, 'UPDATEUSERINFO'])->name('UPDATEUSERINFO');
 
 
 });

@@ -48,7 +48,7 @@ class ReportsController extends Controller
                     $GetLedger = env('API_GET_LEDGER_PER_CONTRACT');
                     if ($selectType == "HCPN") {
                         $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/HCPN/ACTIVE');
-                    } else if ($selectType == "APEX") {
+                    } else {
                         $gethcpncontract = Http::withHeaders(['token' => $token])->get($GetLedger . '/' . $ConNumber . '/' . $SelectedConID . '/FACILITY/ACTIVE');
                     }
                     $decodedResponse = $gethcpncontract->json();
@@ -93,10 +93,7 @@ class ReportsController extends Controller
 
                     } else {
 
-                        $GetHCPN = env('API_GET_HCPN');
-                        $apiMB = Http::withoutVerifying()->get($GetHCPN . "/ACTIVE");
-                        $decodedMB = $apiMB->json();
-                        $HCPN = json_decode($decodedMB['result'], true);
+
 
                         $GetAllFacility = env('API_GET_ALL_FACILITIES');
                         $ApiHCFUnderPro = Http::withHeaders(['token' => $token])->get($GetAllFacility . "/HCPN/" . $SessionUserID);
@@ -105,7 +102,7 @@ class ReportsController extends Controller
 
 
 
-                        return view('Reports/subsidiary-ledger', compact('HCPN', 'Facilities', 'Ledger', 'SelectedHCFHCPN', 'Contract'));
+                        return view('Reports/subsidiary-ledger', compact('Facilities', 'Ledger', 'SelectedHCFHCPN', 'Contract'));
 
                     }
 

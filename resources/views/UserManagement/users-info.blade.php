@@ -88,7 +88,7 @@
                             <th class="text-center">Email</th>
                             <th class="text-center">Contact Number</th>
                             @if (session()->get('leveid') == 'ADMIN')
-                            <th class="text-center">Created By</th>
+                                <th class="text-center">Created By</th>
                             @endif
 
 
@@ -97,112 +97,110 @@
                         </tr>
                     </thead>
                     @if (session()->get('leveid') == 'ADMIN')
-                    <tbody>
-                        @foreach($userInfoList as $user)
-                        <tr>
-                            <td>{{ $user['firstname'] . " " . $user['middlename'] . " " . $user['lastname']}}</td>
+                                    <tbody>
+                                        @foreach($userInfoList as $user)
+                                                            <tr>
+                                                                <td>{{ $user['firstname'] . " " . $user['middlename'] . " " . $user['lastname']}}</td>
 
-                            @php
-                            $login = "No Login Credentials";
-                            $level = "Not Assigned Yet";
-                            foreach ($userlogin as $userlog) {
-                            if ($userlog['did'] === $user['did']) {
-                            $login = $userlog['username'];
-                            $level = $userlog['leveid'];
-                            break;
-                            }
-                            }
-                            @endphp
-                            @if (Str::contains($login, 'No Login Credentials'))
-                            <td class="text-center" style="color: #e9967a">{{ $login }}</td>
-                            <td class="text-center" style="color: #e9967a">{{ $level }}</td>
-                            @else
-                            <td class="text-center">{{ $login }}</td>
-                            <td class="text-center">{{ $level }}</td>
-                            @endif
-                            <td class="text-center">{{ $user['email'] }}</td>
-                            <td class="text-center">{{ $user['contact'] }}</td>
-
-
+                                                                @php
+                                                                    $login = "No Login Credentials";
+                                                                    $level = "Not Assigned Yet";
+                                                                    foreach ($userlogin as $userlog) {
+                                                                        if ($userlog['did'] === $user['did']) {
+                                                                            $login = $userlog['username'];
+                                                                            $level = $userlog['leveid'];
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                @endphp
+                                                                @if (Str::contains($login, 'No Login Credentials'))
+                                                                    <td class="text-center" style="color: #e9967a">{{ $login }}</td>
+                                                                    <td class="text-center" style="color: #e9967a">{{ $level }}</td>
+                                                                @else
+                                                                    <td class="text-center">{{ $login }}</td>
+                                                                    <td class="text-center">{{ $level }}</td>
+                                                                @endif
+                                                                <td class="text-center">{{ $user['email'] }}</td>
+                                                                <td class="text-center">{{ $user['contact'] }}</td>
 
 
 
-                            <td class="text-center">{{ $user['createdby'] }}</td>
 
 
-                            <td>
-                                <center>
-                                    @php
-                                    $login = "Credentials Not Found";
-                                    foreach ($userlogin as $userlog) {
-                                    if ($userlog['did'] === $user['did']) {
-                                    $login = $userlog['username'];
-                                    break;
-                                    }
-                                    }
-                                    @endphp
-                                    @if (Str::contains($login, 'Credentials Not Found'))
-                                    <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin"
-                                        onclick="addLogin(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['did']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['email']?>'
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        )"><i
-                                            class="fas fa-fw fa-plus" data-toggle="tooltip"
-                                            title="Create Login"></i></a>
-                                    @else
-                                    <a class="btn btn-sm btn-link disabled"><i class="fas fa-fw fa-plus"
-                                            data-toggle="tooltip" title="Create Login"></i></a>
-                                    @endif
+                                                                <td class="text-center">{{ $user['createdby'] }}</td>
 
 
-                                    <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
-                                        data-target="#editUser"
-                                        onclick="UpdateDetails('<?=$user['did']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        '<?=$user['firstname']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        '<?=$user['middlename']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        '<?=$user['lastname']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['email']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['contact']?>')"><i
-                                            class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
+                                                                <td>
+                                                                    <center>
+                                                                        @php
+                                                                            $login = "Credentials Not Found";
+                                                                            foreach ($userlogin as $userlog) {
+                                                                                if ($userlog['did'] === $user['did']) {
+                                                                                    $login = $userlog['username'];
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                        @endphp
+                                                                        @if (Str::contains($login, 'Credentials Not Found'))
+                                                                            <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin"
+                                                                                onclick="addLogin(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    '<?=$user['did']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    '<?=$user['email']?>'
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                )"><i
+                                                                                    class="fas fa-fw fa-plus" data-toggle="tooltip"
+                                                                                    title="Create Login"></i></a>
+                                                                        @else
+                                                                            <a class="btn btn-sm btn-link disabled"><i class="fas fa-fw fa-plus"
+                                                                                    data-toggle="tooltip" title="Create Login"></i></a>
+                                                                        @endif
 
-                                </center>
-                            </td>
 
-                        </tr>
-                        @endforeach
-                    </tbody>
+                                                                        <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
+                                                                            data-target="#editUser"
+                                                                            onclick="UpdateDetails('<?=$user['did']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['firstname']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['middlename']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['lastname']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['email']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['contact']?>')"><i
+                                                                                class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
+
+                                                                    </center>
+                                                                </td>
+
+                                                            </tr>
+                                        @endforeach
+                                    </tbody>
 
                     @elseif (session()->get('leveid') == 'PRO')
-                    <!-- ************************************************************************************** -->
-                    <tbody>
-                        @foreach($userInfoList as $user)
-                        @foreach($userlogin as $userlog)
-                        @if ($userlog['did'] === $user['did'])
-                        @if ($userlog['leveid'] == "HCPN")
+                                    <!-- ************************************************************************************** -->
+                                    <tbody>
+                                        @foreach($userInfoList as $user)
 
-                        <tr>
-                            <td>{{ $user['firstname'] . " " . $user['middlename'] . " " . $user['lastname']}}</td>
 
-                            @php
-                            $login = "No Login Credentials";
-                            $level = "Not Assigned Yet";
-                            foreach ($userlogin as $userlog) {
-                            if ($userlog['did'] === $user['did']) {
-                            $login = $userlog['username'];
-                            $level = $userlog['leveid'];
-                            break;
-                            }
-                            }
-                            @endphp
-                            @if (Str::contains($login, 'No Login Credentials'))
-                            <td class="text-center" style="color: #e9967a">{{ $login }}</td>
-                            <td class="text-center" style="color: #e9967a">{{ $level }}</td>
-                            @else
-                            <td class="text-center">{{ $login }}</td>
-                            <td class="text-center">{{ $level }}</td>
-                            @endif
-                            <td class="text-center">{{ $user['email'] }}</td>
-                            <td class="text-center">{{ $user['contact'] }}</td>
+                                                            <tr>
+                                                                <td>{{ $user['firstname'] . " " . $user['middlename'] . " " . $user['lastname']}}</td>
+
+                                                                @php
+                                                                    $login = "No Login Credentials";
+                                                                    $level = "Not Assigned Yet";
+                                                                    foreach ($userlogin as $userlog) {
+                                                                        if ($userlog['did'] === $user['did']) {
+                                                                            $login = $userlog['username'];
+                                                                            $level = $userlog['leveid'];
+                                                                            break;
+                                                                        }
+                                                                    }
+                                                                @endphp
+                                                                @if (Str::contains($login, 'No Login Credentials'))
+                                                                    <td class="text-center" style="color: #e9967a">{{ $login }}</td>
+                                                                    <td class="text-center" style="color: #e9967a">{{ $level }}</td>
+                                                                @else
+                                                                    <td class="text-center">{{ $login }}</td>
+                                                                    <td class="text-center">{{ $level }}</td>
+                                                                @endif
+                                                                <td class="text-center">{{ $user['email'] }}</td>
+                                                                <td class="text-center">{{ $user['contact'] }}</td>
 
 
 
@@ -211,50 +209,48 @@
 
 
 
-                            <td>
-                                <center>
-                                    @php
-                                    $login = "Credentials Not Found";
-                                    foreach ($userlogin as $userlog) {
-                                    if ($userlog['did'] === $user['did']) {
-                                    $login = $userlog['username'];
-                                    break;
-                                    }
-                                    }
-                                    @endphp
-                                    @if (Str::contains($login, 'Credentials Not Found'))
-                                    <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin"
-                                        onclick="addLogin(
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['did']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['email']?>'
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            )"><i
-                                            class="fas fa-fw fa-plus" data-toggle="tooltip"
-                                            title="Create Login"></i></a>
-                                    @else
-                                    <a class="btn btn-sm btn-link disabled"><i class="fas fa-fw fa-plus"
-                                            data-toggle="tooltip" title="Create Login"></i></a>
-                                    @endif
+                                                                <td>
+                                                                    <center>
+                                                                        @php
+                                                                            $login = "Credentials Not Found";
+                                                                            foreach ($userlogin as $userlog) {
+                                                                                if ($userlog['did'] === $user['did']) {
+                                                                                    $login = $userlog['username'];
+                                                                                    break;
+                                                                                }
+                                                                            }
+                                                                        @endphp
+                                                                        @if (Str::contains($login, 'Credentials Not Found'))
+                                                                            <a class="btn btn-sm btn-link" data-toggle="modal" data-target="#addlogin"
+                                                                                onclick="addLogin(
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        '<?=$user['did']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        '<?=$user['email']?>'
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    )"><i
+                                                                                    class="fas fa-fw fa-plus" data-toggle="tooltip"
+                                                                                    title="Create Login"></i></a>
+                                                                        @else
+                                                                            <a class="btn btn-sm btn-link disabled"><i class="fas fa-fw fa-plus"
+                                                                                    data-toggle="tooltip" title="Create Login"></i></a>
+                                                                        @endif
 
 
-                                    <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
-                                        data-target="#editUser"
-                                        onclick="UpdateDetails('<?=$user['did']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['firstname']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['middlename']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            '<?=$user['lastname']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['email']?>',
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['contact']?>')"><i
-                                            class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
+                                                                        <a class="btn btn-sm btn-link text-darker-warning" data-toggle="modal"
+                                                                            data-target="#editUser"
+                                                                            onclick="UpdateDetails('<?=$user['did']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['firstname']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['middlename']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                '<?=$user['lastname']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    '<?=$user['email']?>',
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    '<?=$user['contact']?>')"><i
+                                                                                class="fas fa-fw fa-edit" data-toggle="tooltip" title="Edit"></i></a>
 
-                                </center>
-                            </td>
+                                                                    </center>
+                                                                </td>
 
-                        </tr>
-                        @endif
-                        @endif
-                        @endforeach
-                        @endforeach
-                    </tbody>
+                                                            </tr>
+
+                                        @endforeach
+                                    </tbody>
                     @endif
 
                 </table>
@@ -292,8 +288,8 @@
                                             <label for="level">User Level</label>
                                             <select name="level" class="form-control">
                                                 @foreach($userLevel as $level)
-                                                <option value="{{ $level['levelid'] }}">{{ $level['levdetails'] }}
-                                                </option>
+                                                    <option value="{{ $level['levelid'] }}">{{ $level['levdetails'] }}
+                                                    </option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -366,14 +362,14 @@
                     </div>
                 </div>
                 <script>
-                function UpdateDetails(did, firstname, middlename, lastname, email, contact) {
-                    document.getElementsByName("edid")[0].setAttribute("value", did);
-                    document.getElementsByName("editfirstname")[0].setAttribute("value", firstname);
-                    document.getElementsByName("editmiddlename")[0].setAttribute("value", middlename);
-                    document.getElementsByName("editlastname")[0].setAttribute("value", lastname);
-                    document.getElementsByName("editemail")[0].setAttribute("value", email);
-                    document.getElementsByName("editcontact")[0].setAttribute("value", contact);
-                }
+                    function UpdateDetails(did, firstname, middlename, lastname, email, contact) {
+                        document.getElementsByName("edid")[0].setAttribute("value", did);
+                        document.getElementsByName("editfirstname")[0].setAttribute("value", firstname);
+                        document.getElementsByName("editmiddlename")[0].setAttribute("value", middlename);
+                        document.getElementsByName("editlastname")[0].setAttribute("value", lastname);
+                        document.getElementsByName("editemail")[0].setAttribute("value", email);
+                        document.getElementsByName("editcontact")[0].setAttribute("value", contact);
+                    }
                 </script>
 
 

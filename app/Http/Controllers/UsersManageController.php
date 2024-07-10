@@ -14,6 +14,7 @@ class UsersManageController extends Controller
     public function GetUsers()
     {
         $token = session()->get('token');
+        $UserID = session()->get('userid');
         //================================== TOKEN
         $TokenValidate = env('API_VALIDATE_TOKEN');
         $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
@@ -23,10 +24,21 @@ class UsersManageController extends Controller
                 //=========================================== END TOKEN
                 $GetHCPN = env('API_GET_HCPN');
                 $GetUser = env('API_GET_USER');
-                $apiResponse = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE/0');
+                if (session()->get('leveid') == "ADMIN") {
+
+
+                    $apiUser = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE/0');
+                } else if (session()->get('leveid') == "PRO") {
+
+
+                    $apiUser = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE/' . $UserID);
+
+                }
+
                 $GetUserLevel = env('API_GET_USER_LEVEL');
                 $apiUserLevel = Http::withHeaders(['token' => $token])->get($GetUserLevel . '/ACTIVE');
-                $decodedResponse = $apiResponse->json();
+
+                $decodedResponse = $apiUser->json();
                 $decodedapiUserLevel = $apiUserLevel->json();
                 $userList = json_decode($decodedResponse['result'], true);
                 $userLevel = json_decode($decodedapiUserLevel['result'], true);
@@ -51,6 +63,7 @@ class UsersManageController extends Controller
         //================================== TOKEN
         $TokenValidate = env('API_VALIDATE_TOKEN');
         $validate = http::withHeaders(['token' => $token])->get($TokenValidate);
+        $UserID = session()->get('userid');
         if ($validate->status() < 400) {
             $decodevalidate = $validate->json();
             if ($validate['success'] == 'true') {
@@ -59,9 +72,16 @@ class UsersManageController extends Controller
                 $GetUserInfo = env('API_GET_USER_INFO');
                 $GetUserLevel = env('API_GET_USER_LEVEL');
                 $GetHCPN = env('API_GET_HCPN');
-                $apiUserInfo = Http::withHeaders(['token' => $token])->get($GetUserInfo . '/ACTIVE/0');
+                if (session()->get('leveid') == "ADMIN") {
+                    $apiUserInfo = Http::withHeaders(['token' => $token])->get($GetUserInfo . '/ACTIVE/0');
 
-                $apiUser = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE/0');
+                    $apiUser = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE/0');
+                } else if (session()->get('leveid') == "PRO") {
+                    $apiUserInfo = Http::withHeaders(['token' => $token])->get($GetUserInfo . '/ACTIVE/' . $UserID);
+
+                    $apiUser = Http::withHeaders(['token' => $token])->get($GetUser . '/ACTIVE/' . $UserID);
+
+                }
                 $apiLevel = Http::withHeaders(['token' => $token])->get($GetUserLevel . '/ACTIVE');
                 $decodedUserInfo = $apiUserInfo->json();
 
